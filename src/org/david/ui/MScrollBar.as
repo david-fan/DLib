@@ -122,7 +122,7 @@ public class MScrollBar extends MUIComponent {
 //            if (_in3d) {
                 switch (_direction) {
                     case MDirection.Horizon:
-                        _thumb.x = _slide.globalToLocal(new Point(e.stageX, e.stageY)).x - _thumb.width / 2;
+                        _thumb.x = this.mouseX - _thumb.width / 2;
                         if (_thumb.x < 0)
                             _thumb.x = 0;
                         if (_thumb.x > _maxX)
@@ -132,7 +132,7 @@ public class MScrollBar extends MUIComponent {
                             this._progressMask.width = this._progess.width * value;
                         break;
                     case MDirection.Vertical:
-                        _thumb.y = _slide.globalToLocal(new Point(e.stageX, e.stageY)).y - _thumb.height / 2;
+                        _thumb.y = this.mouseY - _thumb.height / 2;
                         if (_thumb.y < 0)
                             _thumb.y = 0;
                         if (_thumb.y > _maxY)
