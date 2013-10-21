@@ -30,7 +30,7 @@ public class MCombobox extends MUIComponent {
         _showSkin.addEventListener(MouseEvent.CLICK, onCurrentItemClick);
         _hideSkin.addEventListener(MouseEvent.CLICK, onCurrentItemClick);
         _itemRender = itemRender;
-        addChildXY(_hideSkin);
+        skin = _hideSkin;
 //        this.useHandCursor = true;
     }
 
@@ -58,13 +58,15 @@ public class MCombobox extends MUIComponent {
 
     private function onCurrentItemClick(e:MouseEvent):void {
         if (contains(_listContainer)) {
-//            skin = _hideSkin;
-            addChild(_hideSkin);
+            skin = _hideSkin;
+//            addChild(_hideSkin);
+//            removeChild(_showSkin);
             removeChild(_listContainer);
         }
         else {
-//            skin = _showSkin;
-            addChild(_showSkin);
+            skin = _showSkin;
+//            addChild(_showSkin);
+//            removeChild(_hideSkin);
             addChildXY(_listContainer, 0, _showSkin.height);
         }
     }
@@ -77,7 +79,8 @@ public class MCombobox extends MUIComponent {
     private function onListItemClick(e:UIEvent):void {
         _selected = _source.indexOf(e.data.data);
         updateSelected();
-        addChild(_hideSkin);
+        skin = _hideSkin;
+//        addChild(_hideSkin);
         removeChild(_listContainer);
         dispatchEvent(new UIEvent(UIEvent.ItemSeleted, e.data.data));
     }
@@ -86,10 +89,9 @@ public class MCombobox extends MUIComponent {
         return _selected;
     }
 
-    override protected function updateDisplayList():void {
-
-        removeAllChildren(true);
-        super.updateDisplayList();
+    public function set selected(value:int):void {
+        _selected = value;
+        updateSelected();
     }
 }
 }
