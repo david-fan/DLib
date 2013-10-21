@@ -15,6 +15,7 @@ public class MScrollArea extends MContainer {
     private var _scrollDirection:String;
     private var _layoutDirection:String;
     protected var _scrollContent:MScrollContent;
+    private var _scrollRect:Rectangle;
 
     public function MScrollArea(scrollContent:MScrollContent, scrollBar:MScrollBar, scrollRectangle:Rectangle, scrollDirection:String = null) {
         if (scrollBar) {
@@ -34,7 +35,7 @@ public class MScrollArea extends MContainer {
         super(false);
         _scrollContent = scrollContent;
         _scrollContent.cacheAsBitmap = true;
-        _scrollContent.scrollRect = scrollRectangle;
+        _scrollContent.scrollRect = _scrollRect = scrollRectangle;
         addChild(_scrollContent);
         //
         if (scrollBar) {
@@ -146,6 +147,36 @@ public class MScrollArea extends MContainer {
     private function onBarValueChange(e:UIEvent):void {
         var sv:Number = _scrollBar.value;
         scroll = sv;
+    }
+
+
+    override public function get scrollRect():Rectangle {
+        return _scrollRect;
+    }
+
+
+    override public function set scrollRect(value:Rectangle):void {
+        _scrollRect = value;
+        _scrollContent.scrollRect = _scrollRect;
+    }
+
+    override public function get height():Number {
+        return super.height;
+    }
+
+    override public function set height(value:Number):void {
+        _scrollRect.height = value;
+        _scrollContent.scrollRect = _scrollRect;
+        if (_scrollBar)
+            _scrollBar.height = value;
+    }
+
+    override public function get width():Number {
+        return super.width;
+    }
+
+    override public function set width(value:Number):void {
+        super.width = value;
     }
 
 //    protected function update():void {
