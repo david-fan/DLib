@@ -56,6 +56,7 @@ public class MScrollBar extends MUIComponent {
         addEventListener(MouseEvent.CLICK, onSlideClick);
         if (_progess) {
             addChild(_progess);
+            _progess.x = _progess.y = 0;
             this._progressMask = new Sprite();
             this._progressMask.graphics.beginFill(0, 0);
             this._progressMask.graphics.drawRect(0, 0, this._progess.width, this._progess.height);
@@ -120,28 +121,28 @@ public class MScrollBar extends MUIComponent {
     private function onMouseMove(e:MouseEvent):void {
         if (_move) {
 //            if (_in3d) {
-                switch (_direction) {
-                    case MDirection.Horizon:
-                        _thumb.x = this.mouseX - _thumb.width / 2;
-                        if (_thumb.x < 0)
-                            _thumb.x = 0;
-                        if (_thumb.x > _maxX)
-                            _thumb.x = _maxX;
-                        _value = _thumb.x / _maxX;
-                        if (this._progressMask)
-                            this._progressMask.width = this._progess.width * value;
-                        break;
-                    case MDirection.Vertical:
-                        _thumb.y = this.mouseY - _thumb.height / 2;
-                        if (_thumb.y < 0)
-                            _thumb.y = 0;
-                        if (_thumb.y > _maxY)
-                            _thumb.y = _maxY;
-                        _value = _thumb.y / _maxY;
-                        if (this._progressMask)
-                            this._progressMask.height = this._progess.height * value;
-                        break;
-                }
+            switch (_direction) {
+                case MDirection.Horizon:
+                    _thumb.x = this.mouseX - _thumb.width / 2;
+                    if (_thumb.x < 0)
+                        _thumb.x = 0;
+                    if (_thumb.x > _maxX)
+                        _thumb.x = _maxX;
+                    _value = _thumb.x / _maxX;
+                    if (this._progressMask)
+                        this._progressMask.width = this._progess.width * value;
+                    break;
+                case MDirection.Vertical:
+                    _thumb.y = this.mouseY - _thumb.height / 2;
+                    if (_thumb.y < 0)
+                        _thumb.y = 0;
+                    if (_thumb.y > _maxY)
+                        _thumb.y = _maxY;
+                    _value = _thumb.y / _maxY;
+                    if (this._progressMask)
+                        this._progressMask.height = this._progess.height * value;
+                    break;
+            }
 //            } else {
 //                switch (_direction) {
 //                    case MDirection.Horizon:
@@ -156,7 +157,7 @@ public class MScrollBar extends MUIComponent {
 //                        break;
 //                }
 //            }
-            trace(_value);
+//            trace(_value);
             dispatchEvent(new UIEvent(ValueChange, _value));
         }
     }
