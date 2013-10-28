@@ -1,5 +1,6 @@
 package org.david.ui {
 import org.david.ui.core.IListItem;
+import org.david.ui.core.ISelectable;
 import org.david.ui.core.MUIComponent;
 import org.david.ui.event.UIEvent;
 
@@ -19,6 +20,7 @@ public class MTileList extends MUIComponent {
     private var _source:Array;
     private var _items:Array;
     private var _olditems:Array;
+    private var _currentItem:ISelectable;
 
     /**
      * @param itemClass 实现IListItem的类型，负责每一项数据的展示
@@ -56,15 +58,24 @@ public class MTileList extends MUIComponent {
                 var index:int = row * _cHCount + col;
                 if (index < this._source.length) {
                     var item:DisplayObject = new _itemClass();
-                    var ed:EventDispatcher = item as EventDispatcher;
-                    ed.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent):void {
-                        ed.dispatchEvent(new UIEvent(UIEvent.ListItemMouseDown, e.currentTarget, true));
+//                    var ed:EventDispatcher = item as EventDispatcher;
+                    item.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent):void {
+                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseDown, target, true));
                     });
-                    ed.addEventListener(MouseEvent.MOUSE_UP, function (e:MouseEvent):void {
-                        ed.dispatchEvent(new UIEvent(UIEvent.ListItemMouseUp, e.currentTarget, true));
+                    item.addEventListener(MouseEvent.MOUSE_UP, function (e:MouseEvent):void {
+                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseUp, target, true));
                     });
-                    ed.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-                        ed.dispatchEvent(new UIEvent(UIEvent.ListItemMouseClick, e.currentTarget, true));
+                    item.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseClick, target, true));
+                        if (target is ISelectable) {
+                            if (_currentItem)
+                                _currentItem.selected = false;
+                            _currentItem = target as ISelectable;
+                            _currentItem.selected = true;
+                        }
                     });
                     // ListSource.getItemRender(_itemClass, this._source[index]) as DisplayObject;
                     item.x = col * (item.width + this._itemHDistance);
@@ -87,6 +98,10 @@ public class MTileList extends MUIComponent {
 
     public function get items():Array {
         return _items;
+    }
+
+    public function get selectedItem():ISelectable {
+        return _currentItem;
     }
 }
 }
