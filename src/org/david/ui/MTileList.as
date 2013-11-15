@@ -60,15 +60,15 @@ public class MTileList extends MUIComponent {
                     var item:DisplayObject = new _itemClass();
 //                    var ed:EventDispatcher = item as EventDispatcher;
                     item.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent):void {
-                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        var target:EventDispatcher = e.currentTarget as EventDispatcher;
                         target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseDown, target, true));
                     });
                     item.addEventListener(MouseEvent.MOUSE_UP, function (e:MouseEvent):void {
-                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        var target:EventDispatcher = e.currentTarget as EventDispatcher;
                         target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseUp, target, true));
                     });
                     item.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-                        var target:EventDispatcher= e.currentTarget as EventDispatcher;
+                        var target:EventDispatcher = e.currentTarget as EventDispatcher;
                         target.dispatchEvent(new UIEvent(UIEvent.ListItemMouseClick, target, true));
                         if (target is ISelectable) {
                             if (_currentItem)
@@ -102,6 +102,10 @@ public class MTileList extends MUIComponent {
 
     public function get selectedItem():ISelectable {
         return _currentItem;
+    }
+
+    public function set selectedItem(value:ISelectable):void {
+        _currentItem = value;
     }
 }
 }
