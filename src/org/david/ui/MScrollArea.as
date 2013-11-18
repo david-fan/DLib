@@ -72,9 +72,9 @@ public class MScrollArea extends MContainer {
                 if (rect.width >= _scrollContent.width)
                     return;
                 if (e.delta > 0)
-                    rect.x -= 10;
+                    rect.x -= 10 * Math.abs(e.delta);
                 else
-                    rect.x += 10;
+                    rect.x += 10 * Math.abs(e.delta);
                 if (rect.x < 0)
                     rect.x = 0;
                 if (rect.x >= _max)
@@ -87,9 +87,9 @@ public class MScrollArea extends MContainer {
                 if (rect.height >= _scrollContent.height)
                     return;
                 if (e.delta > 0)
-                    rect.y -= 10;
+                    rect.y -= 10 * Math.abs(e.delta);
                 else
-                    rect.y += 10;
+                    rect.y += 10 * Math.abs(e.delta);
                 if (rect.y < 0)
                     rect.y = 0;
                 if (rect.y >= _max)
