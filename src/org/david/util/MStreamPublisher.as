@@ -47,7 +47,21 @@ public class MStreamPublisher extends EventDispatcher {
         _audio = audio;
     }
 
+    public function set video(value:Boolean):void {
+        _video = value;
+    }
 
+    public function get video():Boolean {
+        return _video;
+    }
+
+    public function set audio(value:Boolean):void {
+        _audio = value;
+    }
+
+    public function get audio():Boolean {
+        return _audio;
+    }
 
     public function get publishStream():NetStream {
         return _publishStream;
@@ -176,7 +190,7 @@ public class MStreamPublisher extends EventDispatcher {
         publishConnection.connect(_server);
     }
 
-    public function stopPublish():void{
+    public function stopPublish():void {
         cleanupPublishedStream();
     }
 
