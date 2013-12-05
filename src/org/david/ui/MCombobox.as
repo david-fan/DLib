@@ -34,6 +34,7 @@ public class MCombobox extends MUIComponent {
 //        this.useHandCursor = true;
     }
 
+
 //    override public function set skin(value:Object):void {
 //        super.skin = value;
 //        _currentItem = value as DisplayObject;
@@ -92,18 +93,19 @@ public class MCombobox extends MUIComponent {
         _selected = value;
         updateSelected();
     }
-    override public function get enable():Boolean{
+
+    override public function get enable():Boolean {
         return super.enable;
     }
-    override public function set enable(value:Boolean):void{
-         super.enable=value;
-         this.mouseEnabled = value;
-         this.mouseChildren = value;
-        if(value)
-            this.alpha=1;
-        else
-            this.alpha=0.3;
 
+    override public function set enable(value:Boolean):void {
+        super.enable = value;
+        this.mouseEnabled = value;
+        this.mouseChildren = value;
+        if (value)
+            this.alpha = 1;
+        else
+            this.alpha = 0.3;
     }
 }
 }
