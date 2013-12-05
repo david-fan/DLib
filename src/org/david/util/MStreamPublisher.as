@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.util {
+import com.greensock.easing.Strong;
+
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.NetStatusEvent;
@@ -40,14 +42,33 @@ public class MStreamPublisher extends EventDispatcher {
         return _publishing;
     }
 
-    public function MStreamPublisher(liveId:String, server:String, video:Boolean = true, audio:Boolean = true) {
+    public function MStreamPublisher(liveId:String=null, server:String=null, video:Boolean = true, audio:Boolean = true) {
         _liveId = liveId;
         _server = server;
         _video = video;
         _audio = audio;
     }
+    public function set liveId(value:String):void{
+        _liveId=value;
+    }
+    public function set server(vaule:String):void{
+        _server=vaule;
+    }
+    public function set video(value:Boolean):void {
+        _video = value;
+    }
 
+    public function get video():Boolean {
+        return _video;
+    }
 
+    public function set audio(value:Boolean):void {
+        _audio = value;
+    }
+
+    public function get audio():Boolean {
+        return _audio;
+    }
 
     public function get publishStream():NetStream {
         return _publishStream;
