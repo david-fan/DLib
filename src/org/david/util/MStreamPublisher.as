@@ -40,13 +40,18 @@ public class MStreamPublisher extends EventDispatcher {
         return _publishing;
     }
 
-    public function MStreamPublisher(liveId:String, server:String, video:Boolean = true, audio:Boolean = true) {
+    public function MStreamPublisher(liveId:String=null, server:String=null, video:Boolean = true, audio:Boolean = true) {
         _liveId = liveId;
         _server = server;
         _video = video;
         _audio = audio;
     }
-
+    public function set liveId(value:String):void{
+        _liveId=value;
+    }
+    public function set server(vaule:String):void{
+        _server=vaule;
+    }
     public function set video(value:Boolean):void {
         _video = value;
     }
