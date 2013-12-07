@@ -18,9 +18,12 @@ import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.ObjectEncoding;
 
+import org.david.ui.event.UIEvent;
+
 public class MStreamPublisher extends EventDispatcher {
     public static var PublishStart:String = "MStreamPublisher.PublishStart";
     public static var PublishClose:String = "MStreamPublisher.PublishClose";
+    public static var PublishError:String = "MStreamPublisher.PublishError";
 
     private var _camera:Camera;
     private var _microphone:Microphone;
@@ -40,18 +43,21 @@ public class MStreamPublisher extends EventDispatcher {
         return _publishing;
     }
 
-    public function MStreamPublisher(liveId:String=null, server:String=null, video:Boolean = true, audio:Boolean = true) {
+    public function MStreamPublisher(liveId:String = null, server:String = null, video:Boolean = true, audio:Boolean = true) {
         _liveId = liveId;
         _server = server;
         _video = video;
         _audio = audio;
     }
-    public function set liveId(value:String):void{
-        _liveId=value;
+
+    public function set liveId(value:String):void {
+        _liveId = value;
     }
-    public function set server(vaule:String):void{
-        _server=vaule;
+
+    public function set server(vaule:String):void {
+        _server = vaule;
     }
+
     public function set video(value:Boolean):void {
         _video = value;
     }
@@ -127,7 +133,7 @@ public class MStreamPublisher extends EventDispatcher {
                         _microphone = Microphone.getMicrophone();
                         if (_microphone == null || _microphone.muted) {
                             cleanupPublishedStream();
-                            noCamMicAlert();
+                            noCamMicAlert("没有检测到可用的麦克风");
                             return;
                         }
                     }
@@ -141,7 +147,7 @@ public class MStreamPublisher extends EventDispatcher {
                         _camera = Camera.getCamera();
                         if (_camera == null || _camera.muted) {
                             cleanupPublishedStream();
-                            noCamMicAlert();
+                            noCamMicAlert("没有检测到可用的摄像头");
                             return;
                         }
                     }
@@ -212,8 +218,8 @@ public class MStreamPublisher extends EventDispatcher {
         return _setting;
     }
 
-    private function noCamMicAlert():void {
-        trace("no _camera or _microphone!")
+    private function noCamMicAlert(message:String):void {
+        dispatchEvent(new UIEvent(PublishError, message));
     }
 }
 }
