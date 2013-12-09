@@ -10,6 +10,8 @@ import flash.geom.Rectangle;
  * @author david
  */
 public class MScrollArea extends MContainer {
+    public static var Scroll:String = "MScrollArea.Scroll";
+
     protected var _scrollBar:MScrollBar;
     protected var _max:Number = 0;
     private var _scrollDirection:String;
@@ -80,8 +82,10 @@ public class MScrollArea extends MContainer {
                 if (rect.x >= _max)
                     rect.x = _max;
                 _scrollContent.scrollRect = rect;
+                _scroll = rect.x / _max;
                 if (_scrollBar)
-                    _scrollBar.value = rect.x / _max;
+                    _scrollBar.value = _scroll;
+                dispatchEvent(new UIEvent(Scroll));
                 break;
             case MDirection.Vertical:
                 if (rect.height >= _scrollContent.height)
@@ -95,8 +99,10 @@ public class MScrollArea extends MContainer {
                 if (rect.y >= _max)
                     rect.y = _max;
                 _scrollContent.scrollRect = rect;
+                _scroll = rect.y / _max;
                 if (_scrollBar)
-                    _scrollBar.value = rect.y / _max;
+                    _scrollBar.value = _scroll;
+                dispatchEvent(new UIEvent(Scroll));
                 break;
         }
     }
@@ -109,6 +115,7 @@ public class MScrollArea extends MContainer {
             return;
         _scroll = value;
         doscroll();
+        dispatchEvent(new UIEvent(Scroll));
     }
 
     protected function doscroll():void {
@@ -126,7 +133,8 @@ public class MScrollArea extends MContainer {
                 break;
         }
         _scrollContent.scrollRect = rect;
-        _scrollBar.value = _scroll;
+        if (_scrollBar)
+            _scrollBar.value = _scroll;
     }
 
     public function get scroll():Number {
