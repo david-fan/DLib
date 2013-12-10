@@ -31,9 +31,7 @@ public class MMediaPlayer extends MSprite {
     private var _autoRetry:Boolean;
     public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1) {
         super();
-        _connection = new NetConnection();
-        _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-        _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+
         _autoRetry = autoRetry;
 
         _bufferTime = bufferTime;
@@ -184,10 +182,15 @@ public class MMediaPlayer extends MSprite {
 
     protected function cleanupStream():void {
         if (_stream != null) {
+            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.close();
+            _stream=null;
         }
         if (_connection != null) {
+            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
+            _connection=null;
         }
     }
     private function setVolume():void {
@@ -210,7 +213,9 @@ public class MMediaPlayer extends MSprite {
             return;
         }
 //        trace("PlayStream:" + _server + "," + _filename);
-
+        _connection = new NetConnection();
+        _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+        _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
         _connection.connect(_server);
 
     }
