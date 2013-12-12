@@ -11,12 +11,20 @@ import org.david.ui.core.MContainer;
 public class MScrollContent extends MContainer {
     private var _content:DisplayObject;
     // private var _bg:Sprite;
-    override public function get height():Number {
-        return _content.height;
+//    override public function get height():Number {
+//        return _content.height;
+//    }
+//
+//    override public function get width():Number {
+//        return _content.width;
+//    }
+
+    public function get contentWidth():Number {
+        return _content.width;
     }
 
-    override public function get width():Number {
-        return _content.width;
+    public function get contentHeigth():Number {
+        return _content.height;
     }
 
     public function MScrollContent(content:DisplayObject, dragTarget:Boolean = false) {
@@ -33,6 +41,7 @@ public class MScrollContent extends MContainer {
 
     override public function set scrollRect(value:Rectangle):void {
         super.scrollRect = value;
+        trace(value.x, value.y);
         if (background) {
             background.width = value.width;
             background.height = value.height;

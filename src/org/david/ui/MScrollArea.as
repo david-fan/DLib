@@ -13,7 +13,7 @@ public class MScrollArea extends MContainer {
     public static var Scroll:String = "MScrollArea.Scroll";
 
     protected var _scrollBar:MScrollBar;
-    protected var _max:Number = 0;
+//    protected var _max:Number = 0;
     private var _scrollDirection:String;
     private var _layoutDirection:String;
     protected var _scrollContent:MScrollContent;
@@ -40,27 +40,28 @@ public class MScrollArea extends MContainer {
         _scrollContent.scrollRect = _scrollRect = scrollRectangle;
         addChild(_scrollContent);
         //
-        if (scrollBar) {
-            _scrollBar = scrollBar;
-            addChild(_scrollBar);
-            _scrollBar.addEventListener(MScrollBar.ValueChange, onBarValueChange);
-            if (_scrollDirection == MDirection.Horizon) {
-                _scrollBar.x = scrollRectangle.x;
-                _scrollBar.y = scrollRectangle.height + scrollRectangle.y;
+        if (scrollBar == null)
+            throw new Error("must have scrollbar!")
 
-            } else {
-                _scrollBar.y = scrollRectangle.y;
-                _scrollBar.x = scrollRectangle.width + scrollRectangle.x;//-_scrollBar.width;
-            }
+        _scrollBar = scrollBar;
+        addChild(_scrollBar);
+        _scrollBar.addEventListener(MScrollBar.ValueChange, onBarValueChange);
+        if (_scrollDirection == MDirection.Horizon) {
+            _scrollBar.x = scrollRectangle.x;
+            _scrollBar.y = scrollRectangle.height + scrollRectangle.y;
+
+        } else {
+            _scrollBar.y = scrollRectangle.y;
+            _scrollBar.x = scrollRectangle.width + scrollRectangle.x;//-_scrollBar.width;
         }
-
         //
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
     }
 
     override protected function updateDisplayList():void {
         super.updateDisplayList();
-        checkMax();
+//        checkMax();
+        this.doscroll();
     }
 
     public function get direction():String {
@@ -71,7 +72,7 @@ public class MScrollArea extends MContainer {
         var rect:Rectangle = _scrollContent.scrollRect;
         switch (_scrollDirection) {
             case MDirection.Horizon:
-                if (rect.width >= _scrollContent.width)
+                if (rect.width >= _scrollContent.contentWidth)
                     return;
                 if (e.delta > 0)
                     rect.x -= 10 * Math.abs(e.delta);
@@ -83,12 +84,11 @@ public class MScrollArea extends MContainer {
                     rect.x = _max;
                 _scrollContent.scrollRect = rect;
                 _scroll = rect.x / _max;
-                if (_scrollBar)
-                    _scrollBar.value = _scroll;
+                _scrollBar.value = _scroll;
                 dispatchEvent(new UIEvent(Scroll));
                 break;
             case MDirection.Vertical:
-                if (rect.height >= _scrollContent.height)
+                if (rect.height >= _scrollContent.contentHeigth)
                     return;
                 if (e.delta > 0)
                     rect.y -= 10 * Math.abs(e.delta);
@@ -100,8 +100,7 @@ public class MScrollArea extends MContainer {
                     rect.y = _max;
                 _scrollContent.scrollRect = rect;
                 _scroll = rect.y / _max;
-                if (_scrollBar)
-                    _scrollBar.value = _scroll;
+                _scrollBar.value = _scroll;
                 dispatchEvent(new UIEvent(Scroll));
                 break;
         }
@@ -122,34 +121,34 @@ public class MScrollArea extends MContainer {
         var rect:Rectangle = _scrollContent.scrollRect;
         switch (_scrollDirection) {
             case MDirection.Horizon:
-                if (rect.width >= _scrollContent.width)
+                if (rect.width >= _scrollContent.contentWidth)
                     _scroll = 0;
                 rect.x = _max * _scroll;
                 break;
             case MDirection.Vertical:
-                if (rect.height >= _scrollContent.height)
+                if (rect.height >= _scrollContent.contentHeigth)
                     _scroll = 0;
                 rect.y = _max * _scroll;
                 break;
         }
         _scrollContent.scrollRect = rect;
-        if (_scrollBar)
-            _scrollBar.value = _scroll;
+        _scrollBar.value = _scroll;
     }
 
     public function get scroll():Number {
         return _scroll;
     }
 
-    protected function checkMax():void {
+    private function get _max():Number{
+        var temp:Number;
         if (_scrollDirection == MDirection.Horizon) {
-            _max = _scrollContent.width - _scrollContent.scrollRect.width;
+            temp = _scrollContent.contentWidth - _scrollContent.scrollRect.width;
         } else {
-            _max = _scrollContent.height - _scrollContent.scrollRect.height;
+            temp = _scrollContent.contentHeigth - _scrollContent.scrollRect.height;
         }
-        if (_max < 0)
-            _max = 0;
-        doscroll();
+        if (temp < 0)
+            temp = 0;
+        return temp;
     }
 
     private function onBarValueChange(e:UIEvent):void {
@@ -173,10 +172,15 @@ public class MScrollArea extends MContainer {
     }
 
     override public function set height(value:Number):void {
-        _scrollRect.height = value;
-        _scrollContent.scrollRect = _scrollRect;
-        if (_scrollBar)
+        if (_scrollDirection == MDirection.Vertical) {
+            _scrollRect.height = value;
+            _scrollContent.scrollRect = _scrollRect;
             _scrollBar.height = value;
+        } else {
+            _scrollRect.height = value - _scrollBar.height;
+            _scrollContent.scrollRect = _scrollRect;
+            _scrollBar.y = value - _scrollBar.height;
+        }
     }
 
     override public function get width():Number {
@@ -184,7 +188,15 @@ public class MScrollArea extends MContainer {
     }
 
     override public function set width(value:Number):void {
-        super.width = value;
+        if (_scrollDirection == MDirection.Vertical) {
+            _scrollRect.width = value - _scrollBar.width;
+            _scrollContent.scrollRect = _scrollRect;
+            _scrollBar.x = value - _scrollBar.width;
+        } else {
+            _scrollRect.width = value;
+            _scrollContent.scrollRect = _scrollRect;
+            _scrollBar.width = value;
+        }
     }
 
 //    protected function update():void {
