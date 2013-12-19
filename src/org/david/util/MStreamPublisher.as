@@ -113,7 +113,7 @@ public class MStreamPublisher extends EventDispatcher {
         _publishStream = null;
         _publishing = false;
         if (info)
-            dispatchEvent(new Event(PublishClose, info));
+            dispatchEvent(new UIEvent(PublishClose, info));
     }
 
     private function publishStreamStatus(evt:NetStatusEvent):void {
@@ -122,7 +122,7 @@ public class MStreamPublisher extends EventDispatcher {
             case Start :
                 trace(_publishStream.videoStreamSettings);
                 _publishing = true;
-                dispatchEvent(new Event(PublishStart));
+                dispatchEvent(new UIEvent(PublishStart));
                 break;
             case BadName :
                 cleanupPublishedStream(BadName);
