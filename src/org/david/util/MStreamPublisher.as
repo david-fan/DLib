@@ -21,9 +21,18 @@ import flash.net.ObjectEncoding;
 import org.david.ui.event.UIEvent;
 
 public class MStreamPublisher extends EventDispatcher {
+    public static var Rejected:String = "NetConnection.Connect.Rejected";
+    public static var Failed:String = "NetConnection.Connect.Failed";
+    public static var Close:String = "NetConnection.Connect.Close";
+    public static var Start:String = "NetStream.Publish.Start";
+    public static var BadName:String = "NetStream.Publish.BadName";
+    public static var NoCam:String = "NoCam";
+    public static var NoMic:String = "NoMic";
+    public static var Stop:String = "Stop";
+
     public static var PublishStart:String = "MStreamPublisher.PublishStart";
     public static var PublishClose:String = "MStreamPublisher.PublishClose";
-    public static var PublishError:String = "MStreamPublisher.PublishError";
+//    public static var PublishError:String = "MStreamPublisher.PublishError";
 
     private var _camera:Camera;
     private var _microphone:Microphone;
@@ -94,7 +103,7 @@ public class MStreamPublisher extends EventDispatcher {
         _microphone = value;
     }
 
-    private function cleanupPublishedStream():void {
+    private function cleanupPublishedStream(info:String = null):void {
         if (_publishStream != null) {
             _publishStream.close();
         }
@@ -103,20 +112,20 @@ public class MStreamPublisher extends EventDispatcher {
         }
         _publishStream = null;
         _publishing = false;
-
-        dispatchEvent(new Event(PublishClose));
+        if (info)
+            dispatchEvent(new Event(PublishClose, info));
     }
 
     private function publishStreamStatus(evt:NetStatusEvent):void {
         trace("[NetStream Status]", evt.info.code, evt.info.message);
         switch (evt.info.code) {
-            case "NetStream.Publish.Start" :
+            case Start :
                 trace(_publishStream.videoStreamSettings);
                 _publishing = true;
                 dispatchEvent(new Event(PublishStart));
                 break;
-            case "NetStream.Publish.BadName" :
-                cleanupPublishedStream();
+            case BadName :
+                cleanupPublishedStream(BadName);
                 break;
         }
     }
@@ -132,8 +141,8 @@ public class MStreamPublisher extends EventDispatcher {
                     if (_microphone == null) {
                         _microphone = Microphone.getMicrophone();
                         if (_microphone == null || _microphone.muted) {
-                            cleanupPublishedStream();
-                            noCamMicAlert("没有检测到可用的麦克风");
+                            cleanupPublishedStream(NoMic);
+//                            noCamMicAlert("没有检测到可用的麦克风");
                             return;
                         }
                     }
@@ -146,8 +155,8 @@ public class MStreamPublisher extends EventDispatcher {
                     if (_camera == null) {
                         _camera = Camera.getCamera();
                         if (_camera == null || _camera.muted) {
-                            cleanupPublishedStream();
-                            noCamMicAlert("没有检测到可用的摄像头");
+                            cleanupPublishedStream(NoCam);
+//                            noCamMicAlert("没有检测到可用的摄像头");
                             return;
                         }
                     }
@@ -182,10 +191,10 @@ public class MStreamPublisher extends EventDispatcher {
                 }
 
                 break;
-            case "NetConnection.Connect.Rejected" :
-            case "NetConnection.Connect.Failed" :
-            case "NetConnection.Connect.Close":
-                cleanupPublishedStream();
+            case Rejected :
+            case Failed :
+            case Close:
+                cleanupPublishedStream(evt.info.code);
                 break;
         }
     };
@@ -202,7 +211,7 @@ public class MStreamPublisher extends EventDispatcher {
     }
 
     public function stopPublish():void {
-        cleanupPublishedStream();
+        cleanupPublishedStream(Stop);
     }
 
     public function set setting(value:Object):void {
@@ -218,8 +227,8 @@ public class MStreamPublisher extends EventDispatcher {
         return _setting;
     }
 
-    private function noCamMicAlert(message:String):void {
-        dispatchEvent(new UIEvent(PublishError, message));
-    }
+//    private function noCamMicAlert(message:String):void {
+//        dispatchEvent(new UIEvent(PublishError, message));
+//    }
 }
 }
