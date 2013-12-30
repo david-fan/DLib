@@ -1,5 +1,7 @@
 package org.david.ui {
-	import org.david.ui.core.MSprite;
+import flash.display.DisplayObject;
+
+import org.david.ui.core.MSprite;
 	import org.david.ui.core.MUIComponent;
 	import org.david.ui.event.UIEvent;
 
@@ -44,7 +46,7 @@ package org.david.ui {
 		/**
 		 * 添加一个标签和对象的内容对象
 		 */
-		public function addTab(tab : MButton, panel : MSprite) : void {
+		public function addTab(tab : MButton, panel : DisplayObject) : void {
 			_tabBar.addTab(tab);
 			this._contents.push(panel);
 			if (this._contents.length == 1) {
@@ -61,7 +63,7 @@ package org.david.ui {
 			addToContent(panel);
 		}
 
-		private function addToContent(panel : MSprite) : void {
+		private function addToContent(panel : DisplayObject) : void {
 			if (_panel != panel) {
 				_panel = panel;
 				_contentContainer.removeAllChildren();
@@ -95,13 +97,13 @@ package org.david.ui {
 		/**
 		 * 当前显示的标签内容
 		 */
-		public function get panel() : MSprite {
+		public function get panel() : DisplayObject {
 			return _panel;
 		}
 
 		private var _tabBar : MTabBar;
 		private var _contentContainer : MSprite;
 		private var _contents : Array;
-		private var _panel : MSprite;
+		private var _panel : DisplayObject;
 	}
 }
