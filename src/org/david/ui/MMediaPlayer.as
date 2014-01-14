@@ -29,6 +29,7 @@ public class MMediaPlayer extends MSprite {
     private var _filename:String;
     private var _start:Number = 0;
     private var _autoRetry:Boolean;
+
     public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1) {
         super();
 
@@ -40,6 +41,7 @@ public class MMediaPlayer extends MSprite {
             setInterval(onEnterFrame, 1000);
         }
     }
+
     private var _ispause:Boolean;
 
     public function get ispause():Boolean {
@@ -59,6 +61,7 @@ public class MMediaPlayer extends MSprite {
     public function set autoRetry(value:Boolean):void {
         _autoRetry = value;
     }
+
     private var _volume:Number = 0.6;
 
     public function get volume():Number {
@@ -75,17 +78,21 @@ public class MMediaPlayer extends MSprite {
     public function get mute():Boolean {
         return _mute;
     }
+
     private var _buffering:Boolean;
-    public function set buffering(value:Boolean):void{
-         _buffering=value;
+    public function set buffering(value:Boolean):void {
+        _buffering = value;
     }
-    public function get buffering():Boolean{
+
+    public function get buffering():Boolean {
         return _buffering;
     }
+
     public function set mute(value:Boolean):void {
         _mute = value;
         setVolume();
     }
+
     private function netStatusHandler(event:NetStatusEvent):void {
         trace("NetStatusEvent:", event.info.code);
         switch (event.info.code) {
@@ -100,7 +107,7 @@ public class MMediaPlayer extends MSprite {
                 }
                 break;
             case "NetStream.Play.Start":
-                _isPlaying=true;
+                _isPlaying = true;
                 buffering = false;
                 dispatchEvent(new UIEvent(PlayStart));
                 break;
@@ -137,6 +144,7 @@ public class MMediaPlayer extends MSprite {
     private function securityErrorHandler(event:SecurityErrorEvent):void {
         trace("securityErrorHandler: " + event);
     }
+
     protected function connectStream():void {
         _stream = new NetStream(_connection);
         _stream.bufferTime = _bufferTime;
@@ -152,6 +160,7 @@ public class MMediaPlayer extends MSprite {
 
         setVolume();
     }
+
     private function onEnterFrame():void {
         var ns:NetStream = _stream;
         var info:String = ("缓冲区：" + ns.bufferTime + "s 已缓冲：" + ns.bufferLength + "s 已下载：" + int(ns.bytesLoaded / 1024) + "k 总：" + int(ns.bytesTotal / 1024) + "k 速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" +
@@ -184,15 +193,16 @@ public class MMediaPlayer extends MSprite {
         if (_stream != null) {
             _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.close();
-            _stream=null;
+            _stream = null;
         }
         if (_connection != null) {
             _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
-            _connection=null;
+            _connection = null;
         }
     }
+
     private function setVolume():void {
         if (_stream) {
             if (_mute)
@@ -201,6 +211,7 @@ public class MMediaPlayer extends MSprite {
                 _stream.soundTransform = new SoundTransform(_volume);
         }
     }
+
     public function play(server:String = null, filename:String = null):void {
         if (server) {
             _server = server;
@@ -212,6 +223,10 @@ public class MMediaPlayer extends MSprite {
             trace("Stream is null or empty:" + _filename);
             return;
         }
+        _play();
+    }
+
+    private function _play():void {
 //        trace("PlayStream:" + _server + "," + _filename);
         _connection = new NetConnection();
         _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
@@ -219,16 +234,19 @@ public class MMediaPlayer extends MSprite {
         _connection.connect(_server);
 
     }
+
     public function pause():void {
         if (_stream)
             _stream.pause();
         _ispause = true;
     }
+
     public function stop():void {
-       cleanupStream();
-        _isPlaying=false;
+        cleanupStream();
+        _isPlaying = false;
 
     }
+
     public function resume():void {
         _stream.resume();
         _ispause = false;
@@ -236,8 +254,7 @@ public class MMediaPlayer extends MSprite {
 
     public function replay():void {
         cleanupStream();
-        if (_filename)
-            _connection.connect(_server);
+        _play();
     }
 }
 }

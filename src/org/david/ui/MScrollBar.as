@@ -1,14 +1,10 @@
 package org.david.ui {
-import flash.geom.Point;
-
 import org.david.ui.core.MUIComponent;
 import org.david.ui.event.UIEvent;
-
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.geom.Rectangle;
 
 /**
  * ...
