@@ -41,7 +41,7 @@ public class MScrollContent extends MContainer {
 
     override public function set scrollRect(value:Rectangle):void {
         super.scrollRect = value;
-        trace(value.x, value.y);
+//        trace(value.x, value.y);
         if (background) {
             background.width = value.width;
             background.height = value.height;

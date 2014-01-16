@@ -29,13 +29,16 @@ public class MMediaPlayer extends MSprite {
     private var _filename:String;
     private var _start:Number = 0;
     private var _autoRetry:Boolean;
+    private var _log:Boolean;
 
-    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1) {
+    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1, log:Boolean = true) {
         super();
 
         _autoRetry = autoRetry;
 
         _bufferTime = bufferTime;
+
+        _log = log;
 
         if (debug) {
             setInterval(onEnterFrame, 1000);
@@ -94,7 +97,8 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function netStatusHandler(event:NetStatusEvent):void {
-        trace("NetStatusEvent:", event.info.code);
+        if (_log)
+            trace("NetStatusEvent:", event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
                 connectStream();
@@ -223,6 +227,7 @@ public class MMediaPlayer extends MSprite {
             trace("Stream is null or empty:" + _filename);
             return;
         }
+        cleanupStream();
         _play();
     }
 
