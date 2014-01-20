@@ -147,6 +147,7 @@ public class MStreamPublisher extends EventDispatcher {
                         }
                     }
                     _microphone.codec = SoundCodec.SPEEX;
+                    _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
                     _microphone.rate = _setting.rate;
                     _publishStream.attachAudio(_microphone);
