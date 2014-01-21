@@ -99,7 +99,7 @@ public class MMediaPlayer extends MSprite {
 
     private function netStatusHandler(event:NetStatusEvent):void {
         if (_log)
-        trace("NetStatusEvent:", event.info.code);
+            trace("NetStatusEvent:", event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
                 connectStream();
