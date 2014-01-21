@@ -22,6 +22,7 @@ public class MMediaPlayer extends MSprite {
     public static const Buffering:String = "Player.Buffering";
     public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
+    public static const NetConnectionStatus:String="NetConnectionStatus";
     private var _connection:NetConnection;
     protected var _stream:NetStream;
     private var _bufferTime:Number;
@@ -29,13 +30,16 @@ public class MMediaPlayer extends MSprite {
     private var _filename:String;
     private var _start:Number = 0;
     private var _autoRetry:Boolean;
+    private var _log:Boolean;
 
-    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1) {
+    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1, log:Boolean = true) {
         super();
 
         _autoRetry = autoRetry;
 
         _bufferTime = bufferTime;
+
+        _log = log;
 
         if (debug) {
             setInterval(onEnterFrame, 1000);
@@ -94,6 +98,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function netStatusHandler(event:NetStatusEvent):void {
+        if (_log)
         trace("NetStatusEvent:", event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
@@ -137,6 +142,10 @@ public class MMediaPlayer extends MSprite {
 //                dispatchEvent(new UIEvent(AutoSize));
                 break;
             case "NetConnection.Connect.Closed":
+                    dispatchEvent(new UIEvent(NetConnectionStatus,"closed"));
+                break;
+            case "NetConnection.Connect.Failed":
+                    dispatchEvent(new UIEvent(NetConnectionStatus,"failed"));
                 break;
         }
     }
@@ -223,6 +232,7 @@ public class MMediaPlayer extends MSprite {
             trace("Stream is null or empty:" + _filename);
             return;
         }
+        cleanupStream();
         _play();
     }
 
