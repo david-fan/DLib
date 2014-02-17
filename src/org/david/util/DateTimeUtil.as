@@ -46,7 +46,7 @@ public class DateTimeUtil {
      * @return 00:00:00
      */
 
-    public static function getFormatTimeStr(time:int):String {
+    public static function getFormatTimeStr(time:Number):String {
         var h:int = int(time / HOUR);
         var m:int = int(time % HOUR / MINUTE);
         var s:int = int(time % HOUR % MINUTE / SECOND);
