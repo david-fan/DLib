@@ -188,6 +188,7 @@ public class MStreamPublisher extends EventDispatcher {
                     metaData.width = _setting.width;
                     metaData.height = _setting.height;
                     metaData.framerate = _setting.fps;
+                    metaData.videodatarate=_setting.buffer;
                     _publishStream.send("@setDataFrame", "onMetaData", metaData);
                 }
 

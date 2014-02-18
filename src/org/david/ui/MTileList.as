@@ -52,7 +52,7 @@ public class MTileList extends MUIComponent {
         _olditems = _items;
         _items = new Array();
         removeAllChildren(true);
-        _source = value;
+        _source = value||[];
         for (var row:int = 0; row < this._cVCount; row++) {
             for (var col:int = 0; col < this._cHCount; col++) {
                 var index:int = row * _cHCount + col;

@@ -23,7 +23,7 @@ public class MVideoPlayer extends MMediaPlayer {
 
     public static const AutoSize:String = "Player.SizeChange";
 
-    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1,w:int = 0, h:int = 0, autoResize:Boolean = true) {
+    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1,w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
         super(autoRetry, debug, bufferTime);
 
 
@@ -42,7 +42,7 @@ public class MVideoPlayer extends MMediaPlayer {
         } else
             _video = new Video(_videoWidth, _videoHeight);
 
-        _autoResize = autoResize;
+        _keepDefaultAspect = keepDefaultAspect;
         addChild(_video);
     }
 
@@ -52,7 +52,7 @@ public class MVideoPlayer extends MMediaPlayer {
     private var _bg:Sprite;
     private var _videoWidth:Number = 640;
     private var _videoHeight:Number = 480;
-    private var _autoResize:Boolean;
+    private var _keepDefaultAspect:Boolean;
 
 
     private var _bufferSprite:DisplayObject;
@@ -78,11 +78,23 @@ public class MVideoPlayer extends MMediaPlayer {
 
     override public function onMetaData(info:Object):void {
         super.onMetaData(info);
-        if (_autoResize) {
-            _videoWidth = info.width;
-            _videoHeight = info.height;
-            _bg.width = _video.width = _videoWidth;
-            _bg.height = _video.height = _videoHeight;
+        if (_keepDefaultAspect) {
+//            _video.width = info.width;
+//            _video.height = info.height;
+            _bg.width=_videoWidth;
+            _bg.height=_videoHeight;
+
+            var sx:Number =  _videoWidth/info.width;
+            var sy:Number =  _videoHeight/info.height;
+            if (sx > sy) {
+                _video.width = info.width * sy;
+                _video.height = info.height * sy;
+            } else {
+                _video.width =  info.width * sx;
+                _video.height = info.height * sx;
+            }
+            _video.x = (_videoWidth - _video.width) / 2;
+            _video.y = (_videoHeight - _video.height) / 2;
             dispatchEvent(new UIEvent(AutoSize));
         }
     }
@@ -98,17 +110,19 @@ public class MVideoPlayer extends MMediaPlayer {
 
 
     public function resize(w:Number, h:Number):void {
-        _bg.width = w;
-        _bg.height = h;
-        if (_videoHeight > 0 && _videoWidth > 0) {
-            var sx:Number = w / _videoWidth;
-            var sy:Number = h / _videoHeight;
+        _bg.width = _videoWidth=w;
+        _bg.height =_videoHeight= h;
+        if(_metaData==null)
+            return;
+        if (w > 0 && h > 0) {
+            var sx:Number = w / _metaData.width;
+            var sy:Number = h / _metaData.height;
             if (sx > sy) {
-                _video.width = _videoWidth * sy;
-                _video.height = _videoHeight * sy;
+                _video.width = _metaData.width * sy;
+                _video.height = _metaData.height * sy;
             } else {
-                _video.width = _videoWidth * sx;
-                _video.height = _videoHeight * sx;
+                _video.width = _metaData.width * sx;
+                _video.height = _metaData.height * sx;
             }
             _video.x = (w - _video.width) / 2;
             _video.y = (h - _video.height) / 2;

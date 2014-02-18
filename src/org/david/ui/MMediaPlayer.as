@@ -22,6 +22,7 @@ public class MMediaPlayer extends MSprite {
     public static const Buffering:String = "Player.Buffering";
     public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
+    public static const NetConnectionStatus:String="NetConnectionStatus";
     private var _connection:NetConnection;
     protected var _stream:NetStream;
     private var _bufferTime:Number;
@@ -30,6 +31,7 @@ public class MMediaPlayer extends MSprite {
     private var _start:Number = 0;
     private var _autoRetry:Boolean;
     private var _log:Boolean;
+    protected var _metaData:Object;
 
     public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1, log:Boolean = true) {
         super();
@@ -141,6 +143,10 @@ public class MMediaPlayer extends MSprite {
 //                dispatchEvent(new UIEvent(AutoSize));
                 break;
             case "NetConnection.Connect.Closed":
+                    dispatchEvent(new UIEvent(NetConnectionStatus,"closed"));
+                break;
+            case "NetConnection.Connect.Failed":
+                    dispatchEvent(new UIEvent(NetConnectionStatus,"failed"));
                 break;
         }
     }
@@ -173,7 +179,8 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function onMetaData(info:Object):void {
-        trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate + " videodatarate=" + info.videodatarate);
+        _metaData=info;
+        trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
 
     }
 
@@ -208,7 +215,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function setVolume():void {
-        if (_stream) {
+        if (_stream&&_connection.connected) {
             if (_mute)
                 _stream.soundTransform = new SoundTransform(0);
             else
