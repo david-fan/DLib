@@ -173,7 +173,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function onMetaData(info:Object):void {
-        trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
+        trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate + " videodatarate=" + info.videodatarate);
 
     }
 
