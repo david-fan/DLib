@@ -153,9 +153,9 @@ public class DateTimeUtil {
     }
 
     /**
-     * 格式: 2009/12/11 09:00
+     * 格式: 2009/12/11 09:00:00
      */
-    public static function getDateString(date:Date):String {
+    public static function getDateString(date:Date, hasDateStr:Boolean = true):String {
         var dYear:String = String(date.getFullYear());
 
         var dMouth:String = String((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
@@ -164,14 +164,16 @@ public class DateTimeUtil {
 
         var ret:String = "";
 
-        ret += dYear + "/" + dMouth + "/" + dDate + " ";
+        if (hasDateStr)
+            ret += dYear + "/" + dMouth + "/" + dDate + " ";
 
         // ret += DAYS[date.getDay()] + "";
 
-        ret += ((date.getHours() < 10) ? "0" : "") + date.getHours();
+        ret += ((date.getHours() < 10) ? "0" : "") + date.getHours() + ":";
 
-        ret += ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();
+        ret += ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes() + ":";
 
+        ret += ((date.getSeconds() < 10) ? "0" : "") + date.getSeconds();
         // 想要获取秒的话，date.getSeconds() ，语句同小时、分
 
         return ret;
