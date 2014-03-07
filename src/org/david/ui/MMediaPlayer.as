@@ -204,7 +204,7 @@ public class MMediaPlayer extends MSprite {
     protected function cleanupStream():void {
         if (_stream != null) {
             _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-            _stream.close();
+            _stream.dispose();
             _stream = null;
         }
         if (_connection != null) {

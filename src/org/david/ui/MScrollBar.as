@@ -16,16 +16,16 @@ import flash.events.MouseEvent;
 public class MScrollBar extends MUIComponent {
     public static const ValueChange:String = "MScrollBar.ValueChange";
     //
-    private var _slide:DisplayObject;
-    private var _thumb:MButton;
+    protected var _slide:DisplayObject;
+    protected var _thumb:MButton;
     private var _value:Number = 0;
     private var _direction:String;
     private var _move:Boolean;
     private var _maxX:int;
     private var _maxY:int;
     //
-    private var _progess:DisplayObject;
-    private var _progressMask:Sprite;
+    protected var _progess:DisplayObject;
+    protected var _progressMask:Sprite;
     private var _immediately:Boolean;
 
     public function MScrollBar(slide:DisplayObject, thumb:DisplayObject, direction:String, progress:DisplayObject = null, immediately:Boolean = true) {
@@ -118,9 +118,11 @@ public class MScrollBar extends MUIComponent {
 
     private function stopMove(e:MouseEvent):void {
 //        _thumb.stopDrag();
-        _move = false;
-        if (!_immediately)
-            dispatchEvent(new UIEvent(ValueChange, _value));
+        if (_move == true) {
+            _move = false;
+            if (!_immediately)
+                dispatchEvent(new UIEvent(ValueChange, _value));
+        }
     }
 
     private function onMouseMove(e:MouseEvent):void {
