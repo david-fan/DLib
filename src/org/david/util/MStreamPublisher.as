@@ -14,6 +14,7 @@ import flash.media.H264Profile;
 import flash.media.H264VideoStreamSettings;
 import flash.media.Microphone;
 import flash.media.SoundCodec;
+import flash.media.SoundTransform;
 import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.ObjectEncoding;
@@ -135,6 +136,7 @@ public class MStreamPublisher extends EventDispatcher {
         switch (evt.info.code) {
             case "NetConnection.Connect.Success" :
                 _publishStream = new NetStream(publishConnection);
+//                    _publishStream.soundTransform=new SoundTransform(3);
                 _publishStream.addEventListener(NetStatusEvent.NET_STATUS, publishStreamStatus);
                 if (_audio) {
                     // microphone and camera
