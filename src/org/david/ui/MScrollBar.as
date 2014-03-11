@@ -202,10 +202,10 @@ public class MScrollBar extends MUIComponent {
 
                 break;
             case MDirection.Vertical:
-                if (_careThumbSize)
-                    _thumb.y = this.mouseY - _thumb.height / 2;
-                else
-                    _thumb.y = this.mouseY;
+                    if(_careThumbSize)
+                _thumb.y = this.mouseY - _thumb.height / 2;
+                    else
+                    _thumb.y=this.mouseY;
                 if (_thumb.y < 0)
                     _thumb.y = 0;
                 var my:Number = _slide.height - _thumb.height;

@@ -46,7 +46,7 @@ public class MStreamPublisher extends EventDispatcher {
     private var _video:Boolean;
     private var _audio:Boolean;
 
-    private var _setting:Object = {width: 600, height: 480, fps: 25, quality: 0, buffer: 500, rate: 22,keyframes:5};
+    private var _setting:Object = {width: 600, height: 480, fps: 25, quality: 0, buffer: 500, rate: 22, keyframes: 5};
 
 
     public function get publishing():Boolean {
@@ -170,13 +170,13 @@ public class MStreamPublisher extends EventDispatcher {
 //                    var cameraBit:int = 400;
 
                     var quality:int = 0;
-                    _camera.setKeyFrameInterval(_setting.keyframes);
+                    _camera.setKeyFrameInterval(_setting.fps * _setting.keyframes);
                     _camera.setMode(_setting.width, _setting.height, _setting.fps);
                     _camera.setQuality(_setting.buffer * 128, _setting.quality);
 
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
                     h264Settings.setProfileLevel(H264Profile.BASELINE, "3");
-                    h264Settings.setKeyFrameInterval(_setting.keyframes);
+                    h264Settings.setKeyFrameInterval(_setting.fps * _setting.keyframes);
                     h264Settings.setMode(_setting.width, _setting.height, _setting.fps);
                     h264Settings.setQuality(_setting.buffer * 128, quality);
                     _publishStream.videoStreamSettings = h264Settings;
@@ -190,7 +190,7 @@ public class MStreamPublisher extends EventDispatcher {
                     metaData.width = _setting.width;
                     metaData.height = _setting.height;
                     metaData.framerate = _setting.fps;
-                    metaData.videodatarate=_setting.buffer;
+                    metaData.videodatarate = _setting.buffer;
                     _publishStream.send("@setDataFrame", "onMetaData", metaData);
                 }
 
