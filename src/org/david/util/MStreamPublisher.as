@@ -46,7 +46,7 @@ public class MStreamPublisher extends EventDispatcher {
     private var _video:Boolean;
     private var _audio:Boolean;
 
-    private var _setting:Object = {width: 600, height: 480, fps: 25, quality: 0, buffer: 500, rate: 22, keyframes: 5};
+    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 3};
 
 
     public function get publishing():Boolean {
