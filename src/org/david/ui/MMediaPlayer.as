@@ -157,11 +157,13 @@ public class MMediaPlayer extends MSprite {
     }
 
     protected function connectStream():void {
-        _stream = new NetStream(_connection);
-        _stream.bufferTime = _bufferTime;
-        _stream.maxPauseBufferTime = 120;
-        _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-        _stream.client = this;
+        if (_stream == null) {
+            _stream = new NetStream(_connection);
+            _stream.bufferTime = _bufferTime;
+            _stream.maxPauseBufferTime = 120;
+            _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _stream.client = this;
+        }
 
         if (_start <= 0)
             _start = getTimer();
@@ -201,17 +203,21 @@ public class MMediaPlayer extends MSprite {
         trace("stream onFI:" + infoObj);
     }
 
-    protected function cleanupStream():void {
+    protected function cleanupStream(dispose:Boolean = false):void {
         if (_stream != null) {
-            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-            _stream.dispose();
-            _stream = null;
+            _stream.close();
+            if (dispose) {
+                _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+                _stream = null;
+            }
         }
         if (_connection != null) {
-            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
-            _connection = null;
+            if (dispose) {
+                _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+                _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                _connection = null;
+            }
         }
     }
 
@@ -241,9 +247,11 @@ public class MMediaPlayer extends MSprite {
 
     private function _play():void {
 //        trace("PlayStream:" + _server + "," + _filename);
-        _connection = new NetConnection();
-        _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-        _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+        if (_connection == null) {
+            _connection = new NetConnection();
+            _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+        }
         _connection.connect(_server);
 
     }
@@ -255,7 +263,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function stop():void {
-        cleanupStream();
+        cleanupStream(true);
         _isPlaying = false;
 
     }

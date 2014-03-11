@@ -39,7 +39,7 @@ public class MScrollBar extends MUIComponent {
         this._immediately = immediately;
         switch (_direction) {
             case MDirection.Horizon:
-                _maxX = _slide.width - _thumb.width;
+                _maxX = _slide.width;// - _thumb.width;
                 _maxY = 0;
                 _thumb.x = 0;
                 var ty:Number = (_slide.height - _thumb.height) / 2;
@@ -47,7 +47,7 @@ public class MScrollBar extends MUIComponent {
                 break;
             case MDirection.Vertical:
                 _maxX = 0;
-                _maxY = _slide.height - _thumb.height;
+                _maxY = _slide.height;// - _thumb.height;
                 var tx:Number = ( _slide.width - _thumb.width) / 2;
                 _thumb.x = tx;
                 _thumb.y = 0;
@@ -130,7 +130,7 @@ public class MScrollBar extends MUIComponent {
 //            if (_in3d) {
             switch (_direction) {
                 case MDirection.Horizon:
-                    _thumb.x = this.mouseX - _thumb.width / 2;
+                    _thumb.x = this.mouseX;// - _thumb.width / 2;
                     if (_thumb.x < 0)
                         _thumb.x = 0;
                     if (_thumb.x > _maxX)
@@ -140,7 +140,7 @@ public class MScrollBar extends MUIComponent {
                         this._progressMask.width = this._progess.width * _value;
                     break;
                 case MDirection.Vertical:
-                    _thumb.y = this.mouseY - _thumb.height / 2;
+                    _thumb.y = this.mouseY;// - _thumb.height / 2;
                     if (_thumb.y < 0)
                         _thumb.y = 0;
                     if (_thumb.y > _maxY)
@@ -173,24 +173,24 @@ public class MScrollBar extends MUIComponent {
     private function onSlideClick(e:MouseEvent):void {
         switch (_direction) {
             case MDirection.Horizon:
-                _thumb.x = this.mouseX - _thumb.width / 2;
-                if (_thumb.x < 0)
-                    _thumb.x = 0;
-                var mx:Number = _slide.width - _thumb.width;
-                if (_thumb.x > mx)
-                    _thumb.x = mx;
+                _thumb.x = this.mouseX;// - _thumb.width / 2;
+//                if (_thumb.x < 0)
+//                    _thumb.x = 0;
+//                var mx:Number = _slide.width - _thumb.width;
+//                if (_thumb.x > mx)
+//                    _thumb.x = mx;
                 _value = _thumb.x / _maxX;
                 if (this._progressMask)
                     this._progressMask.width = this._progess.width * _value;
 
                 break;
             case MDirection.Vertical:
-                _thumb.y = this.mouseY - _thumb.height / 2;
-                if (_thumb.y < 0)
-                    _thumb.y = 0;
-                var my:Number = _slide.height - _thumb.height;
-                if (_thumb.y > my)
-                    _thumb.y = my;
+                _thumb.y = this.mouseY;// - _thumb.height / 2;
+//                if (_thumb.y < 0)
+//                    _thumb.y = 0;
+//                var my:Number = _slide.height - _thumb.height;
+//                if (_thumb.y > my)
+//                    _thumb.y = my;
                 _value = _thumb.y / _maxY;
                 if (this._progressMask)
                     this._progressMask.height = this._progess.height * _value;
