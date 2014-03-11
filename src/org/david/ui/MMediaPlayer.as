@@ -199,6 +199,10 @@ public class MMediaPlayer extends MSprite {
         trace("onPlayStatus: time=" + info.time + " name=" + info.name + " type=" + info.type + "code=" + info.code + "level=" + info.level);
     }
 
+    public function onLastSecond(info:Object):void {
+        trace("onLastSecond:" + info);
+    }
+
     public function onFI(infoObj:Object):void {
         trace("stream onFI:" + infoObj);
     }
