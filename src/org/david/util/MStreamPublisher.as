@@ -29,6 +29,7 @@ public class MStreamPublisher extends EventDispatcher {
     public static var BadName:String = "NetStream.Publish.BadName";
     public static var NoCam:String = "NoCam";
     public static var NoMic:String = "NoMic";
+    public static var MicCamMute:String = "MicCamMute";
     public static var Stop:String = "Stop";
 
     public static var PublishStart:String = "MStreamPublisher.PublishStart";
@@ -148,6 +149,10 @@ public class MStreamPublisher extends EventDispatcher {
                             return;
                         }
                     }
+                    if (_microphone.muted) {
+                        cleanupPublishedStream(MicCamMute);
+                        return;
+                    }
                     _microphone.codec = SoundCodec.SPEEX;
                     _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
@@ -168,6 +173,11 @@ public class MStreamPublisher extends EventDispatcher {
 //                    //var keyframe:int = 1;
 //                    var cameraFps:int = 25;
 //                    var cameraBit:int = 400;
+
+                    if (_camera.muted) {
+                        cleanupPublishedStream(MicCamMute);
+                        return;
+                    }
 
                     var quality:int = 0;
                     _camera.setKeyFrameInterval(_setting.fps * _setting.keyframes);
