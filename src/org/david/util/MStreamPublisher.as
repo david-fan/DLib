@@ -211,7 +211,7 @@ public class MStreamPublisher extends EventDispatcher {
             if (_microphone.muted) {
                 _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
 //                cleanupPublishedStream(MicCamMute);
-                Security.exactSettings = true;
+//                Security.exactSettings = true;
                 Security.showSettings(SecurityPanel.PRIVACY);
                 return;
             }
@@ -228,7 +228,7 @@ public class MStreamPublisher extends EventDispatcher {
             if (_camera.muted) {
                 _camera.addEventListener(StatusEvent.STATUS, statusHandler);
 //                cleanupPublishedStream(MicCamMute);
-                Security.exactSettings = true;
+//                Security.exactSettings = true;
                 Security.showSettings(SecurityPanel.PRIVACY);
                 return;
             }
