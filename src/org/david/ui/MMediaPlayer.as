@@ -13,6 +13,7 @@ import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.utils.getTimer;
 import flash.utils.setInterval;
+import flash.utils.setTimeout;
 
 import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
@@ -108,8 +109,9 @@ public class MMediaPlayer extends MSprite {
             case "NetStream.Play.StreamNotFound":
                 trace("Stream not found: " + _filename);
                 if (_autoRetry) {
-                    trace("AutoRetry url:" + _filename);
-                    play();
+                    trace("AutoRetry :" + _filename + " in 2 second");
+                    setTimeout(_play, 2 * 1000);
+//                    play();
                 }
                 break;
             case "NetStream.Play.Start":
@@ -117,10 +119,10 @@ public class MMediaPlayer extends MSprite {
                 dispatchEvent(new UIEvent(PlayStart));
                 break;
             case "NetStream.Play.Stop":
-                if (_autoRetry) {
-                    trace("AutoRetry url:" + _filename);
-                    play();
-                }
+//                if (_autoRetry) {
+//                    trace("AutoRetry url:" + _filename);
+//                    play();
+//                }
             case "NetStream.Buffer.Flush":
                 _isPlaying = false;
                 break;

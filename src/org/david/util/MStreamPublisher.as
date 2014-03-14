@@ -50,6 +50,8 @@ public class MStreamPublisher extends EventDispatcher {
     private var _video:Boolean;
     private var _audio:Boolean;
 
+    private var _muteMicCam:Boolean;
+
     private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 48};
 
 
@@ -140,24 +142,8 @@ public class MStreamPublisher extends EventDispatcher {
         switch (evt.info.code) {
             case "NetConnection.Connect.Success" :
                 _publishStream = new NetStream(publishConnection);
-//                    _publishStream.soundTransform=new SoundTransform(3);
                 _publishStream.addEventListener(NetStatusEvent.NET_STATUS, publishStreamStatus);
                 if (_audio) {
-                    // microphone and camera
-                    if (_microphone == null) {
-                        _microphone = Microphone.getMicrophone();
-                        if (_microphone == null) {
-                            cleanupPublishedStream(NoMic);
-//                            noCamMicAlert("没有检测到可用的麦克风");
-                            return;
-                        }
-                    }
-                    _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
-//                    if (_microphone.muted) {
-//                        Security.showSettings(SecurityPanel.PRIVACY);
-//                        cleanupPublishedStream(MicCamMute);
-//                        return;
-//                    }
                     _microphone.codec = SoundCodec.SPEEX;
                     _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
@@ -165,39 +151,17 @@ public class MStreamPublisher extends EventDispatcher {
                     _publishStream.attachAudio(_microphone);
                 }
                 if (_video) {
-                    if (_camera == null) {
-                        _camera = Camera.getCamera();
-                        if (_camera == null) {
-                            cleanupPublishedStream(NoCam);
-//                            noCamMicAlert("没有检测到可用的摄像头");
-                            return;
-                        }
-                    }
-//                    var cameraWidth:int = 320;
-//                    var cameraHeight:int = 240;
-//                    //var keyframe:int = 1;
-//                    var cameraFps:int = 25;
-//                    var cameraBit:int = 400;
-
-                    _camera.addEventListener(StatusEvent.STATUS, statusHandler);
-//                    if (_camera.muted) {
-//                        Security.showSettings(SecurityPanel.PRIVACY);
-//                        cleanupPublishedStream(MicCamMute);
-//                        return;
-//                    }
-
-                    var quality:int = 0;
                     _camera.setKeyFrameInterval(_setting.keyframes);
                     _camera.setMode(_setting.width, _setting.height, _setting.fps);
                     _camera.setQuality(_setting.buffer * 128, _setting.quality);
 
+                    var quality:int = 0;
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
                     h264Settings.setProfileLevel(H264Profile.BASELINE, "3");
                     h264Settings.setKeyFrameInterval(_setting.keyframes);
                     h264Settings.setMode(_setting.width, _setting.height, _setting.fps);
                     h264Settings.setQuality(_setting.buffer * 128, quality);
                     _publishStream.videoStreamSettings = h264Settings;
-
                     _publishStream.attachCamera(_camera);
                 }
                 if (_video || _audio)
@@ -224,11 +188,53 @@ public class MStreamPublisher extends EventDispatcher {
     public function startPublish(setting:Object = null):void {
         this.setting = setting;
         cleanupPublishedStream();
+        checkMicCam();
+    }
+
+    private function makeConnection():void {
         publishConnection = new NetConnection();
         publishConnection.objectEncoding = ObjectEncoding.AMF0;
         publishConnection.addEventListener(NetStatusEvent.NET_STATUS, publishConnectionStatus);
         //var server:String = _rtmpUrl.substr(0, _rtmpUrl.lastIndexOf("\/"));
         publishConnection.connect(_server);
+    }
+
+    private function checkMicCam():void {
+        if (_audio) {
+            if (_microphone == null) {
+                _microphone = Microphone.getMicrophone();
+                if (_microphone == null) {
+                    cleanupPublishedStream(NoMic);
+                    return;
+                }
+            }
+            if (_microphone.muted) {
+                _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
+//                cleanupPublishedStream(MicCamMute);
+                Security.exactSettings = true;
+                Security.showSettings(SecurityPanel.PRIVACY);
+                return;
+            }
+        }
+        if (_video) {
+            if (_camera == null) {
+                _camera = Camera.getCamera();
+                if (_camera == null) {
+                    cleanupPublishedStream(NoCam);
+                    return;
+                }
+            }
+
+            if (_camera.muted) {
+                _camera.addEventListener(StatusEvent.STATUS, statusHandler);
+//                cleanupPublishedStream(MicCamMute);
+                Security.exactSettings = true;
+                Security.showSettings(SecurityPanel.PRIVACY);
+                return;
+            }
+        }
+        if (_audio || _video)
+            makeConnection();
     }
 
     public function stopPublish():void {
@@ -251,7 +257,9 @@ public class MStreamPublisher extends EventDispatcher {
     private function statusHandler(e:StatusEvent):void {
         if (e.code == "Microphone.Muted" || e.code == "Camera.Muted") {
             cleanupPublishedStream(MicCamMute);
-            Security.showSettings(SecurityPanel.PRIVACY);
+//            Security.showSettings(SecurityPanel.PRIVACY);
+        } else {
+            makeConnection();
         }
     }
 
