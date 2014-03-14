@@ -9,6 +9,7 @@ package org.david.util {
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.NetStatusEvent;
+import flash.events.StatusEvent;
 import flash.media.Camera;
 import flash.media.H264Profile;
 import flash.media.H264VideoStreamSettings;
@@ -18,6 +19,8 @@ import flash.media.SoundTransform;
 import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.ObjectEncoding;
+import flash.system.Security;
+import flash.system.SecurityPanel;
 
 import org.david.ui.event.UIEvent;
 
@@ -143,16 +146,18 @@ public class MStreamPublisher extends EventDispatcher {
                     // microphone and camera
                     if (_microphone == null) {
                         _microphone = Microphone.getMicrophone();
-                        if (_microphone == null || _microphone.muted) {
+                        if (_microphone == null) {
                             cleanupPublishedStream(NoMic);
 //                            noCamMicAlert("没有检测到可用的麦克风");
                             return;
                         }
                     }
-                    if (_microphone.muted) {
-                        cleanupPublishedStream(MicCamMute);
-                        return;
-                    }
+                    _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
+//                    if (_microphone.muted) {
+//                        Security.showSettings(SecurityPanel.PRIVACY);
+//                        cleanupPublishedStream(MicCamMute);
+//                        return;
+//                    }
                     _microphone.codec = SoundCodec.SPEEX;
                     _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
@@ -162,7 +167,7 @@ public class MStreamPublisher extends EventDispatcher {
                 if (_video) {
                     if (_camera == null) {
                         _camera = Camera.getCamera();
-                        if (_camera == null || _camera.muted) {
+                        if (_camera == null) {
                             cleanupPublishedStream(NoCam);
 //                            noCamMicAlert("没有检测到可用的摄像头");
                             return;
@@ -174,10 +179,12 @@ public class MStreamPublisher extends EventDispatcher {
 //                    var cameraFps:int = 25;
 //                    var cameraBit:int = 400;
 
-                    if (_camera.muted) {
-                        cleanupPublishedStream(MicCamMute);
-                        return;
-                    }
+                    _camera.addEventListener(StatusEvent.STATUS, statusHandler);
+//                    if (_camera.muted) {
+//                        Security.showSettings(SecurityPanel.PRIVACY);
+//                        cleanupPublishedStream(MicCamMute);
+//                        return;
+//                    }
 
                     var quality:int = 0;
                     _camera.setKeyFrameInterval(_setting.fps * _setting.keyframes);
@@ -239,6 +246,13 @@ public class MStreamPublisher extends EventDispatcher {
 
     public function get setting():Object {
         return _setting;
+    }
+
+    private function statusHandler(e:StatusEvent):void {
+        if (e.code == "Microphone.Muted" || e.code == "Camera.Muted") {
+            cleanupPublishedStream(MicCamMute);
+            Security.showSettings(SecurityPanel.PRIVACY);
+        }
     }
 
 //    private function noCamMicAlert(message:String):void {
