@@ -148,6 +148,11 @@ public class MVideoPlayer extends MMediaPlayer {
         _video.attachNetStream(_stream);
     }
 
+    override protected function cleanupStream(dispose:Boolean=false):void{
+        super.cleanupStream(dispose);
+        _video.attachNetStream(null);
+    }
+
     override public function stop():void {
         super.stop();
         _video.attachCamera(null);

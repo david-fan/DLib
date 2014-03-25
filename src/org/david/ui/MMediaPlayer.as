@@ -212,18 +212,18 @@ public class MMediaPlayer extends MSprite {
     protected function cleanupStream(dispose:Boolean = false):void {
         if (_stream != null) {
             _stream.close();
-            if (dispose) {
+//            if (dispose) {
                 _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
                 _stream = null;
-            }
+//            }
         }
         if (_connection != null) {
             _connection.close();
-            if (dispose) {
+//            if (dispose) {
                 _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
                 _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
                 _connection = null;
-            }
+//            }
         }
     }
 
