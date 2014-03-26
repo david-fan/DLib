@@ -209,7 +209,7 @@ public class MMediaPlayer extends MSprite {
         trace("stream onFI:" + infoObj);
     }
 
-    protected function cleanupStream(dispose:Boolean = false):void {
+    protected function cleanupStream():void {
         if (_stream != null) {
             //if (dispose) {
                 _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
@@ -269,7 +269,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function stop():void {
-        cleanupStream(true);
+        cleanupStream();
         _isPlaying = false;
 
     }
