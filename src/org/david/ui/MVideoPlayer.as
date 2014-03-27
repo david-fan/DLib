@@ -23,8 +23,8 @@ public class MVideoPlayer extends MMediaPlayer {
 
     public static const AutoSize:String = "Player.SizeChange";
 
-    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1,w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
-        super(autoRetry, debug, bufferTime);
+    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false,w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
+        super(autoRetry, debug);
 
 
         //_autoPlay = autoPlay;
