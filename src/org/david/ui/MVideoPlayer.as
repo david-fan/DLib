@@ -23,8 +23,8 @@ public class MVideoPlayer extends MMediaPlayer {
 
     public static const AutoSize:String = "Player.SizeChange";
 
-    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1,w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
-        super(autoRetry, debug, bufferTime);
+    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false,w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
+        super(autoRetry, debug);
 
 
         //_autoPlay = autoPlay;
@@ -148,8 +148,8 @@ public class MVideoPlayer extends MMediaPlayer {
         _video.attachNetStream(_stream);
     }
 
-    override protected function cleanupStream(dispose:Boolean=false):void{
-        super.cleanupStream(dispose);
+    override protected function cleanupStream():void{
+        super.cleanupStream();
         _video.attachNetStream(null);
     }
 

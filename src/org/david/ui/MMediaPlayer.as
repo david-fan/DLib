@@ -26,7 +26,7 @@ public class MMediaPlayer extends MSprite {
     public static const NetConnectionStatus:String = "NetConnectionStatus";
     private var _connection:NetConnection;
     protected var _stream:NetStream;
-    private var _bufferTime:Number;
+//    private var _bufferTime:Number;
     private var _server:String;
     private var _filename:String;
     private var _start:Number = 0;
@@ -34,12 +34,12 @@ public class MMediaPlayer extends MSprite {
     private var _log:Boolean;
     protected var _metaData:Object;
 
-    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, bufferTime:Number = 0.1, log:Boolean = true) {
+    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true) {
         super();
 
         _autoRetry = autoRetry;
 
-        _bufferTime = bufferTime;
+//        _bufferTime = bufferTime;
 
         _log = log;
 
@@ -161,7 +161,7 @@ public class MMediaPlayer extends MSprite {
     protected function connectStream():void {
         if (_stream == null) {
             _stream = new NetStream(_connection);
-            _stream.bufferTime = _bufferTime;
+            _stream.bufferTime = _server ? 0 : 01;
             _stream.maxPauseBufferTime = 120;
             _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.client = this;
@@ -209,20 +209,20 @@ public class MMediaPlayer extends MSprite {
         trace("stream onFI:" + infoObj);
     }
 
-    protected function cleanupStream(dispose:Boolean = false):void {
+    protected function cleanupStream():void {
         if (_stream != null) {
             //if (dispose) {
-                _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-                _stream.close();
-                _stream = null;
-           // }
+            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _stream.close();
+            _stream = null;
+            // }
         }
         if (_connection != null) {
             //if (dispose) {
-                _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-                _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-                _connection.close();
-                _connection = null;
+            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            _connection.close();
+            _connection = null;
             //}
         }
     }
@@ -269,7 +269,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function stop():void {
-        cleanupStream(true);
+        cleanupStream();
         _isPlaying = false;
 
     }
