@@ -1,23 +1,10 @@
 package org.david.ui {
 import flash.display.DisplayObject;
 import flash.media.Camera;
-import flash.media.SoundTransform;
-import flash.text.TextField;
-import flash.utils.getTimer;
-import flash.utils.setInterval;
-
-import org.david.ui.core.MUIComponent;
-
-import flash.events.Event;
 import flash.display.Sprite;
-import flash.events.NetStatusEvent;
-import flash.events.SecurityErrorEvent;
 import flash.media.Video;
-import flash.net.NetConnection;
-import flash.net.NetStream;
 
 import org.david.ui.event.UIEvent;
-import org.david.util.StrUtil;
 
 public class MVideoPlayer extends MMediaPlayer {
 

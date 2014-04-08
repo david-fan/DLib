@@ -1,6 +1,4 @@
 package org.david.ui {
-import com.greensock.easing.Back;
-
 import org.david.ui.core.MUIComponent;
 import org.david.ui.event.UIEvent;
 
