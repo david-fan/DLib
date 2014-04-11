@@ -54,6 +54,18 @@ public class MMediaPlayer extends MSprite {
         return _ispause;
     }
 
+    protected var _complete:Boolean;
+
+    public function get complete():Boolean {
+        return _complete;
+    }
+
+    protected var _isStop:Boolean;
+
+    public function get isStop():Boolean {
+        return _isStop;
+    }
+
     private var _isPlaying:Boolean;
 
     public function get isPlaying():Boolean {
@@ -108,7 +120,7 @@ public class MMediaPlayer extends MSprite {
                 break;
             case "NetStream.Play.StreamNotFound":
                 trace("Stream not found: " + _filename);
-                if (_autoRetry) {
+                if (!_isStop && _autoRetry) {
                     trace("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
 //                    play();
@@ -124,11 +136,14 @@ public class MMediaPlayer extends MSprite {
 //                    play();
 //                }
             case "NetStream.Buffer.Flush":
+                _isStop = true;
                 _isPlaying = false;
+                _complete = true;
                 break;
             case "NetStream.Buffer.Empty":
                 dispatchEvent(new UIEvent(Buffering));
-                buffering = true;
+                if (!_complete)
+                    buffering = true;
                 break;
             case "NetStream.Buffer.Full":
                 buffering = false;
@@ -151,6 +166,10 @@ public class MMediaPlayer extends MSprite {
             case "NetConnection.Connect.Failed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
                 break;
+//            case "NetStream.Play.Complete":
+//                _complete = true;
+//                dispatchEvent(new UIEvent(NetConnectionStatus, "complete"));
+//                break;
         }
     }
 
@@ -270,8 +289,10 @@ public class MMediaPlayer extends MSprite {
 
     public function stop():void {
         cleanupStream();
+        _isStop = true;
         _isPlaying = false;
-
+        _complete = true;
+        buffering = false;
     }
 
     public function resume():void {

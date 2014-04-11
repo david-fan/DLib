@@ -157,7 +157,7 @@ public class MStreamPublisher extends EventDispatcher {
 
                     var quality:int = 0;
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
-                    h264Settings.setProfileLevel(H264Profile.BASELINE, "3");
+                    h264Settings.setProfileLevel(H264Profile.MAIN, "1.3");
                     h264Settings.setKeyFrameInterval(_setting.keyframes);
                     h264Settings.setMode(_setting.width, _setting.height, _setting.fps);
                     h264Settings.setQuality(_setting.buffer * 128, quality);
