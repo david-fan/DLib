@@ -108,6 +108,7 @@ public class MImage extends MSprite implements IToolTipUI {
     public function set source(value:Object):void {
         if (_source == value)
             return;
+        times=0;
         _source = value;
         image = value as DisplayObject;
         if (value is String && value != "")
@@ -167,10 +168,14 @@ public class MImage extends MSprite implements IToolTipUI {
         hideWait();
         this.dispatchEvent(new UIEvent(MImage.LOAD_COMPLETE_EVENT));
     }
-
+    private var times:int=0;
     protected function onIoError(event:IOErrorEvent):void {
         trace("not load image:" + this.source);
+        if(times<3)
+            loadImg();
+        times++;
         return;
+
     }
 
     private function setSize():void {
