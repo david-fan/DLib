@@ -17,7 +17,7 @@ public class MScrollArea extends MContainer {
     private var _scrollDirection:String;
     private var _layoutDirection:String;
     protected var _scrollContent:MScrollContent;
-    private var _scrollRect:Rectangle;
+//    private var _scrollRect:Rectangle;
 
     public function MScrollArea(scrollContent:MScrollContent, scrollBar:MScrollBar, scrollRectangle:Rectangle, scrollDirection:String = null) {
         if (scrollBar) {
@@ -37,7 +37,7 @@ public class MScrollArea extends MContainer {
         super(false);
         _scrollContent = scrollContent;
         _scrollContent.cacheAsBitmap = true;
-        _scrollContent.scrollRect = _scrollRect = scrollRectangle;
+        _scrollContent.scrollRect = scrollRectangle;
         addChild(_scrollContent);
         //
         if (scrollBar == null)
@@ -139,7 +139,7 @@ public class MScrollArea extends MContainer {
         return _scroll;
     }
 
-    private function get _max():Number{
+    private function get _max():Number {
         var temp:Number;
         if (_scrollDirection == MDirection.Horizon) {
             temp = _scrollContent.contentWidth - _scrollContent.scrollRect.width;
@@ -158,13 +158,13 @@ public class MScrollArea extends MContainer {
 
 
     override public function get scrollRect():Rectangle {
-        return _scrollRect;
+        return _scrollContent.scrollRect;
     }
 
 
     override public function set scrollRect(value:Rectangle):void {
-        _scrollRect = value;
-        _scrollContent.scrollRect = _scrollRect;
+//        _scrollRect = value;
+        _scrollContent.scrollRect = value;
     }
 
     override public function get height():Number {
@@ -172,13 +172,14 @@ public class MScrollArea extends MContainer {
     }
 
     override public function set height(value:Number):void {
+        var tempRect:Rectangle = _scrollContent.scrollRect;
         if (_scrollDirection == MDirection.Vertical) {
-            _scrollRect.height = value;
-            _scrollContent.scrollRect = _scrollRect;
+            tempRect.height = value;
+            _scrollContent.scrollRect = tempRect;
             _scrollBar.height = value;
         } else {
-            _scrollRect.height = value - _scrollBar.height;
-            _scrollContent.scrollRect = _scrollRect;
+            tempRect.height = value - _scrollBar.height;
+            _scrollContent.scrollRect = tempRect;
             _scrollBar.y = value - _scrollBar.height;
         }
     }
@@ -188,13 +189,14 @@ public class MScrollArea extends MContainer {
     }
 
     override public function set width(value:Number):void {
+        var tempRect:Rectangle = _scrollContent.scrollRect;
         if (_scrollDirection == MDirection.Vertical) {
-            _scrollRect.width = value - _scrollBar.width;
-            _scrollContent.scrollRect = _scrollRect;
+            tempRect.width = value - _scrollBar.width;
+            _scrollContent.scrollRect = tempRect;
             _scrollBar.x = value - _scrollBar.width;
         } else {
-            _scrollRect.width = value;
-            _scrollContent.scrollRect = _scrollRect;
+            tempRect.width = value;
+            _scrollContent.scrollRect = tempRect;
             _scrollBar.width = value;
         }
     }

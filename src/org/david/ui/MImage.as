@@ -1,4 +1,6 @@
 package org.david.ui {
+import flash.utils.setTimeout;
+
 import org.david.ui.core.IToolTipUI;
 import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
@@ -108,7 +110,7 @@ public class MImage extends MSprite implements IToolTipUI {
     public function set source(value:Object):void {
         if (_source == value)
             return;
-        times=0;
+        times = 0;
         _source = value;
         image = value as DisplayObject;
         if (value is String && value != "")
@@ -168,11 +170,13 @@ public class MImage extends MSprite implements IToolTipUI {
         hideWait();
         this.dispatchEvent(new UIEvent(MImage.LOAD_COMPLETE_EVENT));
     }
-    private var times:int=0;
+
+    private var times:int = 0;
+
     protected function onIoError(event:IOErrorEvent):void {
         trace("not load image:" + this.source);
-        if(times<3)
-            loadImg();
+        if (times < 3)
+            setTimeout(loadImg, 500);
         times++;
         return;
 
