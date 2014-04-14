@@ -73,6 +73,10 @@ public class MVideoPlayer extends MMediaPlayer {
             _bg.width=_videoWidth+2;
             _bg.height=_videoHeight+2;
 
+//            _video.width=_videoWidth;
+//            _video.height=_videoHeight;
+//            return;
+
             var sx:Number =  _videoWidth/info.width;
             var sy:Number =  _videoHeight/info.height;
             if (sx > sy) {
@@ -103,6 +107,9 @@ public class MVideoPlayer extends MMediaPlayer {
         _bg.height =_videoHeight= h;
         if(_metaData==null)
             return;
+//        _video.width=w;
+//        _video.height=h;
+//        return;
         if (w > 0 && h > 0) {
             var sx:Number = w / _metaData.width;
             var sy:Number = h / _metaData.height;
