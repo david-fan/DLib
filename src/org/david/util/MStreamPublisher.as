@@ -52,7 +52,7 @@ public class MStreamPublisher extends EventDispatcher {
 
     private var _muteMicCam:Boolean;
 
-    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22,keyframes:45};//keyframes: 48
+    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 45};//keyframes: 48
 
 
     public function get publishing():Boolean {
@@ -157,10 +157,11 @@ public class MStreamPublisher extends EventDispatcher {
 
                     var quality:int = 0;
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
-                    h264Settings.setProfileLevel(H264Profile.MAIN, "1.3");
+                    h264Settings.setProfileLevel(H264Profile.MAIN, "2.1");
                     h264Settings.setKeyFrameInterval(_setting.keyframes);
                     h264Settings.setMode(_setting.width, _setting.height, _setting.fps);
                     h264Settings.setQuality(_setting.buffer * 128, quality);
+//                    h264Settings.setQuality(0, 100);
                     _publishStream.videoStreamSettings = h264Settings;
                     _publishStream.attachCamera(_camera);
                 }
