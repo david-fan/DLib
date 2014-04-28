@@ -19,8 +19,8 @@ public class MScrollBar extends MUIComponent {
     private var _value:Number = 0;
     private var _direction:String;
     private var _move:Boolean;
-    private var _maxX:int;
-    private var _maxY:int;
+    protected var _maxX:int;
+    protected var _maxY:int;
     private var _careThumbSize:Boolean;
     //
     protected var _progess:DisplayObject;
