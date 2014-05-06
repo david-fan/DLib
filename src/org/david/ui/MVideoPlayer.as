@@ -18,7 +18,7 @@ public class MVideoPlayer extends MMediaPlayer {
 
 
         _bg = new Sprite();
-        _bg.graphics.beginFill(0xffffff, 1);
+        _bg.graphics.beginFill(0x000000, 1);
         _bg.graphics.drawRect(0, 0, 1, 1);
         _bg.graphics.endFill();
         addChild(_bg);
