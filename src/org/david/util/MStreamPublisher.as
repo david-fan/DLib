@@ -148,6 +148,7 @@ public class MStreamPublisher extends EventDispatcher {
                     _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
                     _microphone.rate = _setting.rate;
+                    _microphone.framesPerPacket=1;
                     _publishStream.attachAudio(_microphone);
                 }
                 if (_video) {
