@@ -8,13 +8,10 @@
  * See LICENSE.txt for full license information.
  */
 package com.hurlant.crypto.tls {
-	import flash.utils.IDataInput;
 	import flash.utils.ByteArray;
-	import com.hurlant.crypto.hash.MD5;
 	import com.hurlant.crypto.hash.HMAC;
-	import com.hurlant.crypto.hash.IHash;
 	import com.hurlant.crypto.symmetric.ICipher;
-	import com.hurlant.crypto.symmetric.IVMode;
+	import com.hurlant.crypto.symmetric.IVMode
 	import com.hurlant.util.Hex;
 	import com.hurlant.util.ArrayUtil;
 	
