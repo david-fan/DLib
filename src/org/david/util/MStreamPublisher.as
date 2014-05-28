@@ -27,7 +27,7 @@ import org.david.ui.event.UIEvent;
 public class MStreamPublisher extends EventDispatcher {
     public static var Rejected:String = "NetConnection.Connect.Rejected";
     public static var Failed:String = "NetConnection.Connect.Failed";
-    public static var Close:String = "NetConnection.Connect.Close";
+    public static var Closed:String = "NetConnection.Connect.Closed";
     public static var Start:String = "NetStream.Publish.Start";
     public static var BadName:String = "NetStream.Publish.BadName";
     public static var NoCam:String = "NoCam";
@@ -180,7 +180,7 @@ public class MStreamPublisher extends EventDispatcher {
                 break;
             case Rejected :
             case Failed :
-            case Close:
+            case Closed:
                 cleanupPublishedStream(evt.info.code);
                 break;
         }
