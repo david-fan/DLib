@@ -3,7 +3,7 @@
   <component name="FlexBuildConfigurationManager" active="DLib">
     <configurations>
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies target-player="11.1">
+        <dependencies target-player="11.8">
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
         <compiler-options />
