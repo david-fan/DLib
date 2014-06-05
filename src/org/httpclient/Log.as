@@ -14,7 +14,7 @@ package org.httpclient {
     public static const ERROR:Number = 4;
     public static const OFF:Number = 5;
     
-    public static var level:Number = 2;
+    public static var level:Number = 1;
       
     // What to do with logged string  
     private static function output(s:String):void {

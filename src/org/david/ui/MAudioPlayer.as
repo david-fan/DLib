@@ -7,8 +7,8 @@
  */
 package org.david.ui {
 public class MAudioPlayer extends MMediaPlayer {
-    public function MAudioPlayer(autoRetry:Boolean = false, debug:Boolean = false) {
-        super(autoRetry, debug);
+    public function MAudioPlayer(autoRetry:Boolean = false, debug:Boolean = false, replay:Boolean = false) {
+        super(autoRetry, debug, true, replay);
     }
 }
 }

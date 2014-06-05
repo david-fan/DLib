@@ -10,8 +10,8 @@ public class MVideoPlayer extends MMediaPlayer {
 
     public static const AutoSize:String = "Player.SizeChange";
 
-    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true) {
-        super(autoRetry, debug);
+    public function MVideoPlayer(autoRetry:Boolean = false, debug:Boolean = false, w:int = 0, h:int = 0, keepDefaultAspect:Boolean = true, replay:Boolean = false) {
+        super(autoRetry, debug, true, replay);
 
 
         //_autoPlay = autoPlay;
@@ -102,6 +102,13 @@ public class MVideoPlayer extends MMediaPlayer {
     public function resize(w:Number, h:Number):void {
         _bg.width = _videoWidth = w;
         _bg.height = _videoHeight = h;
+        if (!_keepDefaultAspect) {
+            _video.width = w;
+            _video.height = h;
+            _video.x = 0;
+            _video.y = 0;
+            return;
+        }
         if (_metaData == null)
             return;
         if (w > 0 && h > 0) {
@@ -136,15 +143,15 @@ public class MVideoPlayer extends MMediaPlayer {
         _video.attachNetStream(_stream);
     }
 
-    override protected function cleanupStream():void {
-        super.cleanupStream();
-        _video.attachNetStream(null);
-    }
+//    override protected function cleanupStream():void {
+//        super.cleanupStream();
+//        _video.attachNetStream(null);
+//    }
 
     override public function stop():void {
         super.stop();
-        _video.attachCamera(null);
-        _video.attachNetStream(null);
+//        _video.attachCamera(null);
+//        _video.attachNetStream(null);
         _video.clear();
 
     }

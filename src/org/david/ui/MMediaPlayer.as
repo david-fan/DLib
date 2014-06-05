@@ -31,16 +31,18 @@ public class MMediaPlayer extends MSprite {
     private var _filename:String;
     private var _start:Number = 0;
     private var _autoRetry:Boolean;
+    private var _replay:Boolean;
     private var _log:Boolean;
     protected var _metaData:Object;
 
-    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true) {
+    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true, replay:Boolean = false) {
         super();
 
         _autoRetry = autoRetry;
 
 //        _bufferTime = bufferTime;
 
+        _replay = replay;
         _log = log;
 
         if (debug) {
@@ -135,6 +137,12 @@ public class MMediaPlayer extends MSprite {
 //                    trace("AutoRetry url:" + _filename);
 //                    play();
 //                }
+                if (_replay)
+                    _stream.seek(1);
+                _isStop = true;
+                _isPlaying = false;
+                _complete = true;
+                break;
             case "NetStream.Buffer.Flush":
                 _isStop = true;
                 _isPlaying = false;
@@ -256,6 +264,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function play(server:String = null, filename:String = null):void {
+        trace("***play***", server, filename);
         if (server) {
             _server = server;
         }
@@ -296,7 +305,8 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function resume():void {
-        _stream.resume();
+        if (_stream)
+            _stream.resume();
         _ispause = false;
     }
 
