@@ -5,7 +5,7 @@
 package org.httpclient {
   
   import com.adobe.net.URI;
-  import com.hurlant.crypto.tls.TLSSocket;
+import com.hurlant.crypto.tls.TLSSocket;
   
   import flash.net.Socket;
   import flash.utils.ByteArray;
@@ -186,7 +186,7 @@ package org.httpclient {
       _responseBuffer = new HttpResponseBuffer(false, onProxyHeader, onProxyData, onProxyComplete);
       
       var bytes:ByteArray = new ByteArray();
-      bytes.writeUTFBytes("CONNECT " + uri.authority + ":" + ((uri.port) ? uri.port : DEFAULT_HTTPS_PORT) + " HTTP/" + HTTP_VERSION + "\r\n\r\n");
+      bytes.writeUTFBytes("CONNECT " + uri.authority + ":" + ((uri.port) ? uri.port : String(DEFAULT_HTTPS_PORT)) + " HTTP/" + HTTP_VERSION + "\r\n\r\n");
       bytes.position = 0;
       
       _socket.writeBytes(bytes);

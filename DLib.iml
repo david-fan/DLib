@@ -3,7 +3,12 @@
   <component name="FlexBuildConfigurationManager" active="DLib">
     <configurations>
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies target-player="11.8">
+        <dependencies target-player="11.1">
+          <entries>
+            <entry library-id="062872f7-8687-4acf-9dcd-b1774f3abd68">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
         <compiler-options />
@@ -21,6 +26,16 @@
     </content>
     <orderEntry type="jdk" jdkName="flex_sdk_4.6.0.23201B" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="062872f7-8687-4acf-9dcd-b1774f3abd68" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
