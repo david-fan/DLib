@@ -40,13 +40,14 @@ public class MCombobox extends MUIComponent {
 //        _currentItem = value as DisplayObject;
 //    }
 
-    private var _selected:int = 0;
+    private var _selected:int = -1;
 
     private var _source:Array;
 
     public function set source(value:Array):void {
         _source = value;
         if (_source.length > 0) {
+            _selected=0;
             _listContainer.source = _source;
             updateSelected();
         }
