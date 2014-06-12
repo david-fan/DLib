@@ -166,8 +166,10 @@ public class MStreamPublisher extends EventDispatcher {
                     _publishStream.videoStreamSettings = h264Settings;
                     _publishStream.attachCamera(_camera);
                 }
-                if (_video || _audio)
+                if (_video || _audio){
                     _publishStream.publish(_liveId, "live");
+                    trace("*****push***** : "+_server,_liveId);
+                }
                 if (_video) {
                     var metaData:Object = new Object();
                     metaData.width = _setting.width;
