@@ -3,9 +3,12 @@
   <component name="FlexBuildConfigurationManager" active="DLib">
     <configurations>
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies target-player="11.1">
+        <dependencies target-player="11.8">
           <entries>
-            <entry library-id="062872f7-8687-4acf-9dcd-b1774f3abd68">
+            <entry library-id="b59349b5-2580-49b8-9e59-19c1e6b4da42">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="2d6009ab-8fb5-4e58-b5b6-70a0ec8f4445">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -28,9 +31,19 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
-        <properties id="062872f7-8687-4acf-9dcd-b1774f3abd68" />
+        <properties id="b59349b5-2580-49b8-9e59-19c1e6b4da42" />
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="2d6009ab-8fb5-4e58-b5b6-70a0ec8f4445" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/as3httpclientlib.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

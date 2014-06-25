@@ -6,7 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.util {
-import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.NetStatusEvent;
 import flash.events.StatusEvent;
@@ -15,7 +14,6 @@ import flash.media.H264Profile;
 import flash.media.H264VideoStreamSettings;
 import flash.media.Microphone;
 import flash.media.SoundCodec;
-import flash.media.SoundTransform;
 import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.ObjectEncoding;
@@ -148,7 +146,7 @@ public class MStreamPublisher extends EventDispatcher {
                     _microphone.setSilenceLevel(0);
                     _microphone.encodeQuality = 6;
                     _microphone.rate = _setting.rate;
-                    _microphone.framesPerPacket=1;
+                    _microphone.framesPerPacket = 1;
                     _publishStream.attachAudio(_microphone);
                 }
                 if (_video) {
@@ -166,9 +164,9 @@ public class MStreamPublisher extends EventDispatcher {
                     _publishStream.videoStreamSettings = h264Settings;
                     _publishStream.attachCamera(_camera);
                 }
-                if (_video || _audio){
+                if (_video || _audio) {
                     _publishStream.publish(_liveId, "live");
-                    trace("*****push***** : "+_server,_liveId);
+                    trace("*****push***** : " + _server, _liveId);
                 }
                 if (_video) {
                     var metaData:Object = new Object();
@@ -205,40 +203,53 @@ public class MStreamPublisher extends EventDispatcher {
 
     private function checkMicCam():void {
         if (_audio) {
-            if (_microphone == null) {
-                _microphone = Microphone.getMicrophone();
-                if (_microphone == null) {
-                    cleanupPublishedStream(NoMic);
-                    return;
-                }
-            }
-            if (_microphone.muted) {
-                _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
-//                cleanupPublishedStream(MicCamMute);
-//                Security.exactSettings = true;
-                Security.showSettings(SecurityPanel.PRIVACY);
+            if (!checkMic())
                 return;
-            }
         }
         if (_video) {
-            if (_camera == null) {
-                _camera = Camera.getCamera();
-                if (_camera == null) {
-                    cleanupPublishedStream(NoCam);
-                    return;
-                }
-            }
-
-            if (_camera.muted) {
-                _camera.addEventListener(StatusEvent.STATUS, statusHandler);
-//                cleanupPublishedStream(MicCamMute);
-//                Security.exactSettings = true;
-                Security.showSettings(SecurityPanel.PRIVACY);
+            if (!checkCam())
                 return;
-            }
         }
         if (_audio || _video)
             makeConnection();
+    }
+
+    private function checkMic():Boolean {
+        if (_microphone == null) {
+            _microphone = Microphone.getMicrophone();
+            if (_microphone == null) {
+                cleanupPublishedStream(NoMic);
+                return false;
+            }
+        }
+        if (_microphone.muted) {
+            _microphone.addEventListener(StatusEvent.STATUS, statusHandler);
+//                cleanupPublishedStream(MicCamMute);
+//                Security.exactSettings = true;
+            Security.showSettings(SecurityPanel.PRIVACY);
+            return false;
+        }
+        return true;
+    }
+
+    private function checkCam():Boolean {
+
+        if (_camera == null) {
+            _camera = Camera.getCamera();
+            if (_camera == null) {
+                cleanupPublishedStream(NoCam);
+                return false;
+            }
+        }
+
+        if (_camera.muted) {
+            _camera.addEventListener(StatusEvent.STATUS, statusHandler);
+//                cleanupPublishedStream(MicCamMute);
+//                Security.exactSettings = true;
+            Security.showSettings(SecurityPanel.PRIVACY);
+            return false;
+        }
+        return true;
     }
 
     public function stopPublish():void {
@@ -259,12 +270,31 @@ public class MStreamPublisher extends EventDispatcher {
     }
 
     private function statusHandler(e:StatusEvent):void {
-        if (e.code == "Microphone.Muted" || e.code == "Camera.Muted") {
-            cleanupPublishedStream(MicCamMute);
-//            Security.showSettings(SecurityPanel.PRIVACY);
-        } else {
-            makeConnection();
-        }
+        checkMicCam();
+//        trace("e.code", e.code);
+//        if (e.code == "Microphone.Unmuted") {
+//            if (_video && !checkCam())
+//                return;
+//            makeConnection();
+//        }
+//        if (e.code == "Microphone.Muted" || e.code == "Camera.Muted") {
+//            cleanupPublishedStream(MicCamMute);
+////            Security.showSettings(SecurityPanel.PRIVACY);
+//        } else {
+//            makeConnection();
+//        }
+
+//        private function statusHandler(e:StatusEvent):void {
+//            trace("e.code", e.code);
+//            if (e.code == "Microphone.Muted")
+//                checkCam();
+//            if (e.code == "Camera.Muted") {
+//                checkMic();
+//            }
+////        cleanupPublishedStream(MicCamMute);
+//            makeConnection();
+//
+//        }
     }
 
 //    private function noCamMicAlert(message:String):void {
