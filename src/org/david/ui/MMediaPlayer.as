@@ -114,8 +114,8 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function netStatusHandler(event:NetStatusEvent):void {
-        if (_log)
-            trace("NetStatusEvent:", event.info.code);
+//        if (_log)
+        trace("NetStatusEvent:", event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
                 connectStream();
@@ -170,9 +170,19 @@ public class MMediaPlayer extends MSprite {
                 break;
             case "NetConnection.Connect.Closed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
+                if (!_isStop && _autoRetry) {
+                    trace("AutoRetry :" + _filename + " in 2 second");
+                    setTimeout(_play, 2 * 1000);
+//                    play();
+                }
                 break;
             case "NetConnection.Connect.Failed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
+                if (!_isStop && _autoRetry) {
+                    trace("AutoRetry :" + _filename + " in 2 second");
+                    setTimeout(_play, 2 * 1000);
+//                    play();
+                }
                 break;
 //            case "NetStream.Play.Complete":
 //                _complete = true;
@@ -214,6 +224,21 @@ public class MMediaPlayer extends MSprite {
         _metaData = info;
         trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
 
+    }
+
+    public function onBWCheck(...rest):Number {
+        return 0;
+    }
+
+    public function onBWDone(...rest):Number {
+        var p_bw:Number;
+        if (rest.length > 0) p_bw = rest[0];
+        // do something here
+        // when the bandwidth check is complete
+        trace("bandwidth = " + p_bw + " Kbps.");
+
+// dColumbus added this
+        return p_bw;
     }
 
     public function onCuePoint(info:Object):void {
@@ -283,6 +308,7 @@ public class MMediaPlayer extends MSprite {
 //        trace("PlayStream:" + _server + "," + _filename);
         if (_connection == null) {
             _connection = new NetConnection();
+            _connection.client = this;
             _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
         }
