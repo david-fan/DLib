@@ -191,9 +191,9 @@ public class MScrollArea extends MContainer {
     override public function set width(value:Number):void {
         var tempRect:Rectangle = _scrollContent.scrollRect;
         if (_scrollDirection == MDirection.Vertical) {
-            tempRect.width = value - _scrollBar.width;
+            tempRect.width = value; //- _scrollBar.width;
             _scrollContent.scrollRect = tempRect;
-            _scrollBar.x = value - _scrollBar.width;
+            _scrollBar.x = value; //- _scrollBar.width;
         } else {
             tempRect.width = value;
             _scrollContent.scrollRect = tempRect;

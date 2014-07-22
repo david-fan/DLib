@@ -3,7 +3,7 @@
   <component name="FlexBuildConfigurationManager" active="DLib">
     <configurations>
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies target-player="11.8">
+        <dependencies target-player="11.1">
           <entries>
             <entry library-id="b59349b5-2580-49b8-9e59-19c1e6b4da42">
               <dependency linkage="Merged" />
