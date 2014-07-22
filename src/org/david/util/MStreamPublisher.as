@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.util {
+import flash.events.ActivityEvent;
 import flash.events.EventDispatcher;
 import flash.events.NetStatusEvent;
 import flash.events.StatusEvent;
@@ -153,7 +154,7 @@ public class MStreamPublisher extends EventDispatcher {
                     _camera.setKeyFrameInterval(_setting.keyframes);
                     _camera.setMode(_setting.width, _setting.height, _setting.fps);
                     _camera.setQuality(_setting.buffer * 128, _setting.quality);
-
+                    _camera.addEventListener(ActivityEvent.ACTIVITY, onActivity);
                     var quality:int = 0;
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
                     h264Settings.setProfileLevel(H264Profile.MAIN, "2.1");
@@ -174,6 +175,22 @@ public class MStreamPublisher extends EventDispatcher {
                     metaData.height = _setting.height;
                     metaData.framerate = _setting.fps;
                     metaData.videodatarate = _setting.buffer;
+                    metaData.hasAudio = true;
+                    metaData.hasVideo = true;
+                    //videocodecid = ["", "", "H263", "SCREEN", "VP6FLV", "VP6FLVALPHA", "SCREENV2", "AVC"];
+//                    IF CodecID == 2
+//                    H263VIDEOPACKET
+//                    IF CodecID == 3
+//                    SCREENVIDEOPACKET
+//                    IF CodecID == 4
+//                    VP6FLVVIDEOPACKET
+//                    IF CodecID == 5
+//                    VP6FLVALPHAVIDEOPACKET
+//                    IF CodecID == 6
+//                    SCREENV2VIDEOPACKET
+//                    IF CodecID == 7
+//                    AVCVIDEOPACKET
+                    metaData.videocodecid = 7;
                     _publishStream.send("@setDataFrame", "onMetaData", metaData);
                 }
 
@@ -267,6 +284,10 @@ public class MStreamPublisher extends EventDispatcher {
 
     public function get setting():Object {
         return _setting;
+    }
+
+    private function onActivity(e:ActivityEvent):void {
+        trace("Camera activating:",e.activating);
     }
 
     private function statusHandler(e:StatusEvent):void {
