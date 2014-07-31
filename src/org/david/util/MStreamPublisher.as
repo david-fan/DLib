@@ -11,7 +11,6 @@ import flash.events.EventDispatcher;
 import flash.events.NetStatusEvent;
 import flash.events.StatusEvent;
 import flash.media.Camera;
-import flash.media.H264Profile;
 import flash.media.H264VideoStreamSettings;
 import flash.media.Microphone;
 import flash.media.SoundCodec;
@@ -51,7 +50,7 @@ public class MStreamPublisher extends EventDispatcher {
 
     private var _muteMicCam:Boolean;
 
-    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 45};//keyframes: 48
+    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 45, profile: "main", level: 3.1};//keyframes: 48
 
 
     public function get publishing():Boolean {
@@ -157,7 +156,7 @@ public class MStreamPublisher extends EventDispatcher {
                     _camera.addEventListener(ActivityEvent.ACTIVITY, onActivity);
                     var quality:int = 0;
                     var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
-                    h264Settings.setProfileLevel(H264Profile.MAIN, "2.1");
+                    h264Settings.setProfileLevel(_setting.profile, _setting.level);
                     h264Settings.setKeyFrameInterval(_setting.keyframes);
                     h264Settings.setMode(_setting.width, _setting.height, _setting.fps);
                     h264Settings.setQuality(_setting.buffer * 128, quality);
@@ -287,7 +286,7 @@ public class MStreamPublisher extends EventDispatcher {
     }
 
     private function onActivity(e:ActivityEvent):void {
-        trace("Camera activating:",e.activating);
+        trace("Camera activating:", e.activating);
     }
 
     private function statusHandler(e:StatusEvent):void {
