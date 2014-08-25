@@ -16,7 +16,7 @@ import flash.text.engine.TextLine;
  * 文本组件，使用嵌入字体
  */
 public class MTextBlock extends MUIComponent {
-    public static var DefaultFontName:String = "jyy";
+    public static var DefaultFontName:String = "宋体";
     protected var _element:TextElement;
     protected var _block:TextBlock;
     private var _textWidth:Number;
