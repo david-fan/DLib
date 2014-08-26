@@ -228,14 +228,16 @@ public class MScrollBar extends MUIComponent {
 
     override public function set width(value:Number):void {
         _slide.width = value;
-        _progess.width = value;
+        if (_progess)
+            _progess.width = value;
         init();
         updateByValue();
     }
 
     override public function set height(value:Number):void {
         _slide.height = value;
-        _progess.height = value;
+        if (_progess)
+            _progess.height = value;
         init();
         updateByValue();
     }
