@@ -3,6 +3,16 @@ package org.david.util {
  * 日期时间工具类
  */
 public class DateTimeUtil {
+    private static var _serverDate:Date = new Date();
+
+    public static function get ServerDate():Date {
+        return _serverDate;
+    }
+
+    public static function set ServerDate(value:Date):void {
+        _serverDate = value;
+    }
+
     public static const MILLISECOND:Number = 1;
     public static const SECOND:Number = MILLISECOND * 1000;
     public static const MINUTE:Number = SECOND * 60;
