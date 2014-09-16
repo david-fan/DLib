@@ -1,11 +1,11 @@
 package org.david.ui {
-import org.david.ui.core.MUIComponent;
-import org.david.ui.event.UIEvent;
-
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+
+import org.david.ui.core.MUIComponent;
+import org.david.ui.event.UIEvent;
 
 /**
  * ...
@@ -37,6 +37,24 @@ public class MScrollBar extends MUIComponent {
         this._progess = progress;
         this._immediately = immediately;
         this._careThumbSize = careThumbSize;
+        init();
+        addChild(_slide);
+        addEventListener(MouseEvent.CLICK, onSlideClick);
+        if (_progess) {
+            addChild(_progess);
+            _progess.x = _progess.y = 0;
+            this._progressMask = new Sprite();
+            this._progressMask.graphics.beginFill(0, 0);
+            this._progressMask.graphics.drawRect(0, 0, this._progess.width, this._progess.height);
+            this._progressMask.graphics.endFill();
+            _progess.mask = _progressMask;
+            addChild(_progressMask);
+        }
+        addChild(_thumb);
+        value = 0;
+    }
+
+    private function init():void {
         switch (_direction) {
             case MDirection.Horizon:
                 if (_careThumbSize)
@@ -59,20 +77,6 @@ public class MScrollBar extends MUIComponent {
                 _thumb.y = 0;
                 break;
         }
-        addChild(_slide);
-        addEventListener(MouseEvent.CLICK, onSlideClick);
-        if (_progess) {
-            addChild(_progess);
-            _progess.x = _progess.y = 0;
-            this._progressMask = new Sprite();
-            this._progressMask.graphics.beginFill(0, 0);
-            this._progressMask.graphics.drawRect(0, 0, this._progess.width, this._progess.height);
-            this._progressMask.graphics.endFill();
-            _progess.mask = _progressMask;
-            addChild(_progressMask);
-        }
-        addChild(_thumb);
-        value = 0;
     }
 
     override protected function addedToStageHandler(event:Event):void {
@@ -94,6 +98,10 @@ public class MScrollBar extends MUIComponent {
         if (_move)
             return;
         _value = value;
+        updateByValue();
+    }
+
+    private function updateByValue():void {
         switch (_direction) {
             case MDirection.Horizon:
                 _thumb.x = _maxX * _value;
@@ -107,6 +115,7 @@ public class MScrollBar extends MUIComponent {
                 break;
         }
     }
+
 
     private function startMove(e:MouseEvent):void {
         _move = true;
@@ -200,10 +209,10 @@ public class MScrollBar extends MUIComponent {
 
                 break;
             case MDirection.Vertical:
-                    if(_careThumbSize)
-                _thumb.y = this.mouseY - _thumb.height / 2;
-                    else
-                    _thumb.y=this.mouseY;
+                if (_careThumbSize)
+                    _thumb.y = this.mouseY - _thumb.height / 2;
+                else
+                    _thumb.y = this.mouseY;
                 if (_thumb.y < 0)
                     _thumb.y = 0;
                 var my:Number = _slide.height - _thumb.height;
@@ -215,6 +224,22 @@ public class MScrollBar extends MUIComponent {
                 break;
         }
         dispatchEvent(new UIEvent(ValueChange, _value));
+    }
+
+    override public function set width(value:Number):void {
+        _slide.width = value;
+        if (_progess)
+            _progess.width = value;
+        init();
+        updateByValue();
+    }
+
+    override public function set height(value:Number):void {
+        _slide.height = value;
+        if (_progess)
+            _progess.height = value;
+        init();
+        updateByValue();
     }
 }
 }
