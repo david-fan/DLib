@@ -17,6 +17,7 @@ import flash.utils.setTimeout;
 
 import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
+import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
 public class MMediaPlayer extends MSprite {
@@ -115,15 +116,15 @@ public class MMediaPlayer extends MSprite {
 
     private function netStatusHandler(event:NetStatusEvent):void {
 //        if (_log)
-        trace("NetStatusEvent:", event.info.code);
+        LogUtil.log("NetStatusEvent:" + event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
                 connectStream();
                 break;
             case "NetStream.Play.StreamNotFound":
-                trace("Stream not found: " + _filename);
+                LogUtil.log("Stream not found: " + _filename);
                 if (!_isStop && _autoRetry) {
-                    trace("AutoRetry :" + _filename + " in 2 second");
+                    LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
 //                    play();
                 }
@@ -161,7 +162,7 @@ public class MMediaPlayer extends MSprite {
 //                buffering = false;
                 break;
             case "NetStream.Video.DimensionChange":
-                trace(event);
+                LogUtil.log(event.toString());
 //                _videoWidth = _video.width;
 //                _videoHeight = _video.height;
 //                _bg.width = _videoWidth;
@@ -171,7 +172,7 @@ public class MMediaPlayer extends MSprite {
             case "NetConnection.Connect.Closed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
                 if (!_isStop && _autoRetry) {
-                    trace("AutoRetry :" + _filename + " in 2 second");
+                    LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
 //                    play();
                 }
@@ -179,7 +180,7 @@ public class MMediaPlayer extends MSprite {
             case "NetConnection.Connect.Failed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
                 if (!_isStop && _autoRetry) {
-                    trace("AutoRetry :" + _filename + " in 2 second");
+                    LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
 //                    play();
                 }
@@ -192,7 +193,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function securityErrorHandler(event:SecurityErrorEvent):void {
-        trace("securityErrorHandler: " + event);
+        LogUtil.log("securityErrorHandler: " + event);
     }
 
     protected function connectStream():void {
@@ -222,7 +223,7 @@ public class MMediaPlayer extends MSprite {
 
     public function onMetaData(info:Object):void {
         _metaData = info;
-        trace("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
+        LogUtil.log("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
 
     }
 
@@ -235,30 +236,30 @@ public class MMediaPlayer extends MSprite {
         if (rest.length > 0) p_bw = rest[0];
         // do something here
         // when the bandwidth check is complete
-        trace("bandwidth = " + p_bw + " Kbps.");
+        LogUtil.log("bandwidth = " + p_bw + " Kbps.");
 
 // dColumbus added this
         return p_bw;
     }
 
     public function onCuePoint(info:Object):void {
-        trace("onCuePoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
+        LogUtil.log("onCuePoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
     }
 
     public function onXMPData(info:Object):void {
-        trace("onXMPData: time=" + info.time + " name=" + info.name + " type=" + info.type);
+        LogUtil.log("onXMPData: time=" + info.time + " name=" + info.name + " type=" + info.type);
     }
 
     public function onPlayStatus(info:Object):void {
-        trace("onPlayStatus: time=" + info.time + " name=" + info.name + " type=" + info.type + "code=" + info.code + "level=" + info.level);
+        LogUtil.log("onPlayStatus: time=" + info.time + " name=" + info.name + " type=" + info.type + "code=" + info.code + "level=" + info.level);
     }
 
     public function onLastSecond(info:Object):void {
-        trace("onLastSecond:" + info);
+        LogUtil.log("onLastSecond:" + info);
     }
 
     public function onFI(infoObj:Object):void {
-        trace("stream onFI:" + infoObj);
+        LogUtil.log("stream onFI:" + infoObj);
     }
 
     protected function cleanupStream():void {
@@ -289,7 +290,7 @@ public class MMediaPlayer extends MSprite {
     }
 
     public function play(server:String = null, filename:String = null):void {
-        trace("***play***", server, filename);
+        LogUtil.log("***play***", server, filename);
         if (server) {
             _server = server;
         }
@@ -297,10 +298,11 @@ public class MMediaPlayer extends MSprite {
             _filename = filename;
         }
         if (StrUtil.isNullOrEmpty(_filename)) {
-            trace("Stream is null or empty:" + _filename);
+            LogUtil.log("Stream is null or empty:" + _filename);
             return;
         }
         cleanupStream();
+//        setTimeout(_play, 500);
         _play();
     }
 
@@ -311,9 +313,10 @@ public class MMediaPlayer extends MSprite {
             _connection.client = this;
             _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            LogUtil.log("make connection!")
         }
         _connection.connect(_server);
-
+        LogUtil.log("connect to ", _server);
     }
 
     public function pause():void {
@@ -338,6 +341,7 @@ public class MMediaPlayer extends MSprite {
 
     public function replay():void {
         cleanupStream();
+//        setTimeout(_play, 500);
         _play();
     }
 }
