@@ -8,6 +8,7 @@ import flash.events.Event;
 import flash.external.ExternalInterface;
 import flash.text.TextField;
 
+//import flash.external.ExternalInterface;
 public class LogUtil {
     public static var instance:LogUtil = new LogUtil();
     private var _textField:TextField;
@@ -60,7 +61,8 @@ public class LogUtil {
             _textField.appendText("\n");
         }
         else {
-            ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n")
+            if (ExternalInterface.available)
+                ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
         }
 //        else
 //            _msgHistory.push("[" + type + "]", msg);
