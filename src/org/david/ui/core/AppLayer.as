@@ -4,6 +4,10 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.EventDispatcher;
+import flash.events.KeyboardEvent;
+import flash.ui.Keyboard;
+
+import org.david.util.LogUtil;
 
 /**
  * 显示对象分层
@@ -36,6 +40,14 @@ public class AppLayer {
         AppWidth = Main.stage.stageWidth;
         AppHeight = Main.stage.stageHeight;
         Main.stage.addEventListener(Event.RESIZE, onResize);
+
+        Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+    }
+
+    private static function onKeyDown(e:KeyboardEvent):void {
+        if (e.ctrlKey && e.altKey && (e.keyCode == Keyboard.D)) {
+            LogUtil.showOrHideLog(Main);
+        }
     }
 
     private static function onResize(e:Event):void {
