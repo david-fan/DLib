@@ -22,8 +22,6 @@ public class MVideoPlayer extends MMediaPlayer {
         _bg.graphics.drawRect(0, 0, 1, 1);
         _bg.graphics.endFill();
         addChild(_bg);
-        _bg.x = -1;
-        _bg.y = -1;
         if (w > 0 && h > 0) {
             _videoWidth = w;
             _videoHeight = h;
@@ -71,8 +69,8 @@ public class MVideoPlayer extends MMediaPlayer {
         if (_keepDefaultAspect) {
 //            _video.width = info.width;
 //            _video.height = info.height;
-            _bg.width = _videoWidth + 2;
-            _bg.height = _videoHeight + 2;
+            _bg.width = _videoWidth ;
+            _bg.height = _videoHeight ;
 
             var sx:Number = _videoWidth / info.width;
             var sy:Number = _videoHeight / info.height;
