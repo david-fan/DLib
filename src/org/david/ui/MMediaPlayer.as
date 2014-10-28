@@ -216,9 +216,12 @@ public class MMediaPlayer extends MSprite {
 
     private function onEnterFrame():void {
         var ns:NetStream = _stream;
-        var info:String = ("缓冲区：" + ns.bufferTime + "s 已缓冲：" + ns.bufferLength + "s 已下载：" + int(ns.bytesLoaded / 1024) + "k 总：" + int(ns.bytesTotal / 1024) + "k 速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" +
-                "\n播放地址:" + _filename + "");
-        dispatchEvent(new UIEvent(DebugInfo, info));
+        if(ns&&_metaData){
+            var info:String = ("缓冲区：" + ns.bufferTime + "s\t\t已缓冲：" + ns.bufferLength + "s\t\t已下载：" + int(ns.bytesLoaded / 1024) + "k\t\t总：" + int(ns.bytesTotal / 1024) + "k\t\t速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" +"\n播放地址：" + _filename+"\n分辨率："+_metaData.width+"*"+_metaData.height+"\t\tfps："+_metaData.fps+"\t\tvideo："+_metaData.videocodecid+" | "+_metaData.videodatarate+"\t\taudio："+_metaData.audiocodecid+" | "+_metaData.audiodatarate+"\t\tprofile："+_metaData.profile+"\t\tlevel："+_metaData.level);
+           var patten:RegExp=/undefined/g;
+           var tempInfo:String=info.replace(patten,"\"\"");
+        }
+        dispatchEvent(new UIEvent(DebugInfo, tempInfo));
     }
 
     public function onMetaData(info:Object):void {
