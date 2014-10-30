@@ -215,6 +215,8 @@ public class MMediaPlayer extends MSprite {
     }
 
     private function onEnterFrame():void {
+        if (!_stream)
+            return;
         var ns:NetStream = _stream;
         if(ns&&_metaData){
             var info:String = ("缓冲区：" + ns.bufferTime + "s\t\t已缓冲：" + ns.bufferLength + "s\t\t已下载：" + int(ns.bytesLoaded / 1024) + "k\t\t总：" + int(ns.bytesTotal / 1024) + "k\t\t速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" +"\n播放地址：" + _filename+"\n分辨率："+_metaData.width+"*"+_metaData.height+"\t\tfps："+_metaData.fps+"\t\tvideo："+_metaData.videocodecid+" | "+_metaData.videodatarate+"\t\taudio："+_metaData.audiocodecid+" | "+_metaData.audiodatarate+"\t\tprofile："+_metaData.profile+"\t\tlevel："+_metaData.level);
