@@ -1,5 +1,6 @@
 package org.mangui.chromeless {
-import com.hurlant.util.Base64;
+import com.dynamicflash.util.Base64;
+//import com.hurlant.util.Base64;
 
 import flash.events.IOErrorEvent;
 
