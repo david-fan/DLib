@@ -5,7 +5,11 @@
  * Time: 下午3:26
  * To change this template use File | Settings | File Templates.
  */
-package org.david.ui {
+package org.david.ui.player {
+import flash.events.EventDispatcher;
+
+import org.david.ui.*;
+
 import flash.events.NetStatusEvent;
 import flash.events.SecurityErrorEvent;
 import flash.media.SoundTransform;
@@ -20,7 +24,7 @@ import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
-public class MMediaPlayer extends MSprite {
+public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     public static const Buffering:String = "Player.Buffering";
     public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
@@ -36,13 +40,9 @@ public class MMediaPlayer extends MSprite {
     private var _log:Boolean;
     protected var _metaData:Object;
 
-    public function MMediaPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true, replay:Boolean = false) {
+    public function MRTMPPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true, replay:Boolean = false) {
         super();
-
         _autoRetry = autoRetry;
-
-//        _bufferTime = bufferTime;
-
         _replay = replay;
         _log = log;
 
@@ -100,6 +100,11 @@ public class MMediaPlayer extends MSprite {
         return _mute;
     }
 
+    public function set mute(value:Boolean):void {
+        _mute = value;
+        setVolume();
+    }
+
     private var _buffering:Boolean;
     public function set buffering(value:Boolean):void {
         _buffering = value;
@@ -109,13 +114,12 @@ public class MMediaPlayer extends MSprite {
         return _buffering;
     }
 
-    public function set mute(value:Boolean):void {
-        _mute = value;
-        setVolume();
-    }
+//    private var _metaDataGetCallback:Function;
+//    public function set metaDataGetCallback(value:Function):void {
+//        _metaDataGetCallback = value;
+//    }
 
     private function netStatusHandler(event:NetStatusEvent):void {
-//        if (_log)
         LogUtil.log("NetStatusEvent:" + event.info.code);
         switch (event.info.code) {
             case "NetConnection.Connect.Success":
@@ -126,7 +130,6 @@ public class MMediaPlayer extends MSprite {
                 if (!_isStop && _autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
-//                    play();
                 }
                 break;
             case "NetStream.Play.Start":
@@ -134,10 +137,6 @@ public class MMediaPlayer extends MSprite {
                 dispatchEvent(new UIEvent(PlayStart));
                 break;
             case "NetStream.Play.Stop":
-//                if (_autoRetry) {
-//                    trace("AutoRetry url:" + _filename);
-//                    play();
-//                }
                 if (_replay)
                     _stream.seek(1);
                 _isStop = true;
@@ -159,22 +158,15 @@ public class MMediaPlayer extends MSprite {
                 break;
             case "NetStream.Record.Stop":
                 _isPlaying = false;
-//                buffering = false;
                 break;
             case "NetStream.Video.DimensionChange":
                 LogUtil.log(event.toString());
-//                _videoWidth = _video.width;
-//                _videoHeight = _video.height;
-//                _bg.width = _videoWidth;
-//                _bg.height = _videoHeight;
-//                dispatchEvent(new UIEvent(AutoSize));
                 break;
             case "NetConnection.Connect.Closed":
                 dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
                 if (!_isStop && _autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
-//                    play();
                 }
                 break;
             case "NetConnection.Connect.Failed":
@@ -182,13 +174,12 @@ public class MMediaPlayer extends MSprite {
                 if (!_isStop && _autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
-//                    play();
                 }
                 break;
-//            case "NetStream.Play.Complete":
+            case "NetStream.Play.Complete":
 //                _complete = true;
 //                dispatchEvent(new UIEvent(NetConnectionStatus, "complete"));
-//                break;
+                break;
         }
     }
 
@@ -199,6 +190,8 @@ public class MMediaPlayer extends MSprite {
     protected function connectStream():void {
         if (_stream == null) {
             _stream = new NetStream(_connection);
+            if (_streamCreateCallback)
+                _streamCreateCallback(_stream);
             _stream.bufferTime = _server ? 0 : 01;
             _stream.maxPauseBufferTime = 120;
             _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
@@ -218,10 +211,10 @@ public class MMediaPlayer extends MSprite {
         if (!_stream)
             return;
         var ns:NetStream = _stream;
-        if(ns&&_metaData){
-            var info:String = ("缓冲区：" + ns.bufferTime + "s\t\t已缓冲：" + ns.bufferLength + "s\t\t已下载：" + int(ns.bytesLoaded / 1024) + "k\t\t总：" + int(ns.bytesTotal / 1024) + "k\t\t速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" +"\n播放地址：" + _filename+"\n分辨率："+_metaData.width+"*"+_metaData.height+"\t\tfps："+_metaData.fps+"\t\tvideo："+_metaData.videocodecid+" | "+_metaData.videodatarate+"\t\taudio："+_metaData.audiocodecid+" | "+_metaData.audiodatarate+"\t\tprofile："+_metaData.profile+"\t\tlevel："+_metaData.level);
-           var patten:RegExp=/undefined/g;
-           var tempInfo:String=info.replace(patten,"\"\"");
+        if (ns && _metaData) {
+            var info:String = ("缓冲区：" + ns.bufferTime + "s\t\t已缓冲：" + ns.bufferLength + "s\t\t已下载：" + int(ns.bytesLoaded / 1024) + "k\t\t总：" + int(ns.bytesTotal / 1024) + "k\t\t速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" + "\n播放地址：" + _filename + "\n分辨率：" + _metaData.width + "*" + _metaData.height + "\t\tfps：" + _metaData.fps + "\t\tvideo：" + _metaData.videocodecid + " | " + _metaData.videodatarate + "\t\taudio：" + _metaData.audiocodecid + " | " + _metaData.audiodatarate + "\t\tprofile：" + _metaData.profile + "\t\tlevel：" + _metaData.level);
+            var patten:RegExp = /undefined/g;
+            var tempInfo:String = info.replace(patten, "\"\"");
         }
         dispatchEvent(new UIEvent(DebugInfo, tempInfo));
     }
@@ -229,7 +222,7 @@ public class MMediaPlayer extends MSprite {
     public function onMetaData(info:Object):void {
         _metaData = info;
         LogUtil.log("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
-
+//        _metaDataGetCallback(info.width, info.height);
     }
 
     public function onBWCheck(...rest):Number {
@@ -240,10 +233,8 @@ public class MMediaPlayer extends MSprite {
         var p_bw:Number;
         if (rest.length > 0) p_bw = rest[0];
         // do something here
-        // when the bandwidth check is complete
         LogUtil.log("bandwidth = " + p_bw + " Kbps.");
-
-// dColumbus added this
+        //dColumbus added this
         return p_bw;
     }
 
@@ -269,19 +260,15 @@ public class MMediaPlayer extends MSprite {
 
     protected function cleanupStream():void {
         if (_stream != null) {
-            //if (dispose) {
             _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.close();
             _stream = null;
-            // }
         }
         if (_connection != null) {
-            //if (dispose) {
             _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
             _connection = null;
-            //}
         }
     }
 
@@ -294,25 +281,17 @@ public class MMediaPlayer extends MSprite {
         }
     }
 
-    public function play(server:String = null, filename:String = null):void {
+    public function play():void {
         LogUtil.log("***play***", server, filename);
-        if (server) {
-            _server = server;
-        }
-        if (filename) {
-            _filename = filename;
-        }
         if (StrUtil.isNullOrEmpty(_filename)) {
             LogUtil.log("Stream is null or empty:" + _filename);
             return;
         }
         cleanupStream();
-//        setTimeout(_play, 500);
         _play();
     }
 
     private function _play():void {
-//        trace("PlayStream:" + _server + "," + _filename);
         if (_connection == null) {
             _connection = new NetConnection();
             _connection.client = this;
@@ -344,10 +323,25 @@ public class MMediaPlayer extends MSprite {
         _ispause = false;
     }
 
-    public function replay():void {
-        cleanupStream();
-//        setTimeout(_play, 500);
-        _play();
+    private var _streamCreateCallback:Function;
+    public function set streamCreateCallback(value:Function):void {
+        _streamCreateCallback = value;
+    }
+
+    public function get server():String {
+        return _server;
+    }
+
+    public function set server(value:String):void {
+        _server = value;
+    }
+
+    public function get filename():String {
+        return _filename;
+    }
+
+    public function set filename(value:String):void {
+        _filename = value;
     }
 }
 }
