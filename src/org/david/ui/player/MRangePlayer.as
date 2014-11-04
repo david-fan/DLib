@@ -5,10 +5,11 @@
  * Time: 5:31 PM
  * To change this template use File | Settings | File Templates.
  */
-package org.david.ui {
+package org.david.ui.player {
+import flash.events.EventDispatcher;
+
 import com.adobe.net.URI;
 import com.adobe.utils.StringUtil;
-
 
 import flash.events.NetStatusEvent;
 import flash.media.SoundTransform;
@@ -17,8 +18,6 @@ import flash.net.NetStream;
 import flash.net.NetStreamAppendBytesAction;
 import flash.system.Security;
 
-
-import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
 import org.httpclient.HttpClient;
 import org.httpclient.HttpRequest;
@@ -27,11 +26,12 @@ import org.httpclient.events.HttpResponseEvent;
 import org.httpclient.events.HttpStatusEvent;
 import org.httpclient.http.Get;
 
-public class MMediaRangePlayer extends MSprite {
+public class MRangePlayer extends EventDispatcher implements IPlayer {
     public static var StreamOK:String = "PlayStream.StreamOK";
 
     private var _playing:Boolean = true;
     private var _volume:Number = 1;
+
     private var _netstream:NetStream;
     private var _netConnection:NetConnection;
     private var _playUrl:String;
@@ -40,7 +40,7 @@ public class MMediaRangePlayer extends MSprite {
     private var _time:Number = 0;
     private var _metaData:Object = {};
 
-    public function MMediaRangePlayer() {
+    public function MRangePlayer() {
         super();
 
     }
@@ -52,7 +52,7 @@ public class MMediaRangePlayer extends MSprite {
             _httpClient.cancel();
         }
 
-        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":10843";
+        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":843";
         trace("policy file: " + policyUrl);
         Security.loadPolicyFile(policyUrl);
 
@@ -94,25 +94,13 @@ public class MMediaRangePlayer extends MSprite {
         if (["200", "206"].indexOf(_lastHttpStatusCode) == -1)
             return;
         _netstream.appendBytes(event.bytes);
-//        if (!_parseHeader) {
-//            trace("***************parse header")
-//            _header.writeBytes(event.bytes)
-////            event.bytes.readBytes(_header, _header.length, event.bytes.length);
-//            _header.position = 0;
-//            readHeader(_header);
-//        }
     }
 
-    public function play(videoUrl:String):void {
-        _playUrl = videoUrl;
+    public function play():void {
         _netConnection = new NetConnection();
         _netConnection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
         _netConnection.connect(null);
     }
-
-//    private function onTimer(e:TimerEvent):void {
-//        trace(time, _netstream.time, _netstream.bufferLength, _netstream.bufferTime, _netstream.bufferTimeMax);
-//    }
 
     public function seek(time:Number):void {
         if (!_hasHeader)
@@ -150,12 +138,17 @@ public class MMediaRangePlayer extends MSprite {
     }
 
     public function get volume():Number {
-        return _volume;
+        return _netstream.soundTransform.volume;
     }
 
     public function set volume(value:Number):void {
         _volume = value;
         _netstream.soundTransform = new SoundTransform(_volume);
+    }
+
+    private var _streamCreateCallback:Function;
+    public function set streamCreateCallback(value:Function):void {
+        _streamCreateCallback = value;
     }
 
     public function togglePause():void {
@@ -175,6 +168,7 @@ public class MMediaRangePlayer extends MSprite {
                 break;
             case "NetConnection.Connect.Success":
                 _netstream = new NetStream(_netConnection);
+                _streamCreateCallback(_netstream);
                 _netstream.play(null);
                 _netstream.client = this;
                 _netstream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
@@ -184,12 +178,19 @@ public class MMediaRangePlayer extends MSprite {
         }
     }
 
+//    private var _metaDataGetCallback:Function;
+//    public function set metaDataGetCallback(value:Function):void {
+//        _metaDataGetCallback = value;
+//    }
+
     public function onMetaData(info:Object):void {
         for (var key:String in info) {
             _metaData[key] = info[key];
         }
         trace("metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
         _hasHeader = true;
+
+//        _metaDataGetCallback(info.width, info.height);
     }
 
     public function onCuePoint(info:Object):void {
@@ -226,5 +227,47 @@ public class MMediaRangePlayer extends MSprite {
     private static const SQUARE_BRACKET_RIGHT:String = "[";
     private static const SQUARE_BRACKET_LEFT_ENCODED:String = encodeURIComponent(SQUARE_BRACKET_LEFT);
     private static const SQUARE_BRACKET_RIGHT_ENCODED:String = encodeURIComponent(SQUARE_BRACKET_RIGHT);
+
+    public function get playUrl():String {
+        return _playUrl;
+    }
+
+    public function set playUrl(value:String):void {
+        _playUrl = value;
+    }
+
+
+    public function pause():void {
+        _netstream.pause();
+    }
+
+    public function set mute(value:Boolean):void {
+        var st:SoundTransform = new SoundTransform(0);
+        _netstream.soundTransform = st;
+    }
+
+    public function get mute():Boolean {
+        return _netstream.soundTransform.volume == 0;
+    }
+
+    public function stop():void {
+
+    }
+
+    protected function cleanupStream():void {
+        if (_netstream != null) {
+            _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+            _netstream.close();
+            _netstream = null;
+        }
+        if (_netConnection != null) {
+            _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+            _netConnection.close();
+            _netConnection = null;
+        }
+    }
+
+    public function resume():void {
+    }
 }
 }
