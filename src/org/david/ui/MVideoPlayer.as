@@ -198,10 +198,11 @@ public class MVideoPlayer extends MSprite {
             rangePlayer.playUrl = flvURL;
             _player = rangePlayer;
         } else {
-            var flv:MRTMPPlayer = new MRTMPPlayer(true);
-            flv.streamCreateCallback = attachStream;
-            flv.server = null;
-            flv.filename = flvURL;
+            var rtmpplayer:MRTMPPlayer = new MRTMPPlayer(true);
+            rtmpplayer.streamCreateCallback = attachStream;
+            rtmpplayer.server = null;
+            rtmpplayer.filename = flvURL;
+            _player = rtmpplayer;
         }
         play();
     }
@@ -235,11 +236,13 @@ public class MVideoPlayer extends MSprite {
         _video.attachCamera(null);
         _video.attachNetStream(null);
         _video.clear();
-        _player.stop();
-        _player = null;
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
     }
 
-    public function replay():void{
+    public function replay():void {
         LogUtil.error("no replay implement");
     }
 
