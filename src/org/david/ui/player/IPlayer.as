@@ -21,6 +21,6 @@ public interface IPlayer {
 
     function set streamCreateCallback(value:Function):void;
 
-//    function set metaDataGetCallback(value:Function):void;
+    function set metaDataGetCallback(value:Function):void;
 }
 }

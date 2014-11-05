@@ -5,6 +5,7 @@ import flash.media.Camera;
 import flash.display.Sprite;
 import flash.media.Video;
 import flash.net.NetStream;
+import flash.utils.setTimeout;
 
 import org.david.ui.core.MSprite;
 
@@ -124,9 +125,14 @@ public class MVideoPlayer extends MSprite {
 //        }
 //    }
 
-    public function resize():void {
-        _bg.width = _videoWidth;
-        _bg.height = _videoHeight;
+    public function resize(w:Number=0,h:Number=0):void {
+        if(w&&h){
+            _bg.width = _videoWidth=w;
+            _bg.height = _videoHeight=h;
+        }else{
+            _bg.width = _videoWidth;
+            _bg.height = _videoHeight;
+        }
         if (!_keepDefaultAspect) {
             _video.width = _videoWidth;
             _video.height = _videoHeight;
@@ -186,7 +192,6 @@ public class MVideoPlayer extends MSprite {
         player.streamCreateCallback = attachStream;
         player.server = server;
         player.filename = streamId;
-
         _player = player;
         play();
     }
@@ -227,9 +232,11 @@ public class MVideoPlayer extends MSprite {
     private function attachStream(stream:NetStream):void {
         _video.attachNetStream(stream);
         _stream = stream;
+        _player.metaDataGetCallback=metaData;
+    }
+    private function metaData(info:Object):void{
         resize();
     }
-
     public function stop():void {
 //        super.stop();
         _video.attachCamera(null);
