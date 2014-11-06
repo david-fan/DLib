@@ -222,7 +222,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     public function onMetaData(info:Object):void {
         _metaData = info;
         LogUtil.log("onMetaData: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
-//        _metaDataGetCallback(info.width, info.height);
+        _metaDataCallback(info);
     }
 
     public function onBWCheck(...rest):Number {
@@ -327,7 +327,10 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     public function set streamCreateCallback(value:Function):void {
         _streamCreateCallback = value;
     }
-
+    private var _metaDataCallback:Function
+    public function set metaDataGetCallback(value:Function):void{
+        _metaDataCallback=value;
+    }
     public function get server():String {
         return _server;
     }

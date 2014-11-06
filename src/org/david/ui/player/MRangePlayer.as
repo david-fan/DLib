@@ -150,7 +150,10 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     public function set streamCreateCallback(value:Function):void {
         _streamCreateCallback = value;
     }
-
+    private var _metaDataCallback:Function
+    public function set metaDataGetCallback(value:Function):void{
+        _metaDataCallback=value;
+    }
     public function togglePause():void {
         _netstream.togglePause();
         _playing = !_playing;
@@ -189,6 +192,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         }
         trace("metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
         _hasHeader = true;
+        _metaDataCallback(info);
 
 //        _metaDataGetCallback(info.width, info.height);
     }
