@@ -5,7 +5,6 @@ import flash.media.Camera;
 import flash.display.Sprite;
 import flash.media.Video;
 import flash.net.NetStream;
-import flash.utils.setTimeout;
 
 import org.david.ui.core.MSprite;
 
@@ -196,6 +195,7 @@ public class MVideoPlayer extends MSprite {
         player.streamCreateCallback = attachStream;
         player.server = server;
         player.filename = streamId;
+
         _player = player;
         play();
     }
