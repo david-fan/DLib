@@ -140,21 +140,25 @@ public class MVideoPlayer extends MSprite {
             _video.y = 0;
             return;
         }
-        if (_stream == null)
-            return;
-        if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
-            var sx:Number = _videoWidth / _video.videoWidth;
-            var sy:Number = _videoHeight / _video.videoHeight;
-            if (sx > sy) {
-                _video.width = _video.videoWidth * sy;
-                _video.height = _video.videoHeight * sy;
-            } else {
-                _video.width = _video.videoWidth * sx;
-                _video.height = _video.videoHeight * sx;
+        if (_stream == null){
+            _video.width = _videoWidth;
+            _video.height = _videoHeight;
+        }else {
+            if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
+                var sx:Number = _videoWidth / _video.videoWidth;
+                var sy:Number = _videoHeight / _video.videoHeight;
+                if (sx > sy) {
+                    _video.width = _video.videoWidth * sy;
+                    _video.height = _video.videoHeight * sy;
+                } else {
+                    _video.width = _video.videoWidth * sx;
+                    _video.height = _video.videoHeight * sx;
+                }
+                _video.x = (_videoWidth - _video.width) / 2;
+                _video.y = (_videoHeight - _video.height) / 2;
             }
-            _video.x = (_videoWidth - _video.width) / 2;
-            _video.y = (_videoHeight - _video.height) / 2;
         }
+
     }
 
     public function playCam(c:Camera):void {
