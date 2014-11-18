@@ -157,7 +157,7 @@ public class MVideoPlayer extends MSprite {
                 _video.y = (_videoHeight - _video.height) / 2;
             }
         }
-
+        dispatchEvent(new UIEvent(AutoSize,{w:_video.width,h:_video.height}));
     }
 
     public function playCam(c:Camera):void {
