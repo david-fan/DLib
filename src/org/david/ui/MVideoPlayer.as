@@ -191,6 +191,10 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function playRTMP(server:String, streamId:String):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         var player:MRTMPPlayer = new MRTMPPlayer(true);
         player.streamCreateCallback = attachStream;
         player.server = server;
@@ -201,6 +205,10 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function playFLV(flvURL:String, range:Boolean = false):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         if (range) {
             var rangePlayer:MRangePlayer = new MRangePlayer();
             rangePlayer.streamCreateCallback = attachStream;
@@ -217,6 +225,10 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function playM3U8(m3u8Url:String):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         var hls:MHLSPlayer = new MHLSPlayer();
         hls.streamCreateCallback = attachStream;
         hls.m3u8Url = m3u8Url;

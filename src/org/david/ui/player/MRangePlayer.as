@@ -255,7 +255,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function stop():void {
-
+        cleanupStream();
     }
 
     protected function cleanupStream():void {

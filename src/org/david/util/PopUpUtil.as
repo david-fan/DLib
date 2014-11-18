@@ -125,7 +125,7 @@ public class PopUpUtil extends EventDispatcher {
     }
 
     public function removePopUp(displayobj:DisplayObject):void {
-        if (displayobj && AppLayer.PopupLayer.contains(displayobj)) {
+        if (displayobj) {
             this.removePopUpToStage(displayobj);
         }
         for each (var wo:WindowObj in windowList) {
@@ -149,7 +149,8 @@ public class PopUpUtil extends EventDispatcher {
     }
 
     protected function removePopUpToStage(displayobj:DisplayObject):void {
-        AppLayer.PopupLayer.removeChild(displayobj);
+        if (AppLayer.PopupLayer.contains(displayobj))
+            AppLayer.PopupLayer.removeChild(displayobj);
     }
 }
 }

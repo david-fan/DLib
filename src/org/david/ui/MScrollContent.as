@@ -48,6 +48,8 @@ public class MScrollContent extends MContainer {
             background.x = value.x;
             background.y = value.y;
         }
+//        _content.width = value.width;
+//        _content.height = value.height;
 
         // _bg.width=value.width;
         // _bg.height=value.height;
@@ -59,6 +61,7 @@ public class MScrollContent extends MContainer {
         var rect:Rectangle = this.scrollRect;
         rect.width = value;
         this.scrollRect = rect;
+
     }
 
     override public function set height(value:Number):void {

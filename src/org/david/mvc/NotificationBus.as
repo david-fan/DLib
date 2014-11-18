@@ -68,7 +68,7 @@ public class NotificationBus {
                 fo.fun(n);
             }
             catch (e:Error) {
-                LogUtil.log(e.message);
+                LogUtil.debug(e.message);
             }
             if (n.stop)
                 return;
