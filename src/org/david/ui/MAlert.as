@@ -59,5 +59,9 @@ import org.david.ui.MTextField;
 import org.david.ui.core.MSprite;
 
 class sysalert extends MSprite {
-    public var msgText:MTextField;
+    public var msgText:MTextField=new MTextField(15,0,true);
+    public function sysalert(){
+        super();
+        addChild(msgText);
+    }
 }
