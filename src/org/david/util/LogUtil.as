@@ -75,5 +75,15 @@ public class LogUtil {
     public static function error(...rest):void {
         instance.showMsg(rest.join(","), "error");
     }
+
+    public static function warn(...rest):void {
+        instance.showMsg(rest.join(","), "warn");
+    }
+
+    public static function debug(...rest):void {
+        if (CONFIG::LOGGING) {
+            trace(rest.join(","));
+        }
+    }
 }
 }

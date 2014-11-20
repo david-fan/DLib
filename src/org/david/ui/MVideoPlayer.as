@@ -124,9 +124,14 @@ public class MVideoPlayer extends MSprite {
 //        }
 //    }
 
-    public function resize():void {
-        _bg.width = _videoWidth;
-        _bg.height = _videoHeight;
+    public function resize(w:Number=0,h:Number=0):void {
+        if(w&&h){
+            _bg.width = _videoWidth=w;
+            _bg.height = _videoHeight=h;
+        }else{
+            _bg.width = _videoWidth;
+            _bg.height = _videoHeight;
+        }
         if (!_keepDefaultAspect) {
             _video.width = _videoWidth;
             _video.height = _videoHeight;
@@ -134,21 +139,25 @@ public class MVideoPlayer extends MSprite {
             _video.y = 0;
             return;
         }
-        if (_stream == null)
-            return;
-        if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
-            var sx:Number = _videoWidth / _video.videoWidth;
-            var sy:Number = _videoHeight / _video.videoHeight;
-            if (sx > sy) {
-                _video.width = _video.videoWidth * sy;
-                _video.height = _video.videoHeight * sy;
-            } else {
-                _video.width = _video.videoWidth * sx;
-                _video.height = _video.videoHeight * sx;
+        if (_stream == null){
+            _video.width = _videoWidth;
+            _video.height = _videoHeight;
+        }else {
+            if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
+                var sx:Number = _videoWidth / _video.videoWidth;
+                var sy:Number = _videoHeight / _video.videoHeight;
+                if (sx > sy) {
+                    _video.width = _video.videoWidth * sy;
+                    _video.height = _video.videoHeight * sy;
+                } else {
+                    _video.width = _video.videoWidth * sx;
+                    _video.height = _video.videoHeight * sx;
+                }
+                _video.x = (_videoWidth - _video.width) / 2;
+                _video.y = (_videoHeight - _video.height) / 2;
             }
-            _video.x = (_videoWidth - _video.width) / 2;
-            _video.y = (_videoHeight - _video.height) / 2;
         }
+        dispatchEvent(new UIEvent(AutoSize,{w:_video.width,h:_video.height}));
     }
 
     public function playCam(c:Camera):void {
@@ -182,6 +191,10 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function playRTMP(server:String, streamId:String):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         var player:MRTMPPlayer = new MRTMPPlayer(true);
         player.streamCreateCallback = attachStream;
         player.server = server;
@@ -192,21 +205,30 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function playFLV(flvURL:String, range:Boolean = false):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         if (range) {
             var rangePlayer:MRangePlayer = new MRangePlayer();
             rangePlayer.streamCreateCallback = attachStream;
             rangePlayer.playUrl = flvURL;
             _player = rangePlayer;
         } else {
-            var flv:MRTMPPlayer = new MRTMPPlayer(true);
-            flv.streamCreateCallback = attachStream;
-            flv.server = null;
-            flv.filename = flvURL;
+            var rtmpplayer:MRTMPPlayer = new MRTMPPlayer(true);
+            rtmpplayer.streamCreateCallback = attachStream;
+            rtmpplayer.server = null;
+            rtmpplayer.filename = flvURL;
+            _player = rtmpplayer;
         }
         play();
     }
 
     public function playM3U8(m3u8Url:String):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
         var hls:MHLSPlayer = new MHLSPlayer();
         hls.streamCreateCallback = attachStream;
         hls.m3u8Url = m3u8Url;
@@ -227,19 +249,23 @@ public class MVideoPlayer extends MSprite {
     private function attachStream(stream:NetStream):void {
         _video.attachNetStream(stream);
         _stream = stream;
+        _player.metaDataGetCallback=metaData;
+    }
+    private function metaData(info:Object):void{
         resize();
     }
-
     public function stop():void {
 //        super.stop();
         _video.attachCamera(null);
         _video.attachNetStream(null);
         _video.clear();
-        _player.stop();
-        _player = null;
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
     }
 
-    public function replay():void{
+    public function replay():void {
         LogUtil.error("no replay implement");
     }
 
