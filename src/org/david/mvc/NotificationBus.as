@@ -1,7 +1,6 @@
 package org.david.mvc {
 import flash.utils.Dictionary;
 
-import org.david.util.LogUtil;
 
 /**
  * 消息的处理中心
@@ -64,12 +63,12 @@ public class NotificationBus {
             return;
         for (var i:int = 0; i < funs.length; i++) {
             var fo:Object = funs[funs.length - i - 1];
-            try {
+//            try {
                 fo.fun(n);
-            }
-            catch (e:Error) {
-                LogUtil.debug(e.message);
-            }
+//            }
+//            catch (e:Error) {
+//                LogUtil.debug(e.message);
+//            }
             if (n.stop)
                 return;
         }
