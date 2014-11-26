@@ -8,66 +8,67 @@ import org.david.ui.core.MContainer;
 
 
 public class MRepeater extends MContainer {
-    private var _direction:String;
     private var _distance:int;
-    private var _w:Number;
-    private var _h:Number;
+    private var _width:Number = 348;
+    private var _height:Number = 262;
 
-    public function MRepeater(direction:String, distance:int, w:Number, h:Number) {
-        _direction = direction;
+    public function MRepeater(distance:int) {
+        super();
+        ;
         _distance = distance;
-        _w = w;
-        _h = h;
-        super(mouseEnabled);
-    }
-
-    override public function addChild(child:DisplayObject):DisplayObject {
-        return super.addChild(child);
-    }
-
-    override public function addChildXY(child:DisplayObject, x:Number = 0, y:Number = 0):void {
-//        super.addChildXY(child, x, y);
-        throw new Error("dot use this method and set x,y!");
-    }
-
-    override public function set height(value:Number):void {
-        super.height = value;
-    }
-
-    override public function get height():Number {
-        return super.height;
-    }
-
-    override public function get width():Number {
-        return super.width;
-    }
-
-    override public function set width(value:Number):void {
-        super.width = value;
     }
 
     override protected function updateDisplayList():void {
-        removeAllChildren();
-        var tx:Number = 0;
-        var ty:Number = 0;
-        var tw:Number = _w;
-        var th:Number = _h;
-
-        if (_direction == MDirection.Horizon) {
-            for (var i:int = 0; i < _childs.length; i++) {
-                var object:DisplayObject = _childs[i];
-                if (i == 0)
-                    super.addChildXY(object, tx, ty);
-                else {
-
-                }
-                tx = object.width + _distance;
-                ty = object.height + _distance;
+        var tx:Number = _distance;
+        var ty:Number = _distance;
+        var tw:Number = 0;
+        var th:Number = 0;
+        for (var i:int = 0; i < _childs.length; i++) {
+            var c:DisplayObject = _childs[i];
+            if (_width > tw) {
+                tw = tx + c.width;
+                tx = tw + _distance;
+                if (c.height > th)
+                    th = c.height;
+            } else {
+                tx = 0;
+                ty = th + _distance;
             }
-        } else if (_direction == MDirection.Vertical) {
-
+            addChildXY(c, tx, ty);
         }
         super.updateDisplayList();
+    }
+
+    override public function set height(value:Number):void {
+        _height = value;
+    }
+
+    override public function get height():Number {
+        return _height;
+    }
+
+    override public function set width(value:Number):void {
+        _width = value;
+    }
+
+    override public function get width():Number {
+        return _width;
+    }
+
+    private function getMaxWidth():int {
+        var max:int;
+        for (var i:int = 0; i < _childs.length - 1; i++) {
+            max = Math.max(_childs[i].width, _childs[i + 1].width);
+        }
+        return max;
+    }
+
+    private function getMaxHeight():int {
+        var max:int;
+        for (var i:int = 0; i < _childs.length - 1; i++) {
+            max = Math.max(_childs[i].height, _childs[i + 1].height);
+        }
+        return max;
     }
 
     protected function get minWidth():Number {
