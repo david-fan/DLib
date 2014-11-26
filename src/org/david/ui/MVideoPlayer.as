@@ -17,13 +17,9 @@ import org.david.util.LogUtil;
 
 public class MVideoPlayer extends MSprite {
     public static const AutoSize:String = "Player.SizeChange";
-
     private var _player:IPlayer;
-//    private var _metaData:Object;
-
     protected var _video:Video;
     private var _stream:NetStream;
-    private var _bg:Sprite;
     private var _videoWidth:Number = 640;
     private var _videoHeight:Number = 480;
     private var _keepDefaultAspect:Boolean;
@@ -45,7 +41,6 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function set buffering(value:Boolean):void {
-//        super.buffering = value;
         bufferVisible = value;
     }
 
@@ -71,23 +66,7 @@ public class MVideoPlayer extends MSprite {
             _player.volume = value;
     }
 
-//
-//    private var _loop:Boolean;
-//
-//    public function get loop():Boolean {
-//        return _loop;
-//    }
-//
-//    public function set loop(value:Boolean):void {
-//        _loop = value;
-//    }
-
     public function MVideoPlayer(w:Number, h:Number, keepDefaultAspect:Boolean = true) {
-        _bg = new Sprite();
-        _bg.graphics.beginFill(0x000000, 1);
-        _bg.graphics.drawRect(0, 0, 1, 1);
-        _bg.graphics.endFill();
-        addChild(_bg);
         if (w > 0 && h > 0) {
             _videoWidth = w;
             _videoHeight = h;
@@ -100,49 +79,14 @@ public class MVideoPlayer extends MSprite {
         addChild(_video);
     }
 
-
-//    public function onMetaData(info:Object):void {
-////        super.onMetaData(info);
-//        if (_keepDefaultAspect) {
-////            _video.width = info.width;
-////            _video.height = info.height;
-//            _bg.width = _videoWidth;
-//            _bg.height = _videoHeight;
-//
-//            var sx:Number = _videoWidth / info.width;
-//            var sy:Number = _videoHeight / info.height;
-//            if (sx > sy) {
-//                _video.width = info.width * sy;
-//                _video.height = info.height * sy;
-//            } else {
-//                _video.width = info.width * sx;
-//                _video.height = info.height * sx;
-//            }
-//            _video.x = (_videoWidth - _video.width) / 2;
-//            _video.y = (_videoHeight - _video.height) / 2;
-//            dispatchEvent(new UIEvent(AutoSize));
-//        }
-//    }
-
-    public function resize(w:Number=0,h:Number=0):void {
-        if(w&&h){
-            _bg.width = _videoWidth=w;
-            _bg.height = _videoHeight=h;
-        }else{
-            _bg.width = _videoWidth;
-            _bg.height = _videoHeight;
-        }
+    public function resize():void {
         if (!_keepDefaultAspect) {
-            _video.width = _videoWidth;
-            _video.height = _videoHeight;
-            _video.x = 0;
-            _video.y = 0;
             return;
         }
-        if (_stream == null){
+        if (_stream == null) {
             _video.width = _videoWidth;
             _video.height = _videoHeight;
-        }else {
+        } else {
             if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
                 var sx:Number = _videoWidth / _video.videoWidth;
                 var sy:Number = _videoHeight / _video.videoHeight;
@@ -153,23 +97,17 @@ public class MVideoPlayer extends MSprite {
                     _video.width = _video.videoWidth * sx;
                     _video.height = _video.videoHeight * sx;
                 }
-                _video.x = (_videoWidth - _video.width) / 2;
-                _video.y = (_videoHeight - _video.height) / 2;
             }
         }
-        dispatchEvent(new UIEvent(AutoSize,{w:_video.width,h:_video.height}));
+        dispatchEvent(new UIEvent(AutoSize));
     }
 
     public function playCam(c:Camera):void {
-//        cleanupStream();
         _video.attachCamera(c);
         bufferVisible = false;
         _videoWidth = c.width;
         _videoHeight = c.height;
-        _bg.width = _video.width = _videoWidth;
-        _bg.height = _video.height = _videoHeight;
         dispatchEvent(new UIEvent(AutoSize));
-//        dispatchEvent(new UIEvent(PlayStart));
     }
 
     private function play():void {
@@ -249,13 +187,16 @@ public class MVideoPlayer extends MSprite {
     private function attachStream(stream:NetStream):void {
         _video.attachNetStream(stream);
         _stream = stream;
-        _player.metaDataGetCallback=metaData;
+        _player.metaDataGetCallback = metaData;
     }
-    private function metaData(info:Object):void{
+
+    private function metaData(info:Object):void {
+//        _videoWidth = info.width;
+//        _videoHeight = info.height;
         resize();
     }
+
     public function stop():void {
-//        super.stop();
         _video.attachCamera(null);
         _video.attachNetStream(null);
         _video.clear();
@@ -269,5 +210,20 @@ public class MVideoPlayer extends MSprite {
         LogUtil.error("no replay implement");
     }
 
+    override public function set height(value:Number):void {
+        super.height = value;
+    }
+
+    override public function get height():Number {
+        return super.height;
+    }
+
+    override public function set width(value:Number):void {
+        super.width = value;
+    }
+
+    override public function get width():Number {
+        return super.width;
+    }
 }
 }
