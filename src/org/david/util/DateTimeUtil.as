@@ -57,7 +57,7 @@ public class DateTimeUtil {
      */
 
     public static function getFormatTimeStr(time:Number):String {
-        var h:int = int(time / HOUR);
+        var h:int = int(time / HOUR)%24;
         var m:int = int(time % HOUR / MINUTE);
         var s:int = int(time % HOUR % MINUTE / SECOND);
         var timestr:String = formartNumber(h) + ":" + formartNumber(m) + ":" + formartNumber(s);
