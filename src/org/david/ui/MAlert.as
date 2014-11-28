@@ -42,9 +42,10 @@ public class MAlert extends MSprite {
             return;
         }
         _alert.x = (AppLayer.AppWidth - _alert.width) / 2;
-        _alert.y = -_alert.height;
+        _alert.y = (AppLayer.AppHeight - _alert.height) / 2;
+        _alert.msgText.y=(_alert.height-_alert.msgText.height)/2;
         UtilManager.popUpUtil.addPopUp(_alert, model, false);
-        TweenLite.to(_alert, 0.3, {y: 0});
+       // TweenLite.to(_alert, 0.3, {y: 0});
         _alerting = true;
     }
 
@@ -55,13 +56,30 @@ public class MAlert extends MSprite {
 }
 }
 
+import flash.display.Sprite;
+import flash.system.Capabilities;
+import flash.text.TextFormat;
+
 import org.david.ui.MTextField;
 import org.david.ui.core.MSprite;
 
 class sysalert extends MSprite {
-    public var msgText:MTextField=new MTextField(15,0,true);
+    private var _bg:Sprite=new Sprite();
+    public var msgText:MTextField=new MTextField(18,0xCCCCCC,true,"Microsoft YaHei");
+    public var hintText:MTextField=new MTextField(18,0x666666,false,"Microsoft YaHei");
     public function sysalert(){
         super();
+        hintText.text="提示信息";
+        hintText.y=25;
+        hintText.x=(690-hintText.width)/2;
+        msgText.width=690;
+        _bg.graphics.lineStyle(1,0x666666);
+        _bg.graphics.beginFill(0x000000);
+        _bg.graphics.drawRect(0,0,690,365);
+        _bg.graphics.endFill();
+        _bg.alpha=0.9;
+        addChild(_bg);
+        addChild(hintText);
         addChild(msgText);
     }
 }
