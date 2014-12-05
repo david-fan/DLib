@@ -10,6 +10,7 @@ import flash.net.FileFilter;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
 
 import org.david.util.FilterUtil;
 
@@ -25,6 +26,7 @@ public class MTextField extends TextField {
         var tf:TextFormat = new TextFormat();
         tf.color = color;
         tf.size = size;
+        tf.align=TextFormatAlign.CENTER;
         if (fontType)
             tf.font = fontType;
         this.defaultTextFormat = tf;
