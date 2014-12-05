@@ -61,8 +61,12 @@ public class LogUtil {
             _textField.appendText("\n");
         }
         else {
-            if (ExternalInterface.available)
-                ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
+            if (CONFIG::LOGGING) {
+                trace("[" + type + "]" + msg);
+            } else {
+                if (ExternalInterface.available)
+                    ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
+            }
         }
 //        else
 //            _msgHistory.push("[" + type + "]", msg);
