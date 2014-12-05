@@ -80,7 +80,7 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function resize(w:Number = 0, h:Number = 0):void {
-        if (w > 0 & h > 0) {
+        if (w > 0 && h > 0) {
             _videoWidth = w;
             _videoHeight = h;
         }
