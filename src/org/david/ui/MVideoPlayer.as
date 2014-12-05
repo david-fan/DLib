@@ -79,8 +79,14 @@ public class MVideoPlayer extends MSprite {
         addChild(_video);
     }
 
-    public function resize():void {
+    public function resize(w:Number = 0, h:Number = 0):void {
+        if (w > 0 & h > 0) {
+            _videoWidth = w;
+            _videoHeight = h;
+        }
         if (!_keepDefaultAspect) {
+            _video.width = _videoWidth;
+            _video.height = _videoHeight;
             return;
         }
         if (_stream == null) {
