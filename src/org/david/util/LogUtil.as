@@ -54,7 +54,7 @@ public class LogUtil {
     }
 
     private function showMsg(msg:String, type:String):void {
-        trace(type, msg);
+//        trace(type, msg);
         if (_textField.stage) {
             _textField.appendText("[" + type + "]");
             _textField.appendText(msg);
