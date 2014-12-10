@@ -218,9 +218,14 @@ public class MImage extends MSprite implements IToolTipUI {
             case KEEPSCALE:
             {
                 var wh:Number=_loader.width/_loader.height;
-                this.image.height=this.height;
-                this.image.width=this.height*wh;
                 this.image.scrollRect=null;
+                if(this.height!=50){
+                    this.image.height=this.height;
+                    this.image.width=this.height*wh;
+                }else if(this.width!=50){
+                    this.image.width=this.width;
+                    this.image.height=this.width/wh;
+                }
             }
         }
     }
