@@ -1,4 +1,5 @@
 package org.david.ui {
+import flash.display.Bitmap;
 import flash.events.HTTPStatusEvent;
 import flash.utils.setTimeout;
 
@@ -22,9 +23,10 @@ import flash.net.URLRequest;
 public class MImage extends MSprite implements IToolTipUI {
     //
     public static const LOAD_COMPLETE_EVENT:String = "loadCompleteEvent";
-    public static const HTTP_STATUS_EVENT:String="httpdStatusEvent";
+    public static const HTTPSTATUS_EVENT:String="httpStatusEvent";
     public static const CLIP:String = "clip";
     public static const SCALE:String = "scale";
+    public static const KEEPSCALE:String = "keepScale";
     public static const AUTO:String = "auto";
     //
     protected var _source:Object;
@@ -123,8 +125,8 @@ public class MImage extends MSprite implements IToolTipUI {
         if (this._loader == null) {
             this._loader = new Loader();
             this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.onLoadCompletedHandler);
+            this._loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS,onHttpStatus);
             this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onIoError);
-            this._loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, onHttpStatusHandler);
         }
         this._loader.load(new URLRequest(_source as String));
         this.showWait();
@@ -165,17 +167,16 @@ public class MImage extends MSprite implements IToolTipUI {
             _wait = null;
         }
     }
-
+    protected function onHttpStatus(e:HTTPStatusEvent):void{
+        this.dispatchEvent(new UIEvent(HTTPSTATUS_EVENT,e.status));
+    }
     protected function onLoadCompletedHandler(event:Event):void {
         this.image = this._loader;
+        if(this._loader.content is Bitmap)
+            (_loader.content as Bitmap).smoothing=true;
         super.updateDisplayList();
-        //
         hideWait();
         this.dispatchEvent(new UIEvent(MImage.LOAD_COMPLETE_EVENT));
-    }
-    protected function onHttpStatusHandler(event:Event):void
-    {
-        this.dispatchEvent(new UIEvent(MImage.HTTP_STATUS_EVENT));
     }
 
     private var times:int = 0;
@@ -213,6 +214,13 @@ public class MImage extends MSprite implements IToolTipUI {
                 this.image.scaleX = 1;
                 this.image.scrollRect = null;
                 break;
+            }
+            case KEEPSCALE:
+            {
+                var wh:Number=_loader.width/_loader.height;
+                this.image.height=this.height;
+                this.image.width=this.height*wh;
+                this.image.scrollRect=null;
             }
         }
     }
