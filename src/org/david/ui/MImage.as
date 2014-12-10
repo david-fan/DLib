@@ -1,4 +1,5 @@
 package org.david.ui {
+import flash.events.HTTPStatusEvent;
 import flash.utils.setTimeout;
 
 import org.david.ui.core.IToolTipUI;
@@ -21,6 +22,7 @@ import flash.net.URLRequest;
 public class MImage extends MSprite implements IToolTipUI {
     //
     public static const LOAD_COMPLETE_EVENT:String = "loadCompleteEvent";
+    public static const HTTP_STATUS_EVENT:String="httpdStatusEvent";
     public static const CLIP:String = "clip";
     public static const SCALE:String = "scale";
     public static const AUTO:String = "auto";
@@ -122,6 +124,7 @@ public class MImage extends MSprite implements IToolTipUI {
             this._loader = new Loader();
             this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.onLoadCompletedHandler);
             this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onIoError);
+            this._loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, onHttpStatusHandler);
         }
         this._loader.load(new URLRequest(_source as String));
         this.showWait();
@@ -169,6 +172,10 @@ public class MImage extends MSprite implements IToolTipUI {
         //
         hideWait();
         this.dispatchEvent(new UIEvent(MImage.LOAD_COMPLETE_EVENT));
+    }
+    protected function onHttpStatusHandler(event:Event):void
+    {
+        this.dispatchEvent(new UIEvent(MImage.HTTP_STATUS_EVENT));
     }
 
     private var times:int = 0;
