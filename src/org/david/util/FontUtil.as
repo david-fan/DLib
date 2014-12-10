@@ -13,8 +13,8 @@ public class FontUtil {
     public static function hasDeviceFont(fontName:String):Boolean {
         if (fonts == null)
             fonts = Font.enumerateFonts();
-        for (var i:int = 0; i < arguments.length; i++) {
-            var font:Font = arguments[i];
+        for (var i:int = 0; i < fonts.length; i++) {
+            var font:Font = fonts[i];
             if (font.fontName == fontName)
                 return true;
         }
