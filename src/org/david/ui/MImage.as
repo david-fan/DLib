@@ -220,6 +220,7 @@ public class MImage extends MSprite implements IToolTipUI {
                 var sw:Number=_width/_loader.width;
                 var sh:Number=_height/_loader.height;
                 this.image.scrollRect=null;
+
                 if(sw>sh){
                     this.image.width=_loader.width*sh;
                     this.image.height=_loader.height*sh;
