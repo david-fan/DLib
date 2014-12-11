@@ -217,14 +217,15 @@ public class MImage extends MSprite implements IToolTipUI {
             }
             case KEEPSCALE:
             {
-                var wh:Number=_loader.width/_loader.height;
+                var sw:Number=_width/_loader.width;
+                var sh:Number=_height/_loader.height;
                 this.image.scrollRect=null;
-                if(this.height!=50){
-                    this.image.height=this.height;
-                    this.image.width=this.height*wh;
-                }else if(this.width!=50){
-                    this.image.width=this.width;
-                    this.image.height=this.width/wh;
+                if(sw>sh){
+                    this.image.width=_loader.width*sh;
+                    this.image.height=_loader.height*sh;
+                }else{
+                    this.image.width=_loader.width*sw;
+                    this.image.height=_loader.height*sw;
                 }
             }
         }
@@ -257,7 +258,7 @@ public class MImage extends MSprite implements IToolTipUI {
     }
 
     override public function get height():Number {
-        if (this.sizeType == AUTO && this._image != null) {
+        if (this.sizeType == AUTO&& this._image != null) {
             return this._image.height;
         }
         return this._height;
