@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.ui.player {
+import flash.events.Event;
 import flash.events.EventDispatcher;
 
 import org.david.ui.*;
@@ -28,7 +29,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     public static const Buffering:String = "Player.Buffering";
     public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
-    public static const NetConnectionStatus:String = "NetConnectionStatus";
+//    public static const NetConnectionStatus:String = "NetConnectionStatus";
     private var _connection:NetConnection;
     protected var _stream:NetStream;
 //    private var _bufferTime:Number;
@@ -163,14 +164,20 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 LogUtil.log(event.toString());
                 break;
             case "NetConnection.Connect.Closed":
-                dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
+//                dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
                 if (!_isStop && _autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
                 }
+                else {
+                    if (_connection) {
+                        _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+                        _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                    }
+                }
                 break;
             case "NetConnection.Connect.Failed":
-                dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
+//                dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
                 if (!_isStop && _autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
@@ -266,8 +273,8 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _stream = null;
         }
         if (_connection != null) {
-            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+//            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+//            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
             _connection = null;
         }
@@ -298,7 +305,6 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _connection.client = this;
             _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-            LogUtil.log("make connection!")
         }
         _connection.connect(_server);
         LogUtil.log("connect to ", _server);
