@@ -1,7 +1,6 @@
 package org.david.mvc {
 import flash.utils.Dictionary;
 
-import org.david.util.LogUtil;
 
 /**
  * 消息的处理中心

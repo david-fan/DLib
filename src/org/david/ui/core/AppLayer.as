@@ -22,7 +22,7 @@ public class AppLayer {
     public static var UILayer:MSprite = new MSprite();
     public static var SceneLayer:MSprite = new MSprite();
     public static var Main:Sprite;
-    public static var AppWidth:Number = 760;
+    public static var  AppWidth:Number = 760;
     public static var AppHeight:Number = 580;
 
     public static var dispatch:EventDispatcher;
