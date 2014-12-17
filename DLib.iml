@@ -15,7 +15,7 @@
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
         <compiler-options>
-          <option name="additionalOptions" value="-define+=CONFIG::LOGGING,false" />
+          <option name="additionalOptions" value="-define+=CONFIG::LOGGING,true" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android />

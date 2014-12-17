@@ -174,6 +174,9 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                         _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
                         _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
                     }
+                    if (_stream) {
+                        _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+                    }
                 }
                 break;
             case "NetConnection.Connect.Failed":
@@ -268,15 +271,13 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
     protected function cleanupStream():void {
         if (_stream != null) {
-            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+//            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.close();
-            _stream = null;
         }
         if (_connection != null) {
 //            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 //            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
-            _connection = null;
         }
     }
 
@@ -317,11 +318,14 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function stop():void {
-        cleanupStream();
+        _streamCreateCallback = null;
+        _metaDataCallback = null;
         _isStop = true;
         _isPlaying = false;
         _complete = true;
+        _autoRetry = false;
         buffering = false;
+        cleanupStream();
     }
 
     public function resume():void {
