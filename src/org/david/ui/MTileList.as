@@ -77,6 +77,14 @@ public class MTileList extends MUIComponent {
                             _currentItem.selected = true;
                         }
                     });
+                    item.addEventListener(MouseEvent.ROLL_OVER, function (e:MouseEvent):void {
+                        var target:EventDispatcher = e.currentTarget as EventDispatcher;
+                        target.dispatchEvent(new UIEvent(UIEvent.ListItemRollOver, target, true));
+                    });
+                    item.addEventListener(MouseEvent.ROLL_OUT, function (e:MouseEvent):void {
+                        var target:EventDispatcher = e.currentTarget as EventDispatcher;
+                        target.dispatchEvent(new UIEvent(UIEvent.ListItemRollOut, target, true));
+                    });
                     // ListSource.getItemRender(_itemClass, this._source[index]) as DisplayObject;
                     item.x = col * (item.width + this._itemHDistance);
                     item.y = row * ( item.height + this._itemVDistance);

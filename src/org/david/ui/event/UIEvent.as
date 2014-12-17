@@ -22,6 +22,8 @@ public class UIEvent extends Event {
     public static const ListItemMouseDown:String = "UIEvent.ListItemMouseDown";
     public static const ListItemMouseUp:String = "UIEvent.ListItemMouseUp";
     public static const ListItemMouseClick:String = "UIEvent.ListItemMouseClick";
+    public static const ListItemRollOver:String="UIEvent.ListItemRollOver";
+    public static const ListItemRollOut:String="UIEvent.ListItemRollOut";
     //
     public static const ItemSeleted:String = "UIEvent.ItemSelected";
 

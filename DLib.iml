@@ -5,10 +5,10 @@
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.1">
           <entries>
-            <entry library-id="b59349b5-2580-49b8-9e59-19c1e6b4da42">
+            <entry library-id="7b2a4c9c-9c4e-41f8-92d9-8810e1597cc7">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-id="2d6009ab-8fb5-4e58-b5b6-70a0ec8f4445">
+            <entry library-id="875068e6-dcde-4b3e-a339-49bb220e9d7f">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -33,9 +33,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
-        <properties id="b59349b5-2580-49b8-9e59-19c1e6b4da42" />
+        <properties id="7b2a4c9c-9c4e-41f8-92d9-8810e1597cc7" />
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
+          <root url="jar://$MODULE_DIR$/libs/as3httpclientlib.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -43,9 +43,9 @@
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library type="flex">
-        <properties id="2d6009ab-8fb5-4e58-b5b6-70a0ec8f4445" />
+        <properties id="875068e6-dcde-4b3e-a339-49bb220e9d7f" />
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/as3httpclientlib.swc!/" />
+          <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
