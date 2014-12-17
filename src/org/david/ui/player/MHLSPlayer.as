@@ -51,6 +51,8 @@ public class MHLSPlayer extends HLS implements IPlayer {
     }
 
     public function stop():void {
+        _streamCreateCallback = null;
+        _metaDataCallback = null;
         stream.close();
     }
 
@@ -68,10 +70,13 @@ public class MHLSPlayer extends HLS implements IPlayer {
     public function set streamCreateCallback(value:Function):void {
         _streamCreateCallback = value;
     }
+
     private var _metaDataCallback:Function;
-    public function set metaDataGetCallback(value:Function):void{
-        _metaDataCallback=value;
+
+    public function set metaDataGetCallback(value:Function):void {
+        _metaDataCallback = value;
     }
+
 //    private var _metaDataGetCallback:Function;
 //    public function set metaDataGetCallback(value:Function):void {
 //        _metaDataGetCallback = value;

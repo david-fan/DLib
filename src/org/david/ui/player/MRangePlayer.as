@@ -19,6 +19,7 @@ import flash.net.NetStreamAppendBytesAction;
 import flash.system.Security;
 
 import org.david.ui.event.UIEvent;
+import org.david.util.LogUtil;
 import org.httpclient.HttpClient;
 import org.httpclient.HttpRequest;
 import org.httpclient.events.HttpDataEvent;
@@ -150,10 +151,13 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     public function set streamCreateCallback(value:Function):void {
         _streamCreateCallback = value;
     }
+
     private var _metaDataCallback:Function
-    public function set metaDataGetCallback(value:Function):void{
-        _metaDataCallback=value;
+
+    public function set metaDataGetCallback(value:Function):void {
+        _metaDataCallback = value;
     }
+
     public function togglePause():void {
         _netstream.togglePause();
         _playing = !_playing;
@@ -161,23 +165,28 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 
     private function onNetStatus(e:NetStatusEvent):void {
         var code:String = e.info.code;
-        trace(code);
+        LogUtil.log(e.info.code, e.info.message);
         switch (code) {
             case "NetStream.SeekStart.Notify":
-                trace(e.info);
+//                trace(e.info);
                 break;
             case "NetStream.Seek.Notify":
-                trace(e.info);
+//                trace(e.info);
                 break;
             case "NetConnection.Connect.Success":
                 _netstream = new NetStream(_netConnection);
-                _streamCreateCallback(_netstream);
+                if (_streamCreateCallback)
+                    _streamCreateCallback(_netstream);
                 _netstream.play(null);
                 _netstream.client = this;
                 _netstream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
                 loadFLV();
                 dispatchEvent(new UIEvent(StreamOK, _netstream));
                 break;
+            case "NetConnection.Connect.Closed":
+                _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+                _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+                break
         }
     }
 
@@ -192,7 +201,8 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         }
         trace("metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
         _hasHeader = true;
-        _metaDataCallback(info);
+        if (_metaDataCallback)
+            _metaDataCallback(info);
 
 //        _metaDataGetCallback(info.width, info.height);
     }
@@ -255,19 +265,21 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function stop():void {
+        _metaDataCallback = null;
+        _streamCreateCallback = null;
         cleanupStream();
     }
 
     protected function cleanupStream():void {
         if (_netstream != null) {
-            _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+//            _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
             _netstream.close();
-            _netstream = null;
+//            _netstream = null;
         }
         if (_netConnection != null) {
-            _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+//            _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
             _netConnection.close();
-            _netConnection = null;
+//            _netConnection = null;
         }
     }
 
