@@ -5,10 +5,19 @@
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.1">
           <entries>
-            <entry library-id="7b2a4c9c-9c4e-41f8-92d9-8810e1597cc7">
+            <entry library-name="as3crypto" library-level="application">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-id="875068e6-dcde-4b3e-a339-49bb220e9d7f">
+            <entry library-name="as3httpclientlib" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="CasaLib_1.4.1" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="flashls" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="greensock" library-level="application">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -31,26 +40,11 @@
     </content>
     <orderEntry type="jdk" jdkName="flex_sdk_4.6.0.23201B" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="7b2a4c9c-9c4e-41f8-92d9-8810e1597cc7" />
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/as3httpclientlib.swc!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="875068e6-dcde-4b3e-a339-49bb220e9d7f" />
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" name="as3crypto" level="application" />
+    <orderEntry type="library" exported="" name="as3httpclientlib" level="application" />
+    <orderEntry type="library" exported="" name="CasaLib_1.4.1" level="application" />
+    <orderEntry type="library" exported="" name="flashls" level="application" />
+    <orderEntry type="library" exported="" name="greensock" level="application" />
   </component>
 </module>
 
