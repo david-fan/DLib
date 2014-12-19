@@ -1,7 +1,8 @@
 package org.david.util {
-	import org.casalib.util.StringUtil;
 
-	import flash.utils.ByteArray;
+import com.adobe.utils.StringUtil;
+
+import flash.utils.ByteArray;
 
 	/**
 	 * @author david
