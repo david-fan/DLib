@@ -1,10 +1,11 @@
 package org.david.util {
 
-import com.adobe.utils.StringUtil;
 
 import flash.utils.ByteArray;
 
-	/**
+import org.casalib.util.StringUtil;
+
+/**
 	 * @author david
 	 */
 	public class StrUtil {

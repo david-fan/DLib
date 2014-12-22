@@ -11,13 +11,13 @@
             <entry library-name="as3httpclientlib" library-level="application">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-name="CasaLib_1.4.1" library-level="application">
-              <dependency linkage="Merged" />
-            </entry>
             <entry library-name="flashls" library-level="application">
               <dependency linkage="Merged" />
             </entry>
             <entry library-name="greensock" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="as3corelib" library-level="application">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -42,9 +42,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="as3crypto" level="application" />
     <orderEntry type="library" exported="" name="as3httpclientlib" level="application" />
-    <orderEntry type="library" exported="" name="CasaLib_1.4.1" level="application" />
     <orderEntry type="library" exported="" name="flashls" level="application" />
     <orderEntry type="library" exported="" name="greensock" level="application" />
+    <orderEntry type="library" exported="" name="as3corelib" level="application" />
   </component>
 </module>
 

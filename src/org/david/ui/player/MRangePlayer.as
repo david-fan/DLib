@@ -9,7 +9,6 @@ package org.david.ui.player {
 import flash.events.EventDispatcher;
 
 import com.adobe.net.URI;
-import com.adobe.utils.StringUtil;
 
 import flash.events.NetStatusEvent;
 import flash.media.SoundTransform;
@@ -17,6 +16,8 @@ import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.NetStreamAppendBytesAction;
 import flash.system.Security;
+
+import org.casalib.util.StringUtil;
 
 import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
@@ -81,7 +82,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         switch (_lastHttpStatusCode) {
             case "302":
                 _playUrl = event.header.getValue("Location");
-                _playUrl = StringUtil.ltrim(_playUrl);
+                _playUrl = StringUtil.trimLeft(_playUrl);
                 loadFLV();
                 break;
             case "200":
