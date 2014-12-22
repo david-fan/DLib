@@ -5,19 +5,22 @@
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.1">
           <entries>
-            <entry library-name="as3crypto" library-level="application">
-              <dependency linkage="Merged" />
-            </entry>
-            <entry library-name="as3httpclientlib" library-level="application">
-              <dependency linkage="Merged" />
-            </entry>
             <entry library-name="CasaLib_1.4.1" library-level="application">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-name="flashls" library-level="application">
+            <entry library-name="greensock" library-level="application">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-name="greensock" library-level="application">
+            <entry library-id="eb3561b1-a385-4bbe-855c-3b4f0f15d502">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="b217b55f-512c-4a05-89c9-38318020ec8b">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="e79d2ef9-9f89-49f1-aa3d-6ec6fa9c8f82">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="66e7667b-5e6e-4d47-95ec-d81a541d6825">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -45,6 +48,46 @@
     <orderEntry type="library" exported="" name="CasaLib_1.4.1" level="application" />
     <orderEntry type="library" exported="" name="flashls" level="application" />
     <orderEntry type="library" exported="" name="greensock" level="application" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="eb3561b1-a385-4bbe-855c-3b4f0f15d502" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/flashls.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="b217b55f-512c-4a05-89c9-38318020ec8b" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/as3httpclientlib.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="e79d2ef9-9f89-49f1-aa3d-6ec6fa9c8f82" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="66e7667b-5e6e-4d47-95ec-d81a541d6825" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/as3corelib.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
