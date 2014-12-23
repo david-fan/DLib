@@ -13,6 +13,7 @@ public class LogUtil {
     public static var instance:LogUtil = new LogUtil();
     private var _textField:TextField;
     private var _bg:Shape;
+    public static var externalLog:Function;
 //    private var _msgHistory:Vector.<String> = new Vector.<String>();
 
     public function LogUtil() {
@@ -67,6 +68,8 @@ public class LogUtil {
                 if (ExternalInterface.available)
                     ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
             }
+            if (externalLog)
+                externalLog("[" + type + "]" + msg);
         }
 //        else
 //            _msgHistory.push("[" + type + "]", msg);
