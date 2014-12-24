@@ -10,6 +10,7 @@ import org.david.ui.core.MSprite;
 
 import org.david.ui.event.UIEvent;
 import org.david.ui.player.IPlayer;
+import org.david.ui.player.MFLVsPlayer;
 import org.david.ui.player.MRTMPPlayer;
 import org.david.ui.player.MRangePlayer;
 import org.david.ui.player.MHLSPlayer;
@@ -166,6 +167,24 @@ public class MVideoPlayer extends MSprite {
             _player = rtmpplayer;
         }
         play();
+    }
+
+    public function playFLVs(flvPath:String):void {
+        if (_player) {
+            _player.stop();
+            _player = null;
+        }
+
+        var rtmpplayer:MFLVsPlayer = new MFLVsPlayer();
+        rtmpplayer.streamCreateCallback = attachStream;
+        rtmpplayer.flvPath = flvPath;
+        _player = rtmpplayer;
+        play();
+    }
+
+    public function seek(time:Number):void {
+        if (_player)
+            _player.seek(time);
     }
 
     public function playM3U8(m3u8Url:String):void {
