@@ -360,5 +360,11 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     public function set filename(value:String):void {
         _filename = value;
     }
+
+    public function seek(time:Number):void {
+        if (_server) {
+            _stream.seek(time);
+        }
+    }
 }
 }

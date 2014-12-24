@@ -34,7 +34,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     private var _playing:Boolean = true;
     private var _volume:Number = 1;
 
-    private var _netstream:NetStream;
+    private var _netStream:NetStream;
     private var _netConnection:NetConnection;
     private var _playUrl:String;
     private var _hasHeader:Boolean;
@@ -95,7 +95,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     private function onData(event:HttpDataEvent):void {
         if (["200", "206"].indexOf(_lastHttpStatusCode) == -1)
             return;
-        _netstream.appendBytes(event.bytes);
+        _netStream.appendBytes(event.bytes);
     }
 
     public function play():void {
@@ -107,8 +107,8 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     public function seek(time:Number):void {
         if (!_hasHeader)
             return;
-        _netstream.seek(0);
-        _netstream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
+        _netStream.seek(0);
+        _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
         var keyframes:Object = _metaData.keyframes;
         for (var i:int = 0; i < keyframes.times.length; i++) {
             if (time < keyframes.times[i]) {
@@ -122,15 +122,15 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function get time():Number {
-        if (_netstream)
-            return _time + _netstream.time;
+        if (_netStream)
+            return _time + _netStream.time;
         else
             return 0;
     }
 
     public function get bufferTime():Number {
-        if (_netstream)
-            return _time + _netstream.bufferTime;
+        if (_netStream)
+            return _time + _netStream.bufferTime;
         else
             return 0;
     }
@@ -140,12 +140,12 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function get volume():Number {
-        return _netstream.soundTransform.volume;
+        return _netStream.soundTransform.volume;
     }
 
     public function set volume(value:Number):void {
         _volume = value;
-        _netstream.soundTransform = new SoundTransform(_volume);
+        _netStream.soundTransform = new SoundTransform(_volume);
     }
 
     private var _streamCreateCallback:Function;
@@ -160,7 +160,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function togglePause():void {
-        _netstream.togglePause();
+        _netStream.togglePause();
         _playing = !_playing;
     }
 
@@ -175,18 +175,18 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 //                trace(e.info);
                 break;
             case "NetConnection.Connect.Success":
-                _netstream = new NetStream(_netConnection);
+                _netStream = new NetStream(_netConnection);
                 if (_streamCreateCallback)
-                    _streamCreateCallback(_netstream);
-                _netstream.play(null);
-                _netstream.client = this;
-                _netstream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+                    _streamCreateCallback(_netStream);
+                _netStream.play(null);
+                _netStream.client = this;
+                _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
                 loadFLV();
-                dispatchEvent(new UIEvent(StreamOK, _netstream));
+                dispatchEvent(new UIEvent(StreamOK, _netStream));
                 break;
             case "NetConnection.Connect.Closed":
                 _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+                _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
                 break
         }
     }
@@ -253,16 +253,16 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 
 
     public function pause():void {
-        _netstream.pause();
+        _netStream.pause();
     }
 
     public function set mute(value:Boolean):void {
         var st:SoundTransform = new SoundTransform(0);
-        _netstream.soundTransform = st;
+        _netStream.soundTransform = st;
     }
 
     public function get mute():Boolean {
-        return _netstream.soundTransform.volume == 0;
+        return _netStream.soundTransform.volume == 0;
     }
 
     public function stop():void {
@@ -272,9 +272,9 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     protected function cleanupStream():void {
-        if (_netstream != null) {
+        if (_netStream != null) {
 //            _netstream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-            _netstream.close();
+            _netStream.close();
 //            _netstream = null;
         }
         if (_netConnection != null) {

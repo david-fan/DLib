@@ -11,6 +11,8 @@ public interface IPlayer {
 
     function stop():void;
 
+    function seek(time:Number):void;
+
     function get mute():Boolean ;
 
     function set mute(value:Boolean):void;

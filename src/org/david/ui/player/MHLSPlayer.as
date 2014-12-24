@@ -100,5 +100,9 @@ public class MHLSPlayer extends HLS implements IPlayer {
 //            _bufferedTime = event.mediatime.buffer + event.mediatime.position;
 //        }
     }
+
+    public function seek(time:Number):void {
+        stream.seek(time);
+    }
 }
 }
