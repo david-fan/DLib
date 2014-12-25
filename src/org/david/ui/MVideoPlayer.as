@@ -169,7 +169,7 @@ public class MVideoPlayer extends MSprite {
         play();
     }
 
-    public function playFLVs(flvPath:String):void {
+    public function playFLVs(flvPath:String, seek:int = 0):void {
         if (_player) {
             _player.stop();
             _player = null;
@@ -178,6 +178,8 @@ public class MVideoPlayer extends MSprite {
         var rtmpplayer:MFLVsPlayer = new MFLVsPlayer();
         rtmpplayer.streamCreateCallback = attachStream;
         rtmpplayer.flvPath = flvPath;
+        if (seek > 0)
+            rtmpplayer.seek(seek);
         _player = rtmpplayer;
         play();
     }
@@ -199,13 +201,14 @@ public class MVideoPlayer extends MSprite {
         play();
 
         if (stage)
-            hls.stage = stage
+            hls.stage = stage;
         else
             addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
     }
 
     private function onAddToStage(e:Event):void {
-        (_player as MHLSPlayer).stage = this.stage;
+        if (_player is MHLSPlayer)
+            (_player as MHLSPlayer).stage = this.stage;
         removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
     }
 

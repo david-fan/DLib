@@ -7,6 +7,8 @@ import flash.events.EventDispatcher;
 import flash.events.KeyboardEvent;
 import flash.ui.Keyboard;
 
+import org.casalib.util.StageReference;
+
 import org.david.util.LogUtil;
 
 /**
@@ -22,7 +24,7 @@ public class AppLayer {
     public static var UILayer:MSprite = new MSprite();
     public static var SceneLayer:MSprite = new MSprite();
     public static var Main:Sprite;
-    public static var  AppWidth:Number = 760;
+    public static var AppWidth:Number = 760;
     public static var AppHeight:Number = 580;
 
     public static var dispatch:EventDispatcher;
@@ -39,8 +41,8 @@ public class AppLayer {
         dispatch = new EventDispatcher();
         AppWidth = Main.stage.stageWidth;
         AppHeight = Main.stage.stageHeight;
+        StageReference.setStage(Main.stage);
         Main.stage.addEventListener(Event.RESIZE, onResize);
-
         Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
     }
 
