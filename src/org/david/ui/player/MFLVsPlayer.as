@@ -7,22 +7,27 @@ import flash.net.NetStreamAppendBytesAction;
 import flash.utils.ByteArray;
 import flash.utils.setTimeout;
 
-public class MFLVsPlayer extends EventDispatcher implements IPlayer {
-//    private var _video:Video;
+import org.david.ui.event.UIEvent;
 
+public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _netStream:NetStream;
     private var _netConnection:NetConnection;
 
     private var _loader:FLVLoader;
     private var _nextUrl:String;
-    private var _index:uint = 100;
+    private var _index:uint;
     private var _pause:Boolean;
-    private var _flvPath:String;
+
     private var _seek:int;
 
+    private var _flvsIndex:FLVsIndex;
+
     public function MFLVsPlayer() {
-//        _flvPath = QueryStringUtil.getValue("path");
-//        _seek = parseInt(QueryStringUtil.getValue("seek"));
+        _flvsIndex = new FLVsIndex();
+        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
+    }
+
+    private function onParseOK(e:UIEvent):void {
         play();
     }
 
@@ -43,12 +48,14 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function getNextUrl():String {
-        var url:String = _flvPath + "/" + _index + ".flv";
+        var url:String = _flvsIndex.getFlvUrl(_index);
         _index++;
         return url;
     }
 
     public function play():void {
+        if (!_flvsIndex.parseOK)
+            return;
         _netConnection = new NetConnection();
         _netConnection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
         _netConnection.connect(null);
@@ -75,6 +82,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function seek(time:Number):void {
+        _seek = time;
         if (_netStream == null)
             return;
         _index = Math.floor(time / 2);
@@ -86,10 +94,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function playBytes(bytes:ByteArray):void {
-        var buffers:ByteArray = new ByteArray();
-        buffers.writeBytes(bytes, 13);
-        bytes.clear();
-        _netStream.appendBytes(buffers);
+//        var buffers:ByteArray = new ByteArray();
+//        buffers.writeBytes(bytes, 13);
+//        bytes.clear();
+        _netStream.appendBytes(bytes);
     }
 
     private function onNetStatus(e:NetStatusEvent):void {
@@ -185,12 +193,18 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         _metaDataGetCallback = value;
     }
 
-    public function get flvPath():String {
-        return _flvPath;
+    public function get flvsIndexUrl():String {
+        return _flvsIndex.indexUrl;
     }
 
-    public function set flvPath(value:String):void {
-        _flvPath = value;
+    public function set flvsIndexUrl(value:String):void {
+        /*
+         # 获取索引文件
+         http://42.62.95.7:8001/play/107549/107549-20150103212128/index.list
+         # 获取第几片flv
+         http://42.62.95.7:8001/play/107549/107549-20150103212128/107549-20150103212128-1-1420367092.flv
+         */
+        _flvsIndex.indexUrl = value;
     }
 }
 }

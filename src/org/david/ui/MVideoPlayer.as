@@ -177,7 +177,7 @@ public class MVideoPlayer extends MSprite {
 
         var rtmpplayer:MFLVsPlayer = new MFLVsPlayer();
         rtmpplayer.streamCreateCallback = attachStream;
-        rtmpplayer.flvPath = flvPath;
+        rtmpplayer.flvsIndexUrl = flvPath;
         if (seek > 0)
             rtmpplayer.seek(seek);
         _player = rtmpplayer;
