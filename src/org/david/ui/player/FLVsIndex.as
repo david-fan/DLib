@@ -58,8 +58,9 @@ public class FLVsIndex extends EventDispatcher {
     public function set indexUrl(value:String):void {
         _indexUrl = value;
         flvsPath = _indexUrl.substr(0, _indexUrl.lastIndexOf("\/"));
-        var reg:RegExp = /\d+-\d+/g;
-        flvsName = reg.exec(_indexUrl) + "-{0}-{1}.flv";
+//        var reg:RegExp = /\d+-\d+/g;
+//        flvsName = reg.exec(_indexUrl) + "-{0}-{1}.flv";
+        flvsName = "{0}-{1}.flv";
         if (loader)
             loader.stop();
 

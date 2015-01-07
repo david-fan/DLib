@@ -114,7 +114,7 @@ public class MScrollArea extends MContainer {
             return;
         _scroll = value;
         doscroll();
-        dispatchEvent(new UIEvent(Scroll));
+//        dispatchEvent(new UIEvent(Scroll));
     }
 
     protected function doscroll():void {
