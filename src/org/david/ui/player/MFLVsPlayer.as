@@ -8,6 +8,7 @@ import flash.utils.ByteArray;
 import flash.utils.setTimeout;
 
 import org.david.ui.event.UIEvent;
+import org.david.util.LogUtil;
 
 public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _netStream:NetStream;
@@ -88,8 +89,14 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         _index = Math.floor(time / 2);
         _netStream.seek(0);
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
-        if (_loader)
-            _loader.close();
+        if (_loader) {
+            try {
+                _loader.close();
+            }
+            catch (e:Error) {
+                LogUtil.error(e.message);
+            }
+        }
         loadNext();
     }
 
