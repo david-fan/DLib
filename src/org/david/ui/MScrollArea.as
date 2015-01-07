@@ -114,7 +114,7 @@ public class MScrollArea extends MContainer {
             return;
         _scroll = value;
         doscroll();
-//        dispatchEvent(new UIEvent(Scroll));
+
     }
 
     protected function doscroll():void {
@@ -154,6 +154,7 @@ public class MScrollArea extends MContainer {
     private function onBarValueChange(e:UIEvent):void {
         var sv:Number = _scrollBar.value;
         scroll = sv;
+        dispatchEvent(new UIEvent(Scroll));
     }
 
 

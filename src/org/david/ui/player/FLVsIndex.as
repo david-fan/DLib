@@ -2,6 +2,8 @@
  * Created by david on 1/5/15.
  */
 package org.david.ui.player {
+import com.adobe.serialization.json.JSONExt;
+
 import flash.events.EventDispatcher;
 import flash.events.IOErrorEvent;
 import flash.utils.Dictionary;
@@ -19,36 +21,28 @@ public class FLVsIndex extends EventDispatcher {
     private var _indexUrl:String;
     private var loader:DataLoad;
 
-    public var totalTimeLength:Number;
-    public var timeStamp:Number;
-    public var flvs:Dictionary;
+    public var duration:Number;
+    public var timestamp:Number;
+    public var timeIndexItems:Array;
     public var parseOK:Boolean;
 
     public function FLVsIndex() {
     }
 
     private function parse(txts:String):void {
-        flvs = new Dictionary();
-        var r:RegExp = /^\d+$/;
-        var temps:Array = txts.split("\n");
-        for (var i:int = 0; i < temps.length; i++) {
-            var line:String = temps[i];
-            var strs:Array = line.split(":");
-            var prefix:String = strs[0];
-            if (r.test(prefix)) {
-                flvs[parseInt(prefix)] = {start: parseFloat(strs[1]), end: parseFloat(strs[2])};
-            } else if (prefix == "totalTimeLength") {
-                totalTimeLength = parseFloat(strs[1]);
-            } else if (prefix == "timestamp") {
-                timeStamp = parseFloat(strs[1]);
-            }
-        }
+        //{"duration":2,"timestamp":1420622214,"length":2040903,"timeIndexItems":[{"start":0,"end":2011},{"start":2011,"end":4011}]}
+        var index:Object = JSONExt.decode(txts);
+        duration = index.duration;
+        timestamp = index.timestamp;
+        timeIndexItems = index.timeIndexItems;
         parseOK = true;
         dispatchEvent(new UIEvent(FLVsIndex.ParseOK));
     }
 
     public function getFlvUrl(index:int):String {
-        return flvsPath + "/" + StrUtil.replace(flvsName, index, timeStamp);
+        if (index > timeIndexItems.length)
+            return null;
+        return flvsPath + "/" + StrUtil.replace(flvsName, index, timestamp);
     }
 
     public function get indexUrl():String {

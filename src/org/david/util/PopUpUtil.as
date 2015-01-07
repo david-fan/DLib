@@ -23,6 +23,7 @@ public class PopUpUtil extends EventDispatcher {
     protected var windowCenterDic:Dictionary;
     protected var windowPriorityDic:Dictionary;
     private var windowList:Array;
+
     public function PopUpUtil() {
         this.windowList = [];
         AppLayer.dispatch.addEventListener(AppLayer.Resize, resizeHandler);
@@ -38,9 +39,9 @@ public class PopUpUtil extends EventDispatcher {
 
     private function resizeHandler(e:Event):void {
         for each (var wo:WindowObj in this.windowList) {
-            if(wo.showModel==WindowObj.TweenPopUp)  {
-                wo.modal.width=AppLayer.AppWidth;
-                wo.modal.height=AppLayer.AppHeight;
+            if (wo.showModel == WindowObj.TweenPopUp) {
+                wo.modal.width = AppLayer.AppWidth;
+                wo.modal.height = AppLayer.AppHeight;
                 return;
             }
             if (wo.center == true) {
@@ -60,9 +61,10 @@ public class PopUpUtil extends EventDispatcher {
      * @param priority 优先级，大的优先
      * @param animation 动画显示弹出窗口
      */
-    public function addPopUp(displayobj:DisplayObject, modal:Boolean = false, center:Boolean = true, priority:int = 1, animation:Boolean = false, hideScene:Boolean = false,model:String="popUp"):void {
+    public function addPopUp(displayobj:DisplayObject, modal:Boolean = false, center:Boolean = true, priority:int = 1, animation:Boolean = false, hideScene:Boolean = false, model:String = "popUp"):void {
         displayobj.visible = false;
-        var wo:WindowObj;wo= new WindowObj();
+        var wo:WindowObj;
+        wo = new WindowObj();
         if (modal) {
             wo.modal = getModalSprite();
         }
@@ -71,7 +73,7 @@ public class PopUpUtil extends EventDispatcher {
         wo.priority = priority;
         wo.obj = displayobj;
         wo.animation = animation;
-        wo.showModel=model;
+        wo.showModel = model;
         this.windowList.push(wo);
         this.windowList.sortOn("priority", Array.NUMERIC);
 
@@ -81,9 +83,11 @@ public class PopUpUtil extends EventDispatcher {
             dispatchEvent(e);
         }
     }
-    public function addTween(displayobj:DisplayObject,oldX:Number,oldY:Number,model:String="popUp", modal:Boolean = false, center:Boolean = true, priority:int = 1, animation:Boolean = false, hideScene:Boolean = false):void {
+
+    public function addTween(displayobj:DisplayObject, oldX:Number, oldY:Number, model:String = "popUp", modal:Boolean = false, center:Boolean = true, priority:int = 1, animation:Boolean = false, hideScene:Boolean = false):void {
         displayobj.visible = false;
-        var wo:WindowObj;wo= new WindowObj();
+        var wo:WindowObj;
+        wo = new WindowObj();
         if (modal) {
             wo.modal = getModalSprite();
         }
@@ -92,9 +96,9 @@ public class PopUpUtil extends EventDispatcher {
         wo.priority = priority;
         wo.obj = displayobj;
         wo.animation = animation;
-        wo.showModel=model;
-        wo._x=oldX;
-        wo._y=oldY;
+        wo.showModel = model;
+        wo._x = oldX;
+        wo._y = oldY;
         this.windowList.push(wo);
         this.windowList.sortOn("priority", Array.NUMERIC);
 
@@ -122,12 +126,13 @@ public class PopUpUtil extends EventDispatcher {
         }
         if (wo.hideScene)
             AppLayer.hideSceneLayer();
-        if(wo.showModel==WindowObj.NormalPopUp){
+        if (wo.showModel == WindowObj.NormalPopUp) {
             this.addPopUpToStage(wo.obj, wo.center, wo.animation);
-        }else{
-            this.addTweenToStage(wo.obj,wo._x,wo._y);
+        } else {
+            this.addTweenToStage(wo.obj, wo._x, wo._y);
         }
     }
+
     protected function addPopUpToStage(displayobj:DisplayObject, center:Boolean, animation:Boolean):void {
         displayobj.visible = true;
         var px:Number;
@@ -150,17 +155,19 @@ public class PopUpUtil extends EventDispatcher {
             }
         }
     }
-    private function addTweenToStage(displayobj:DisplayObject,oldX:Number,oldY:Number):void{
+
+    private function addTweenToStage(displayobj:DisplayObject, oldX:Number, oldY:Number):void {
         displayobj.visible = true;
         AppLayer.PopupLayer.addChild(displayobj);
-        displayobj.x= oldX;
-        displayobj.y= oldY;
-        var rect:Rectangle=new Rectangle(0,displayobj.height,displayobj.width,displayobj.height);
-        TweenLite.to(rect, 0.3,{y:0,onUpdate:function():void{
-            displayobj.scrollRect=rect;
+        displayobj.x = oldX;
+        displayobj.y = oldY;
+        var rect:Rectangle = new Rectangle(0, displayobj.height, displayobj.width, displayobj.height);
+        TweenLite.to(rect, 0.3, {y: 0, onUpdate: function ():void {
+            displayobj.scrollRect = rect;
         }});
 
     }
+
     private function popUpComplete():void {
         var e:UIEvent = new UIEvent(UIEvent.POP_UP_COMPLETE);
         dispatchEvent(e);
@@ -189,11 +196,12 @@ public class PopUpUtil extends EventDispatcher {
             this._addPopUp(this.windowList[(this.windowList.length - 1)]);
         }
     }
+
     public function removeTweenPopUp(displayobj:DisplayObject):void {
-        var rect:Rectangle=new Rectangle(0,0,displayobj.width,displayobj.height);
-        TweenLite.to(rect, 0.3,{y:displayobj.height,onUpdate:function():void{
-            displayobj.scrollRect=rect;
-        },onComplete:function():void{
+        var rect:Rectangle = new Rectangle(0, 0, displayobj.width, displayobj.height);
+        TweenLite.to(rect, 0.3, {y: displayobj.height, onUpdate: function ():void {
+            displayobj.scrollRect = rect;
+        }, onComplete: function ():void {
             removePopUp(displayobj);
         }});
 
