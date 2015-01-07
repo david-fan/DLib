@@ -1,4 +1,6 @@
 package org.david.util {
+import com.hurlant.util.asn1.parser.nulll;
+
 import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 import flash.geom.Rectangle;
@@ -25,7 +27,7 @@ public class PopUpUtil extends EventDispatcher {
     private var windowList:Array;
     public function PopUpUtil() {
         this.windowList = [];
-        AppLayer.dispatch.addEventListener(AppLayer.Resize, resizeHandler);
+        AppLayer.dispatch.addEventListener(AppLayer.Resize, resizeHandler,false,-1);
     }
 
     private function getModalSprite():Sprite {
@@ -39,8 +41,12 @@ public class PopUpUtil extends EventDispatcher {
     private function resizeHandler(e:Event):void {
         for each (var wo:WindowObj in this.windowList) {
             if(wo.showModel==WindowObj.TweenPopUp)  {
-                wo.modal.width=AppLayer.AppWidth;
-                wo.modal.height=AppLayer.AppHeight;
+                if ( wo.obj===this.windowList[this.windowList.length - 1].obj )  {
+                    wo.modal.width=AppLayer.AppWidth;
+                    wo.modal.height=AppLayer.AppHeight;
+                   _rect.width = (wo.obj as DisplayObjectContainer).getChildAt(0).width;
+                    wo.obj.scrollRect=_rect;
+                }
                 return;
             }
             if (wo.center == true) {
@@ -77,7 +83,7 @@ public class PopUpUtil extends EventDispatcher {
 
         if (this.windowList[this.windowList.length - 1].obj === displayobj) {
             this._addPopUp(wo);
-            var e:UIEvent = new UIEvent(UIEvent.POP_UP_OPEN, displayobj);
+            var e:UIEvent = new UIEvent(UIEvent.POP_UP_OPEN, wo.obj);
             dispatchEvent(e);
         }
     }
@@ -150,16 +156,21 @@ public class PopUpUtil extends EventDispatcher {
             }
         }
     }
+    private  var _rect:Rectangle=new Rectangle();
     private function addTweenToStage(displayobj:DisplayObject,oldX:Number,oldY:Number):void{
         displayobj.visible = true;
         AppLayer.PopupLayer.addChild(displayobj);
         displayobj.x= oldX;
         displayobj.y= oldY;
-        var rect:Rectangle=new Rectangle(0,displayobj.height,displayobj.width,displayobj.height);
-        TweenLite.to(rect, 0.3,{y:0,onUpdate:function():void{
-            displayobj.scrollRect=rect;
+//        var rect:Rectangle=new Rectangle(0,displayobj.height,displayobj.width,displayobj.height);
+        _rect.x=0;
+        _rect.y=displayobj.height;
+        _rect.width=displayobj.width;
+        _rect.height=displayobj.height;
+        TweenLite.to(_rect, 0.3,{y:0,onUpdate:function():void{
+            displayobj.scrollRect=_rect;
         }});
-
+        resizeHandler(null);
     }
     private function popUpComplete():void {
         var e:UIEvent = new UIEvent(UIEvent.POP_UP_COMPLETE);
@@ -190,9 +201,9 @@ public class PopUpUtil extends EventDispatcher {
         }
     }
     public function removeTweenPopUp(displayobj:DisplayObject):void {
-        var rect:Rectangle=new Rectangle(0,0,displayobj.width,displayobj.height);
-        TweenLite.to(rect, 0.3,{y:displayobj.height,onUpdate:function():void{
-            displayobj.scrollRect=rect;
+        //var rect:Rectangle=new Rectangle(0,0,displayobj.width,displayobj.height);
+        TweenLite.to(_rect, 0.3,{y:displayobj.height,onUpdate:function():void{
+            displayobj.scrollRect=_rect;
         },onComplete:function():void{
             removePopUp(displayobj);
         }});
