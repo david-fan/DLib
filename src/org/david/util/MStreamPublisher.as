@@ -13,6 +13,8 @@ import flash.events.StatusEvent;
 import flash.media.Camera;
 import flash.media.H264VideoStreamSettings;
 import flash.media.Microphone;
+import flash.media.MicrophoneEnhancedMode;
+import flash.media.MicrophoneEnhancedOptions;
 import flash.media.SoundCodec;
 import flash.net.NetConnection;
 import flash.net.NetStream;
@@ -142,11 +144,27 @@ public class MStreamPublisher extends EventDispatcher {
                 _publishStream = new NetStream(publishConnection);
                 _publishStream.addEventListener(NetStatusEvent.NET_STATUS, publishStreamStatus);
                 if (_audio) {
-                    _microphone.codec = SoundCodec.SPEEX;
                     _microphone.setSilenceLevel(0);
-                    _microphone.encodeQuality = 6;
+                    _microphone.setUseEchoSuppression(true);
+
                     _microphone.rate = _setting.rate;
                     _microphone.framesPerPacket = 1;
+                    _microphone.codec = SoundCodec.SPEEX;
+                    _microphone.encodeQuality = 6;
+                    _microphone.setLoopBack(false);
+                    _microphone.noiseSuppressionLevel = -30
+
+                    var options:MicrophoneEnhancedOptions = new MicrophoneEnhancedOptions();
+                    //模式，默认使用全双工模式
+                    options.mode = MicrophoneEnhancedMode.FULL_DUPLEX;
+                    //是否启用自动增益控制
+                    options.autoGain = false;
+                    //回声路径,值越大，回声抑制效果越好，但声音的延迟会越大，消耗的资源会越多，值取128或256
+                    options.echoPath = 128;
+                    //非线性处理，处理乐音时最好关闭
+                    options.nonLinearProcessing = true;
+                    _microphone.enhancedOptions = options;
+
                     _publishStream.attachAudio(_microphone);
                 }
                 if (_video) {
@@ -232,7 +250,7 @@ public class MStreamPublisher extends EventDispatcher {
 
     private function checkMic():Boolean {
         if (_microphone == null) {
-            _microphone = Microphone.getMicrophone();
+            _microphone = Microphone.getEnhancedMicrophone();
             if (_microphone == null) {
                 cleanupPublishedStream(NoMic);
                 return false;

@@ -55,6 +55,7 @@ public class FLVsIndex extends EventDispatcher {
 //        var reg:RegExp = /\d+-\d+/g;
 //        flvsName = reg.exec(_indexUrl) + "-{0}-{1}.flv";
         flvsName = "{0}-{1}.flv";
+        parseOK = false;
         if (loader)
             loader.stop();
 
