@@ -6,10 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.ui.player {
-import flash.events.Event;
 import flash.events.EventDispatcher;
-
-import org.david.ui.*;
 
 import flash.events.NetStatusEvent;
 import flash.events.SecurityErrorEvent;
@@ -20,13 +17,12 @@ import flash.utils.getTimer;
 import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
-import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
 public class MRTMPPlayer extends EventDispatcher implements IPlayer {
-    public static const Buffering:String = "Player.Buffering";
+//    public static const Buffering:String = "Player.Buffering";
     public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
 //    public static const NetConnectionStatus:String = "NetConnectionStatus";
@@ -150,7 +146,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 _complete = true;
                 break;
             case "NetStream.Buffer.Empty":
-                dispatchEvent(new UIEvent(Buffering));
+//                dispatchEvent(new UIEvent(Buffering));
                 if (!_complete)
                     buffering = true;
                 break;
@@ -343,6 +339,12 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
     public function set metaDataGetCallback(value:Function):void {
         _metaDataCallback = value;
+    }
+
+    private var _playStatusCallback:Function
+
+    public function set playStatusCallback(value:Function):void {
+        _playStatusCallback = value;
     }
 
     public function get server():String {

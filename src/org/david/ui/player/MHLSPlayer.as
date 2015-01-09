@@ -77,6 +77,12 @@ public class MHLSPlayer extends HLS implements IPlayer {
         _metaDataCallback = value;
     }
 
+    private var _playStatusCallback:Function
+
+    public function set playStatusCallback(value:Function):void {
+        _playStatusCallback = value;
+    }
+
 //    private var _metaDataGetCallback:Function;
 //    public function set metaDataGetCallback(value:Function):void {
 //        _metaDataGetCallback = value;

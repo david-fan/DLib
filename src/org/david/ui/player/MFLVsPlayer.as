@@ -16,7 +16,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private var _loader:FLVLoader;
     private var _nextUrl:String;
-    private var _index:uint;
+    private var _index:uint = 1;
     private var _pause:Boolean;
 
     private var _seek:int;
@@ -25,7 +25,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     public function MFLVsPlayer() {
         _flvsIndex = new FLVsIndex();
-        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
+//        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
     }
 
     private function onParseOK(e:UIEvent):void {
@@ -34,7 +34,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private function loadNext():void {
         trace(_netStream.bufferLength);
-        if (_pause || _netStream.bufferLength > 20)
+        if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
             setTimeout(loadNext, 1000);
         else
             _loadNext();
@@ -55,8 +55,6 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function play():void {
-        if (!_flvsIndex.parseOK)
-            return;
         _netConnection = new NetConnection();
         _netConnection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
         _netConnection.connect(null);
@@ -116,6 +114,13 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
             case "NetStream.Seek.Notify":
 //                trace(e.info);
                 break;
+            case "NetStream.Buffer.Empty":
+//                dispatchEvent(new UIEvent(Buffering));
+                buffering = true;
+                break;
+            case "NetStream.Buffer.Full":
+                buffering = false;
+                break;
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
                 _netStream.play(null);
@@ -139,6 +144,15 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                     _loader.close();
                 break
         }
+    }
+
+    private var _buffering:Boolean;
+    public function set buffering(value:Boolean):void {
+        _buffering = value;
+    }
+
+    public function get buffering():Boolean {
+        return _buffering;
     }
 
     private function reset():void {
@@ -198,6 +212,12 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _metaDataGetCallback:Function;
     public function set metaDataGetCallback(value:Function):void {
         _metaDataGetCallback = value;
+    }
+
+    private var _playStatusCallback:Function
+
+    public function set playStatusCallback(value:Function):void {
+        _playStatusCallback = value;
     }
 
     public function get flvsIndexUrl():String {
