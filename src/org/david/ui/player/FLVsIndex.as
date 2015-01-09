@@ -15,7 +15,7 @@ import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
 public class FLVsIndex extends EventDispatcher {
-    public static var ParseOK:String = "ParseOK";
+//    public static var ParseOK:String = "ParseOK";
     public var flvsPath:String;
     public var flvsName:String;
     private var _indexUrl:String;
@@ -36,7 +36,7 @@ public class FLVsIndex extends EventDispatcher {
         timestamp = index.timestamp;
         timeIndexItems = index.timeIndexItems;
         parseOK = true;
-        dispatchEvent(new UIEvent(FLVsIndex.ParseOK));
+//        dispatchEvent(new UIEvent(FLVsIndex.ParseOK));
     }
 
     public function getFlvUrl(index:int):String {
@@ -55,6 +55,7 @@ public class FLVsIndex extends EventDispatcher {
 //        var reg:RegExp = /\d+-\d+/g;
 //        flvsName = reg.exec(_indexUrl) + "-{0}-{1}.flv";
         flvsName = "{0}-{1}.flv";
+        parseOK = false;
         if (loader)
             loader.stop();
 

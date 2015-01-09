@@ -159,6 +159,12 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         _metaDataCallback = value;
     }
 
+    private var _playStatusCallback:Function
+
+    public function set playStatusCallback(value:Function):void {
+        _playStatusCallback = value;
+    }
+
     public function togglePause():void {
         _netStream.togglePause();
         _playing = !_playing;

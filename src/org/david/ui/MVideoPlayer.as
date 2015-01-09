@@ -41,8 +41,15 @@ public class MVideoPlayer extends MSprite {
             _bufferSprite.visible = value;
     }
 
+    private var _buffering:Boolean;
+
     public function set buffering(value:Boolean):void {
-        bufferVisible = value;
+        _buffering = value;
+        bufferVisible = _buffering;
+    }
+
+    public function get buffering():Boolean {
+        return _buffering;
     }
 
     private var _mute:Boolean;
@@ -141,6 +148,7 @@ public class MVideoPlayer extends MSprite {
             _player = null;
         }
         var player:MRTMPPlayer = new MRTMPPlayer(true);
+        player.playStatusCallback = playStatusChange;
         player.streamCreateCallback = attachStream;
         player.server = server;
         player.filename = streamId;
@@ -157,11 +165,13 @@ public class MVideoPlayer extends MSprite {
         if (range) {
             var rangePlayer:MRangePlayer = new MRangePlayer();
             rangePlayer.streamCreateCallback = attachStream;
+            rangePlayer.playStatusCallback = playStatusChange;
             rangePlayer.playUrl = flvURL;
             _player = rangePlayer;
         } else {
             var rtmpplayer:MRTMPPlayer = new MRTMPPlayer(true);
             rtmpplayer.streamCreateCallback = attachStream;
+            rtmpplayer.playStatusCallback = playStatusChange;
             rtmpplayer.server = null;
             rtmpplayer.filename = flvURL;
             _player = rtmpplayer;
@@ -176,6 +186,7 @@ public class MVideoPlayer extends MSprite {
         }
 
         var rtmpplayer:MFLVsPlayer = new MFLVsPlayer();
+        rtmpplayer.playStatusCallback = playStatusChange;
         rtmpplayer.streamCreateCallback = attachStream;
         rtmpplayer.flvsIndexUrl = flvPath;
         if (seek > 0)
@@ -195,6 +206,7 @@ public class MVideoPlayer extends MSprite {
             _player = null;
         }
         var hls:MHLSPlayer = new MHLSPlayer();
+        hls.playStatusCallback = playStatusChange;
         hls.streamCreateCallback = attachStream;
         hls.m3u8Url = m3u8Url;
         _player = hls;
@@ -210,6 +222,10 @@ public class MVideoPlayer extends MSprite {
         if (_player is MHLSPlayer)
             (_player as MHLSPlayer).stage = this.stage;
         removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+    }
+
+    private function playStatusChange(status:String):void {
+
     }
 
     private function attachStream(stream:NetStream):void {
