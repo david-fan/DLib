@@ -43,7 +43,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private function _loadNext():void {
         _nextUrl = getNextUrl();
         if (_nextUrl == null)
+        {
             end();
+            return;
+        }
         _loader = new FLVLoader(_nextUrl, playBytes, loadNext);
         _loader.start();
     }
