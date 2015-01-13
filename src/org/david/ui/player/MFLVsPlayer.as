@@ -143,8 +143,15 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
             case "NetConnection.Connect.Closed":
                 _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
                 _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                if (_loader)
-                    _loader.close();
+                if (_loader) {
+                    try {
+                        _loader.close();
+                    }
+                    catch (e:Error) {
+                        LogUtil.error(e.message);
+                    }
+                }
+
                 break
         }
     }
