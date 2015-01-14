@@ -9,6 +9,7 @@ import flash.utils.setTimeout;
 
 import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
+import org.david.util.LogUtil;
 
 public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _netStream:NetStream;
@@ -18,6 +19,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _nextUrl:String;
     private var _index:uint = 1;
     private var _pause:Boolean;
+    private var _stop:Boolean;
 
     private var _seek:int;
 
@@ -33,7 +35,9 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function loadNext():void {
-        trace(_netStream.bufferLength);
+        LogUtil.debug(_netStream.bufferLength);
+        if (_stop)
+            return;
         if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
             setTimeout(loadNext, 1000);
         else
@@ -43,7 +47,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private function _loadNext():void {
         _nextUrl = getNextUrl();
         if (_nextUrl == null)
+        {
             end();
+            return;
+        }
         _loader = new FLVLoader(_nextUrl, playBytes, loadNext);
         _loader.start();
     }
@@ -72,8 +79,15 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function stop():void {
-        if (_loader)
-            _loader.close();
+        _stop = true;
+        if (_loader) {
+            try {
+                _loader.close();
+            }
+            catch (e:Error) {
+                LogUtil.error(e.message);
+            }
+        }
         if (_netConnection)
             _netConnection.close();
         if (_netStream)
@@ -140,8 +154,14 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
             case "NetConnection.Connect.Closed":
                 _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
                 _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                if (_loader)
-                    _loader.close();
+                if (_loader) {
+                    try {
+                        _loader.close();
+                    }
+                    catch (e:Error) {
+                        LogUtil.error(e.message);
+                    }
+                }
                 break
         }
     }

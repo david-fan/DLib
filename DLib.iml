@@ -5,9 +5,6 @@
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.1">
           <entries>
-            <entry library-name="greensock" library-level="application">
-              <dependency linkage="Merged" />
-            </entry>
             <entry library-id="eb3561b1-a385-4bbe-855c-3b4f0f15d502">
               <dependency linkage="Merged" />
             </entry>
@@ -15,6 +12,9 @@
               <dependency linkage="Merged" />
             </entry>
             <entry library-id="e79d2ef9-9f89-49f1-aa3d-6ec6fa9c8f82">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="05d8475e-64d8-41af-aeea-5fcd42d57a82">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -64,6 +64,16 @@
         <properties id="e79d2ef9-9f89-49f1-aa3d-6ec6fa9c8f82" />
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/as3crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="05d8475e-64d8-41af-aeea-5fcd42d57a82" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/greensock.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
