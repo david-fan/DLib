@@ -14,7 +14,7 @@ package org.david.ui {
 			super();
 			this.mouseChildren = false;
 			this.mouseEnabled = false;
-			_block = new MTextBlock(null, 14, 0xffffff, 150);
+			_block = new MTextBlock(null, 14, 0xCCCCCC, 150);
 			addChild(_block);
 		}
 

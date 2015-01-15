@@ -12,10 +12,10 @@ package org.david.ui {
 	 */
 	public class MToolTipBg extends MContainer {
 		private var _triangleSprite : Sprite;
-		private var _bgalpha : Number = 0.6;
-		private var _lineColor : uint = 0xffffff;
+		private var _bgalpha : Number = 0.5;
+		private var _lineColor : uint = 0x333333;
 		private var _lineWidth : uint = 1;
-		private var _bgColor : uint = 0x666666;
+		private var _bgColor : uint = 0x000000;
 		private var _padding : int = 5;
 		private const dis : int = 10;
 		private var _triangleWidth : int = 10;
