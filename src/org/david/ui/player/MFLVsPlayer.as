@@ -120,6 +120,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function onNetStatus(e:NetStatusEvent):void {
+        LogUtil.debug(e.info.code);
         var code:String = e.info.code;
         switch (code) {
             case "NetStream.SeekStart.Notify":
