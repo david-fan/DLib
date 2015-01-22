@@ -26,7 +26,7 @@ public class UIEvent extends Event {
     public static const ListItemRollOut:String="UIEvent.ListItemRollOut";
     //
     public static const ItemSeleted:String = "UIEvent.ItemSelected";
-
+    public static const ListShowClick:String="UIEvent.ListShowClick";
     public function UIEvent(type:String, eventdata:Object = null, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
         this.data = eventdata;

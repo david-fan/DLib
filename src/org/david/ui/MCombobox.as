@@ -69,6 +69,7 @@ public class MCombobox extends MUIComponent {
 //            addChild(_showSkin);
 //            removeChild(_hideSkin);
             addChildXY(_listContainer, 0, _showSkin.height);
+            dispatchEvent(new UIEvent(UIEvent.ListShowClick));
         }
     }
 
