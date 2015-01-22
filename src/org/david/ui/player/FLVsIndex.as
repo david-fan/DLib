@@ -18,6 +18,8 @@ public class FLVsIndex extends EventDispatcher {
 //    public static var ParseOK:String = "ParseOK";
     public var flvsPath:String;
     public var flvsName:String;
+    public var zero4Thirteenth:Boolean;
+    private var _loadedFirst:Boolean;
     private var _indexUrl:String;
     private var loader:DataLoad;
 
@@ -25,6 +27,7 @@ public class FLVsIndex extends EventDispatcher {
     public var timestamp:Number;
     public var timeIndexItems:Array;
     public var parseOK:Boolean;
+
 
     public function FLVsIndex() {
     }
@@ -35,6 +38,7 @@ public class FLVsIndex extends EventDispatcher {
         duration = index.duration;
         timestamp = index.timestamp;
         timeIndexItems = index.timeIndexItems;
+        zero4Thirteenth = index.zero4Thirteenth;
         parseOK = true;
 //        dispatchEvent(new UIEvent(FLVsIndex.ParseOK));
     }
@@ -42,6 +46,10 @@ public class FLVsIndex extends EventDispatcher {
     public function getFlvUrl(index:int):String {
         if (index > timeIndexItems.length)
             return null;
+        if (zero4Thirteenth && !_loadedFirst) {
+            _loadedFirst = true;
+            return flvsPath + "/" + StrUtil.replace(flvsName, 0, timestamp);
+        }
         return flvsPath + "/" + StrUtil.replace(flvsName, index, timestamp);
     }
 
