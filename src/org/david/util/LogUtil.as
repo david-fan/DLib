@@ -62,11 +62,11 @@ public class LogUtil {
             _textField.appendText("\n");
         }
         else {
-            if (CONFIG::LOGGING) {
-                trace("[" + type + "]" + msg);
-            } else {
+            if (CONFIG::JSLog) {
                 if (ExternalInterface.available)
                     ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
+            } else {
+                trace("[" + type + "]" + msg);
             }
             if (externalLog)
                 externalLog("[" + type + "]" + msg);
@@ -88,9 +88,7 @@ public class LogUtil {
     }
 
     public static function debug(...rest):void {
-        if (CONFIG::LOGGING) {
-            trace(rest.join(","));
-        }
+        instance.showMsg(rest.join(","), "debug");
     }
 }
 }
