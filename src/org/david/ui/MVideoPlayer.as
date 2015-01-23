@@ -74,6 +74,10 @@ public class MVideoPlayer extends MSprite {
             _player.volume = value;
     }
 
+    public function get video():Video{
+        return _video;
+    }
+
     public function MVideoPlayer(w:Number, h:Number, keepDefaultAspect:Boolean = true) {
         if (w > 0 && h > 0) {
             _videoWidth = w;
@@ -113,7 +117,7 @@ public class MVideoPlayer extends MSprite {
                 }
             }
         }
-        dispatchEvent(new UIEvent(AutoSize));
+        dispatchEvent(new UIEvent(AutoSize,_video));
     }
 
     public function playCam(c:Camera):void {
@@ -121,7 +125,7 @@ public class MVideoPlayer extends MSprite {
         bufferVisible = false;
         _videoWidth = c.width;
         _videoHeight = c.height;
-        dispatchEvent(new UIEvent(AutoSize));
+        dispatchEvent(new UIEvent(AutoSize,_video));
     }
 
     private function play():void {
