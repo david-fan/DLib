@@ -247,6 +247,9 @@ public class MImage extends MSprite implements IToolTipUI {
     }
 
     override public function get width():Number {
+        if(this.sizeType==KEEPSCALE&& this._image != null){
+            return  this._image.width;
+        }
         if (this.sizeType == AUTO && this._image != null) {
             return this._image.width;
         }
@@ -259,6 +262,9 @@ public class MImage extends MSprite implements IToolTipUI {
     }
 
     override public function get height():Number {
+        if(this.sizeType==KEEPSCALE&& this._image != null){
+            return  this._image.height;
+        }
         if (this.sizeType == AUTO&& this._image != null) {
             return this._image.height;
         }
