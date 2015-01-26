@@ -70,8 +70,16 @@ public class MStreamPublisher extends EventDispatcher {
         _liveId = value;
     }
 
+    public function get liveId():String {
+        return _liveId;
+    }
+
     public function set server(vaule:String):void {
         _server = vaule;
+    }
+
+    public function get server():String {
+        return _server;
     }
 
     public function set video(value:Boolean):void {
