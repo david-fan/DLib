@@ -37,7 +37,6 @@
     </content>
     <orderEntry type="jdk" jdkName="flex_sdk_4.6.0.23201B" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="CasaLib_1.4.1" level="application" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
         <properties id="eb3561b1-a385-4bbe-855c-3b4f0f15d502" />
