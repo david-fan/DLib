@@ -1,6 +1,7 @@
 package org.david.ui {
 import flash.display.Bitmap;
 import flash.events.HTTPStatusEvent;
+import flash.system.LoaderContext;
 import flash.utils.setTimeout;
 
 import org.david.ui.core.IToolTipUI;
@@ -128,7 +129,7 @@ public class MImage extends MSprite implements IToolTipUI {
             this._loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS,onHttpStatus);
             this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onIoError);
         }
-        this._loader.load(new URLRequest(_source as String));
+        this._loader.load(new URLRequest(_source as String),new LoaderContext(true));
         this.showWait();
     }
 
@@ -247,6 +248,9 @@ public class MImage extends MSprite implements IToolTipUI {
     }
 
     override public function get width():Number {
+        if(this.sizeType==KEEPSCALE&& this._image != null){
+            return  this._image.width;
+        }
         if (this.sizeType == AUTO && this._image != null) {
             return this._image.width;
         }
@@ -259,6 +263,9 @@ public class MImage extends MSprite implements IToolTipUI {
     }
 
     override public function get height():Number {
+        if(this.sizeType==KEEPSCALE&& this._image != null){
+            return  this._image.height;
+        }
         if (this.sizeType == AUTO&& this._image != null) {
             return this._image.height;
         }
