@@ -46,8 +46,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private function _loadNext():void {
         _nextUrl = getNextUrl();
-        if (_nextUrl == null)
-        {
+        if (_nextUrl == null) {
             end();
             return;
         }
@@ -69,12 +68,14 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function pause():void {
-        _netStream.pause();
+        if (_netStream)
+            _netStream.pause();
         _pause = true;
     }
 
     public function resume():void {
-        _netStream.resume();
+        if (_netStream)
+            _netStream.resume();
         _pause = false;
     }
 
@@ -140,6 +141,8 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                 _netStream = new NetStream(_netConnection);
                 _netStream.play(null);
                 _netStream.client = this;
+                if(_pause)
+                    _netStream.pause();
                 _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 //                _video = new Video();
 //                _video.attachNetStream(_netStream);

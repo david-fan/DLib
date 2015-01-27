@@ -132,10 +132,10 @@ public class MStreamPublisher extends EventDispatcher {
     }
 
     private function publishStreamStatus(evt:NetStatusEvent):void {
-        trace("[NetStream Status]", evt.info.code, evt.info.message);
+        LogUtil.debug("[NetStream Status]", evt.info.code, evt.info.message);
         switch (evt.info.code) {
             case Start :
-                trace(_publishStream.videoStreamSettings);
+                LogUtil.debug(_publishStream.videoStreamSettings);
                 _publishing = true;
                 dispatchEvent(new UIEvent(PublishStart));
                 break;
@@ -146,7 +146,7 @@ public class MStreamPublisher extends EventDispatcher {
     }
 
     private function publishConnectionStatus(evt:NetStatusEvent):void {
-        trace("[Connection Status]" + evt.info.code);
+        LogUtil.debug("[Connection Status]" + evt.info.code);
         switch (evt.info.code) {
             case "NetConnection.Connect.Success" :
                 _publishStream = new NetStream(publishConnection);
