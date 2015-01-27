@@ -208,6 +208,8 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _start = getTimer();
         if (_stream)
             _stream.play(_filename);
+        if (_ispause)
+            _stream.pause();
         buffering = true;
 
         setVolume();
