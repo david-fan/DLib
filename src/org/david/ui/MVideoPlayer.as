@@ -235,10 +235,10 @@ public class MVideoPlayer extends MSprite {
     private function attachStream(stream:NetStream):void {
         _video.attachNetStream(stream);
         _stream = stream;
-        _player.metaDataGetCallback = metaData;
+        _player.metaDataGetCallback = metaDataGet;
     }
 
-    private function metaData(info:Object):void {
+    private function metaDataGet(info:Object):void {
 //        _videoWidth = info.width;
 //        _videoHeight = info.height;
         resize();
