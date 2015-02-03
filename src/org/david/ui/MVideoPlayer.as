@@ -17,7 +17,13 @@ import org.david.ui.player.MHLSPlayer;
 import org.david.util.LogUtil;
 
 public class MVideoPlayer extends MSprite {
-    public static const AutoSize:String = "Player.SizeChange";
+    public static const Empty:String = "Empty";
+    public static const Full:String = "Full";
+    public static const Start:String = "Start";
+    public static const Pause:String = "Pause";
+    public static const Stop:String = "Stop";
+    public static const PlayStatus:String = "PlayStatus";
+    public static const AutoSize:String = "AutoSize";
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;
@@ -25,32 +31,32 @@ public class MVideoPlayer extends MSprite {
     private var _videoHeight:Number = 480;
     private var _keepDefaultAspect:Boolean;
 
-    private var _bufferSprite:DisplayObject;
+//    private var _bufferSprite:DisplayObject;
 
-    public function get bufferSprite():DisplayObject {
-        return _bufferSprite;
-    }
+//    public function get bufferSprite():DisplayObject {
+//        return _bufferSprite;
+//    }
+//
+//    public function set bufferSprite(value:DisplayObject):void {
+//        _bufferSprite = value;
+//        bufferVisible = false;
+//    }
 
-    public function set bufferSprite(value:DisplayObject):void {
-        _bufferSprite = value;
-        bufferVisible = false;
-    }
+//    public function set bufferVisible(value:Boolean):void {
+//        if (_bufferSprite)
+//            _bufferSprite.visible = value;
+//    }
 
-    public function set bufferVisible(value:Boolean):void {
-        if (_bufferSprite)
-            _bufferSprite.visible = value;
-    }
+//    private var _buffering:Boolean;
 
-    private var _buffering:Boolean;
-
-    public function set buffering(value:Boolean):void {
-        _buffering = value;
-        bufferVisible = _buffering;
-    }
-
-    public function get buffering():Boolean {
-        return _buffering;
-    }
+//    public function set buffering(value:Boolean):void {
+//        _buffering = value;
+//        bufferVisible = _buffering;
+//    }
+//
+//    public function get buffering():Boolean {
+//        return _buffering;
+//    }
 
     private var _mute:Boolean;
     public function get mute():Boolean {
@@ -74,7 +80,7 @@ public class MVideoPlayer extends MSprite {
             _player.volume = value;
     }
 
-    public function get video():Video{
+    public function get video():Video {
         return _video;
     }
 
@@ -117,15 +123,15 @@ public class MVideoPlayer extends MSprite {
                 }
             }
         }
-        dispatchEvent(new UIEvent(AutoSize,_video));
+        dispatchEvent(new UIEvent(AutoSize, _video));
     }
 
     public function playCam(c:Camera):void {
         _video.attachCamera(c);
-        bufferVisible = false;
+//        bufferVisible = false;
         _videoWidth = c.width;
         _videoHeight = c.height;
-        dispatchEvent(new UIEvent(AutoSize,_video));
+        dispatchEvent(new UIEvent(AutoSize, _video));
     }
 
     private function play():void {
@@ -229,7 +235,7 @@ public class MVideoPlayer extends MSprite {
     }
 
     private function playStatusChange(status:String):void {
-
+        dispatchEvent(new UIEvent(PlayStatus, status));
     }
 
     private function attachStream(stream:NetStream):void {

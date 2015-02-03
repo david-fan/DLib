@@ -17,13 +17,15 @@ import flash.utils.getTimer;
 import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
+import org.david.ui.MVideoPlayer;
+
 import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
 public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 //    public static const Buffering:String = "Player.Buffering";
-    public static const PlayStart:String = "Player.PlayStart";
+//    public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
 //    public static const NetConnectionStatus:String = "NetConnectionStatus";
     private var _connection:NetConnection;
@@ -54,23 +56,23 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         return _ispause;
     }
 
-    protected var _complete:Boolean;
+//    protected var _complete:Boolean;
+//
+//    public function get complete():Boolean {
+//        return _complete;
+//    }
 
-    public function get complete():Boolean {
-        return _complete;
-    }
+//    protected var _isStop:Boolean;
+//
+//    public function get isStop():Boolean {
+//        return _isStop;
+//    }
 
-    protected var _isStop:Boolean;
-
-    public function get isStop():Boolean {
-        return _isStop;
-    }
-
-    private var _isPlaying:Boolean;
-
-    public function get isPlaying():Boolean {
-        return _isPlaying;
-    }
+//    private var _isPlaying:Boolean;
+//
+//    public function get isPlaying():Boolean {
+//        return _isPlaying;
+//    }
 
     public function get autoRetry():Boolean {
         return _autoRetry;
@@ -102,14 +104,14 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         setVolume();
     }
 
-    private var _buffering:Boolean;
-    public function set buffering(value:Boolean):void {
-        _buffering = value;
-    }
-
-    public function get buffering():Boolean {
-        return _buffering;
-    }
+//    private var _buffering:Boolean;
+//    public function set buffering(value:Boolean):void {
+//        _buffering = value;
+//    }
+//
+//    public function get buffering():Boolean {
+//        return _buffering;
+//    }
 
 //    private var _metaDataGetCallback:Function;
 //    public function set metaDataGetCallback(value:Function):void {
@@ -124,44 +126,48 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 break;
             case "NetStream.Play.StreamNotFound":
                 LogUtil.log("Stream not found: " + _filename);
-                if (!_isStop && _autoRetry) {
+                if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
                 }
                 break;
             case "NetStream.Play.Start":
-                _isPlaying = false;
-                dispatchEvent(new UIEvent(PlayStart));
+//                _isPlaying = false;
+//                dispatchEvent(new UIEvent(PlayStart));
+                callPlayStatsCallback(MVideoPlayer.Start);
                 break;
             case "NetStream.Play.Stop":
                 if (_replay)
                     _stream.seek(1);
-                _isStop = true;
-                _isPlaying = false;
-                _complete = true;
+                callPlayStatsCallback(MVideoPlayer.Stop);
+//                _isStop = true;
+//                _isPlaying = false;
+//                _complete = true;
                 break;
             case "NetStream.Buffer.Flush":
-                _isStop = true;
-                _isPlaying = false;
-                _complete = true;
+//                _isStop = true;
+//                _isPlaying = false;
+//                _complete = true;
                 break;
             case "NetStream.Buffer.Empty":
 //                dispatchEvent(new UIEvent(Buffering));
-                if (!_complete)
-                    buffering = true;
+//                if (!_complete)
+//                    buffering = true;
+                callPlayStatsCallback(MVideoPlayer.Empty);
                 break;
             case "NetStream.Buffer.Full":
-                buffering = false;
+//                buffering = false;
+                callPlayStatsCallback(MVideoPlayer.Full);
                 break;
             case "NetStream.Record.Stop":
-                _isPlaying = false;
+//                _isPlaying = false;
                 break;
             case "NetStream.Video.DimensionChange":
                 LogUtil.log(event.toString());
                 break;
             case "NetConnection.Connect.Closed":
 //                dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
-                if (!_isStop && _autoRetry) {
+                if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
                 }
@@ -177,7 +183,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 break;
             case "NetConnection.Connect.Failed":
 //                dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
-                if (!_isStop && _autoRetry) {
+                if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
                 }
@@ -210,7 +216,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _stream.play(_filename);
         if (_ispause)
             _stream.pause();
-        buffering = true;
+//        buffering = true;
 
         setVolume();
     }
@@ -313,16 +319,17 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         if (_stream)
             _stream.pause();
         _ispause = true;
+        callPlayStatsCallback(MVideoPlayer.Pause);
     }
 
     public function stop():void {
         _streamCreateCallback = null;
         _metaDataCallback = null;
-        _isStop = true;
-        _isPlaying = false;
-        _complete = true;
+//        _isStop = true;
+//        _isPlaying = false;
+//        _complete = true;
         _autoRetry = false;
-        buffering = false;
+//        buffering = false;
         cleanupStream();
     }
 
@@ -330,6 +337,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         if (_stream)
             _stream.resume();
         _ispause = false;
+        callPlayStatsCallback(MVideoPlayer.Start);
     }
 
     private var _streamCreateCallback:Function;
@@ -347,6 +355,11 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
     public function set playStatusCallback(value:Function):void {
         _playStatusCallback = value;
+    }
+
+    private function callPlayStatsCallback(status:String):void {
+        if (_playStatusCallback)
+            _playStatusCallback(status);
     }
 
     public function get server():String {

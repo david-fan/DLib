@@ -7,6 +7,8 @@ import flash.net.NetStreamAppendBytesAction;
 import flash.utils.ByteArray;
 import flash.utils.setTimeout;
 
+import org.david.ui.MVideoPlayer;
+
 import org.david.ui.event.UIEvent;
 import org.david.util.LogUtil;
 import org.david.util.LogUtil;
@@ -71,12 +73,14 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         if (_netStream)
             _netStream.pause();
         _pause = true;
+        callPlayStatsCallback(MVideoPlayer.Pause);
     }
 
     public function resume():void {
         if (_netStream)
             _netStream.resume();
         _pause = false;
+        callPlayStatsCallback(MVideoPlayer.Start);
     }
 
     public function stop():void {
@@ -121,32 +125,32 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function onNetStatus(e:NetStatusEvent):void {
-        LogUtil.debug(e.info.code);
+        LogUtil.debug("NetStatusEvent:", e.info.code);
         var code:String = e.info.code;
         switch (code) {
             case "NetStream.SeekStart.Notify":
-//                trace(e.info);
                 break;
             case "NetStream.Seek.Notify":
-//                trace(e.info);
                 break;
             case "NetStream.Buffer.Empty":
-//                dispatchEvent(new UIEvent(Buffering));
-                buffering = true;
+                callPlayStatsCallback(MVideoPlayer.Empty);
                 break;
             case "NetStream.Buffer.Full":
-                buffering = false;
+                callPlayStatsCallback(MVideoPlayer.Full);
+                break;
+            case "NetStream.Play.Start":
+                callPlayStatsCallback(MVideoPlayer.Start);
+                break;
+            case "NetStream.Play.Stop":
+                callPlayStatsCallback(MVideoPlayer.Stop);
                 break;
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
                 _netStream.play(null);
                 _netStream.client = this;
-                if(_pause)
+                if (_pause)
                     _netStream.pause();
                 _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-//                _video = new Video();
-//                _video.attachNetStream(_netStream);
-//                this.addChild(_video);
                 if (_streamCreateCallback)
                     _streamCreateCallback(_netStream);
                 reset();
@@ -168,15 +172,6 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                 }
                 break
         }
-    }
-
-    private var _buffering:Boolean;
-    public function set buffering(value:Boolean):void {
-        _buffering = value;
-    }
-
-    public function get buffering():Boolean {
-        return _buffering;
     }
 
     private function reset():void {
@@ -242,6 +237,11 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     public function set playStatusCallback(value:Function):void {
         _playStatusCallback = value;
+    }
+
+    private function callPlayStatsCallback(status:String):void {
+        if (_playStatusCallback)
+            _playStatusCallback(status);
     }
 
     public function get flvsIndexUrl():String {
