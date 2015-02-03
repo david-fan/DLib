@@ -17,13 +17,15 @@ import org.david.ui.player.MHLSPlayer;
 import org.david.util.LogUtil;
 
 public class MVideoPlayer extends MSprite {
-    public static const Empty:String = "Empty";
-    public static const Full:String = "Full";
-    public static const Start:String = "Start";
+    public static const Empty:String = "NetStream.Buffer.Empty";
+    public static const Full:String = "NetStream.Buffer.Full";
+    public static const Start:String = "NetStream.Play.Start";
     public static const Pause:String = "Pause";
-    public static const Stop:String = "Stop";
+    public static const Stop:String = "NetStream.Play.Stop";
     public static const PlayStatus:String = "PlayStatus";
     public static const AutoSize:String = "AutoSize";
+    public static const Seek:String = "NetStream.Seek.Notify";
+    public static const SeekStart:String = "NetStream.SeekStart.Notify";
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;
@@ -258,10 +260,6 @@ public class MVideoPlayer extends MSprite {
             _player.stop();
             _player = null;
         }
-    }
-
-    public function replay():void {
-        LogUtil.error("no replay implement");
     }
 
     override public function set height(value:Number):void {

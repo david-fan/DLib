@@ -128,22 +128,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         LogUtil.debug("NetStatusEvent:", e.info.code);
         var code:String = e.info.code;
         switch (code) {
-            case "NetStream.SeekStart.Notify":
-                break;
-            case "NetStream.Seek.Notify":
-                break;
-            case "NetStream.Buffer.Empty":
-                callPlayStatsCallback(MVideoPlayer.Empty);
-                break;
-            case "NetStream.Buffer.Full":
-                callPlayStatsCallback(MVideoPlayer.Full);
-                break;
-            case "NetStream.Play.Start":
-                callPlayStatsCallback(MVideoPlayer.Start);
-                break;
-            case "NetStream.Play.Stop":
-                callPlayStatsCallback(MVideoPlayer.Stop);
-                break;
+
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
                 _netStream.play(null);
@@ -170,7 +155,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                         LogUtil.error(e.message);
                     }
                 }
-                break
+                break;
+            default :
+                callPlayStatsCallback(code);
+                break;
         }
     }
 

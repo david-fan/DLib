@@ -119,8 +119,9 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 //    }
 
     private function netStatusHandler(event:NetStatusEvent):void {
-        LogUtil.log("NetStatusEvent:" + event.info.code);
-        switch (event.info.code) {
+        var code:String = event.info.code;
+        LogUtil.log("NetStatusEvent:" + code);
+        switch (code) {
             case "NetConnection.Connect.Success":
                 connectStream();
                 break;
@@ -131,67 +132,36 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                     setTimeout(_play, 2 * 1000);
                 }
                 break;
-            case "NetStream.Play.Start":
-//                _isPlaying = false;
-//                dispatchEvent(new UIEvent(PlayStart));
-                callPlayStatsCallback(MVideoPlayer.Start);
-                break;
             case "NetStream.Play.Stop":
                 if (_replay)
                     _stream.seek(1);
                 callPlayStatsCallback(MVideoPlayer.Stop);
-//                _isStop = true;
-//                _isPlaying = false;
-//                _complete = true;
-                break;
-            case "NetStream.Buffer.Flush":
-//                _isStop = true;
-//                _isPlaying = false;
-//                _complete = true;
-                break;
-            case "NetStream.Buffer.Empty":
-//                dispatchEvent(new UIEvent(Buffering));
-//                if (!_complete)
-//                    buffering = true;
-                callPlayStatsCallback(MVideoPlayer.Empty);
-                break;
-            case "NetStream.Buffer.Full":
-//                buffering = false;
-                callPlayStatsCallback(MVideoPlayer.Full);
-                break;
-            case "NetStream.Record.Stop":
-//                _isPlaying = false;
-                break;
-            case "NetStream.Video.DimensionChange":
-                LogUtil.log(event.toString());
-                break;
-            case "NetConnection.Connect.Closed":
-//                dispatchEvent(new UIEvent(NetConnectionStatus, "closed"));
-                if (_autoRetry) {
-                    LogUtil.log("AutoRetry :" + _filename + " in 2 second");
-                    setTimeout(_play, 2 * 1000);
-                }
-                else {
-                    if (_connection) {
-                        _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-                        _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-                    }
-                    if (_stream) {
-                        _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-                    }
-                }
                 break;
             case "NetConnection.Connect.Failed":
-//                dispatchEvent(new UIEvent(NetConnectionStatus, "failed"));
                 if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
                 }
                 break;
-            case "NetStream.Play.Complete":
-//                _complete = true;
-//                dispatchEvent(new UIEvent(NetConnectionStatus, "complete"));
+            default :
+                callPlayStatsCallback(code);
                 break;
+//            case "NetStream.Play.Start":
+//                break;
+//            case "NetStream.Buffer.Flush":
+//                break;
+//            case "NetStream.Buffer.Empty":
+//                break;
+//            case "NetStream.Buffer.Full":
+//                break;
+//            case "NetStream.Record.Stop":
+//                break;
+//            case "NetStream.Video.DimensionChange":
+//                break;
+//            case "NetConnection.Connect.Closed":
+//                break;
+//            case "NetStream.Play.Complete":
+//                break;
         }
     }
 
