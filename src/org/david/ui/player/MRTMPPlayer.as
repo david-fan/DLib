@@ -82,7 +82,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         _autoRetry = value;
     }
 
-    private var _volume:Number = 0.6;
+    private var _volume:Number = 1;
 
     public function get volume():Number {
         return _volume;
