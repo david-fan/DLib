@@ -37,7 +37,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function loadNext():void {
-        LogUtil.debug(_netStream.bufferLength);
+        LogUtil.debug(_netStream.bufferLength, _netStream.time);
         if (_stop)
             return;
         if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
@@ -131,6 +131,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
+//                _netStream.bufferTime = 0;
                 _netStream.play(null);
                 _netStream.client = this;
                 if (_pause)
