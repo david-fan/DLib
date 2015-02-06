@@ -27,6 +27,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private var _flvsIndex:FLVsIndex;
 
+
     public function MFLVsPlayer() {
         _flvsIndex = new FLVsIndex();
 //        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
@@ -140,10 +141,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                 if (_streamCreateCallback)
                     _streamCreateCallback(_netStream);
                 reset();
-                if (_seek > 0)
-                    seek(_seek);
-                else
-                    loadNext();
+//                if (_seek > 0)
+//                    seek(_seek);
+//                else
+//                    loadNext();
                 break;
             case "NetConnection.Connect.Closed":
                 _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
@@ -163,9 +164,37 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         }
     }
 
+    private function procTimestamp(buf:ByteArray, timestamp:Number):void {
+        buf[4] = (timestamp >> 16 & 0x000000FF);
+        buf[5] = (timestamp >> 8 & 0x000000FF);
+        buf[6] = (timestamp & 0x000000FF);
+
+    }
+
     private function reset():void {
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_BEGIN);
         _netStream.appendBytes(getHeader());
+        loadZero();
+    }
+
+    private function loadZero():void {
+        if (!_flvsIndex.parseOK)
+            setTimeout(loadZero, 1000);
+
+        var zeroFLV:String = _flvsIndex.getZeroFlvUrl();
+        if (zeroFLV) {
+            _loader = new FLVLoader(zeroFLV, onLoadZero, null);
+            _loader.start();
+        } else
+            loadNext();
+    }
+
+    private function onLoadZero(bytes:ByteArray):void {
+        _netStream.appendBytes(bytes);
+        if (_seek)
+            seek(_seek);
+        else
+            loadNext();
     }
 
     private function end():void {
