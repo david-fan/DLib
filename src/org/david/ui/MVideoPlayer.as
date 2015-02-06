@@ -14,7 +14,6 @@ import org.david.ui.player.MFLVsPlayer;
 import org.david.ui.player.MRTMPPlayer;
 import org.david.ui.player.MRangePlayer;
 import org.david.ui.player.MHLSPlayer;
-import org.david.util.LogUtil;
 
 public class MVideoPlayer extends MSprite {
     public static const Empty:String = "NetStream.Buffer.Empty";
