@@ -27,6 +27,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private var _flvsIndex:FLVsIndex;
 
+
     public function MFLVsPlayer() {
         _flvsIndex = new FLVsIndex();
 //        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
@@ -37,7 +38,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function loadNext():void {
-        LogUtil.debug(_netStream.bufferLength);
+        LogUtil.debug(_netStream.bufferLength, _netStream.time);
         if (_stop)
             return;
         if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
@@ -131,6 +132,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
+//                _netStream.bufferTime = 0;
                 _netStream.play(null);
                 _netStream.client = this;
                 if (_pause)
@@ -139,10 +141,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
                 if (_streamCreateCallback)
                     _streamCreateCallback(_netStream);
                 reset();
-                if (_seek > 0)
-                    seek(_seek);
-                else
-                    loadNext();
+//                if (_seek > 0)
+//                    seek(_seek);
+//                else
+//                    loadNext();
                 break;
             case "NetConnection.Connect.Closed":
                 _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
@@ -162,9 +164,37 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         }
     }
 
+    private function procTimestamp(buf:ByteArray, timestamp:Number):void {
+        buf[4] = (timestamp >> 16 & 0x000000FF);
+        buf[5] = (timestamp >> 8 & 0x000000FF);
+        buf[6] = (timestamp & 0x000000FF);
+
+    }
+
     private function reset():void {
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_BEGIN);
         _netStream.appendBytes(getHeader());
+        loadZero();
+    }
+
+    private function loadZero():void {
+        if (!_flvsIndex.parseOK)
+            setTimeout(loadZero, 1000);
+
+        var zeroFLV:String = _flvsIndex.getZeroFlvUrl();
+        if (zeroFLV) {
+            _loader = new FLVLoader(zeroFLV, onLoadZero, null);
+            _loader.start();
+        } else
+            loadNext();
+    }
+
+    private function onLoadZero(bytes:ByteArray):void {
+        _netStream.appendBytes(bytes);
+        if (_seek)
+            seek(_seek);
+        else
+            loadNext();
     }
 
     private function end():void {

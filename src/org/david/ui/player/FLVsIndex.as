@@ -19,7 +19,7 @@ public class FLVsIndex extends EventDispatcher {
     public var flvsPath:String;
     public var flvsName:String;
     public var zero4Thirteenth:Boolean;
-    private var _loadedFirst:Boolean;
+//    private var _loadedFirst:Boolean;
     private var _indexUrl:String;
     private var loader:DataLoad;
 
@@ -46,11 +46,14 @@ public class FLVsIndex extends EventDispatcher {
     public function getFlvUrl(index:int):String {
         if (index > timeIndexItems.length)
             return null;
-        if (zero4Thirteenth && !_loadedFirst) {
-            _loadedFirst = true;
-            return flvsPath + "/" + StrUtil.replace(flvsName, 0, timestamp);
-        }
+
         return flvsPath + "/" + StrUtil.replace(flvsName, index, timestamp);
+    }
+
+    public function getZeroFlvUrl():String {
+        if (zero4Thirteenth)
+            return flvsPath + "/" + StrUtil.replace(flvsName, 0, timestamp);
+        return null;
     }
 
     public function get indexUrl():String {
