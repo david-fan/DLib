@@ -17,9 +17,6 @@
             <entry library-id="05d8475e-64d8-41af-aeea-5fcd42d57a82">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-name="as3crypto" library-level="application">
-              <dependency linkage="Merged" />
-            </entry>
           </entries>
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
