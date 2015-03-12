@@ -19,7 +19,7 @@ import org.david.util.LogUtil;
 /**
  * 文本组件，使用嵌入字体
  */
-public class MTextBlock extends MUIComponent implements IText{
+public class MTextBlock extends MUIComponent implements IText {
     public static var DefaultFontName:String = "宋体";
     protected var _element:TextElement;
     protected var _block:TextBlock;

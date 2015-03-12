@@ -38,7 +38,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     private var _replay:Boolean;
     private var _log:Boolean;
     protected var _metaData:Object;
-    private var _bufferTime:Number = 0.1;
+    private var _bufferTime:Number = 0.5;
 
     public function MRTMPPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true, replay:Boolean = false) {
         super();

@@ -163,8 +163,10 @@ public class MVideoPlayer extends MSprite {
         player.streamCreateCallback = attachStream;
         player.server = server;
         player.filename = streamId;
+        player.bufferTime = _bufferTime;
 
         _player = player;
+
         play();
     }
 
@@ -258,6 +260,15 @@ public class MVideoPlayer extends MSprite {
         if (_player) {
             _player.stop();
             _player = null;
+        }
+    }
+
+    private var _bufferTime:Number = 0.5;
+
+    public function set bufferTime(value:Number):void {
+        _bufferTime = value;
+        if (_player is MRTMPPlayer) {
+            (_player as MRTMPPlayer).bufferTime = value;
         }
     }
 

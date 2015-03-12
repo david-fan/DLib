@@ -3,7 +3,7 @@
  */
 package org.david.ui.core {
 public interface IText {
-    function set text(value:String);
+    function set text(value:String):void;
 
     function get text():String;
 }
