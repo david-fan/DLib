@@ -1,5 +1,6 @@
 package org.david.ui {
-	import org.david.ui.core.MUIComponent;
+import org.david.ui.core.IText;
+import org.david.ui.core.MUIComponent;
 
 	import flash.events.MouseEvent;
 
@@ -20,7 +21,7 @@ package org.david.ui {
 		protected var _currentPage : int;
 		public var _nextBtn : MButton;
 		public var _preBtn : MButton;
-		public var _pageInfo : MTextBlock;
+		public var _pageInfo : IText;
 		public var _firstBtn : MButton;
 		public var _lastBtn : MButton;
 
@@ -36,7 +37,7 @@ package org.david.ui {
 		 * @param itemHDistance 水平方向的项间距
 		 * @param itemVDistance 垂直方向的项间距
 		 */
-		public function MListBase(itemClass : Class, row : int, col : int, preBtn : MButton, nextBtn : MButton, pageInfo : MTextBlock = null, firstBtn : MButton = null, lastBtn : MButton = null, itemHDistance : Number = 0, itemVDistance : Number = 0) {
+		public function MListBase(itemClass : Class, row : int, col : int, preBtn : MButton, nextBtn : MButton, pageInfo : IText = null, firstBtn : MButton = null, lastBtn : MButton = null, itemHDistance : Number = 0, itemVDistance : Number = 0) {
 			super(false);
 			this._itemClass = itemClass;
 			this._itemVDistance = itemVDistance;

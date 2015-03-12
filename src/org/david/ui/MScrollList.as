@@ -1,7 +1,9 @@
 package org.david.ui {
 	import com.greensock.TweenLite;
 
-	import org.david.ui.core.MSprite;
+import org.david.ui.core.IText;
+
+import org.david.ui.core.MSprite;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -31,7 +33,7 @@ package org.david.ui {
 		 * @param itemVDistance 垂直方向的项间距
 		 * @param renderWhole 是否整体渲染
 		 */
-		public function MScrollList(itemClass : Class, row : int, col : int, preBtn : MButton, nextBtn : MButton, pageInfo : MTextBlock = null, itemHDistance : Number = 0, itemVDistance : Number = 0) {
+		public function MScrollList(itemClass : Class, row : int, col : int, preBtn : MButton, nextBtn : MButton, pageInfo : IText = null, itemHDistance : Number = 0, itemVDistance : Number = 0) {
 			super(itemClass, row, col, preBtn, nextBtn, pageInfo, null, null, itemHDistance, itemVDistance);
 			_scrollContainer = new MSprite();
 			this.addChild(_scrollContainer);

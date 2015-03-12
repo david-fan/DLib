@@ -12,9 +12,11 @@ import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+import org.david.ui.core.IText;
+
 import org.david.util.FilterUtil;
 
-public class MTextField extends TextField {
+public class MTextField extends TextField implements IText{
     public function MTextField(size:int, color:uint, wrap:Boolean, fontType:String = null, select:Boolean = true) {
         super();
         autoSize = TextFieldAutoSize.LEFT;
