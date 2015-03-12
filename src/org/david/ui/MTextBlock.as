@@ -12,6 +12,8 @@ import flash.text.engine.TextBlock;
 import flash.text.engine.TextElement;
 import flash.text.engine.TextLine;
 
+import org.david.util.LogUtil;
+
 /**
  * 文本组件，使用嵌入字体
  */
@@ -29,13 +31,13 @@ public class MTextBlock extends MUIComponent {
         this.mouseChildren = false;
         this.mouseEnabled = false;
         var fontDesc:FontDescription = new FontDescription();
-        fontDesc.fontName=MTextBlock.DefaultFontName;
-        fontDesc.fontLookup=FontLookup.EMBEDDED_CFF;
+        fontDesc.fontName = MTextBlock.DefaultFontName;
+        fontDesc.fontLookup = FontLookup.DEVICE;
         _size = size;
         _color = color;
 
-        var com = FontDescription.isFontCompatible(MTextBlock.DefaultFontName, FontWeight.NORMAL, FontPosture.NORMAL);
-        trace(com);
+        var com:Boolean = FontDescription.isFontCompatible(MTextBlock.DefaultFontName, FontWeight.NORMAL, FontPosture.NORMAL);
+        LogUtil.debug("isFontCompatible", com, fontDesc.fontName, fontDesc.fontLookup);
 
         style = new ElementFormat();
         style.fontDescription = fontDesc;

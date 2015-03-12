@@ -77,7 +77,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="as3crypto" level="application" />
   </component>
 </module>
 

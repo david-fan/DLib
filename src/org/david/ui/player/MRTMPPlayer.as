@@ -38,6 +38,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     private var _replay:Boolean;
     private var _log:Boolean;
     protected var _metaData:Object;
+    private var _bufferTime:Number = 0.1;
 
     public function MRTMPPlayer(autoRetry:Boolean = false, debug:Boolean = false, log:Boolean = true, replay:Boolean = false) {
         super();
@@ -80,6 +81,14 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
     public function set autoRetry(value:Boolean):void {
         _autoRetry = value;
+    }
+
+    public function get bufferTime():Number {
+        return _bufferTime;
+    }
+
+    public function set bufferTime(value:Number):void {
+        _bufferTime = value;
     }
 
     private var _volume:Number = 1;
@@ -184,7 +193,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _stream = new NetStream(_connection);
             if (_streamCreateCallback)
                 _streamCreateCallback(_stream);
-            _stream.bufferTime = _server ? 0 : 01;
+            _stream.bufferTime = _bufferTime;
             _stream.maxPauseBufferTime = 120;
             _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _stream.client = this;
@@ -348,6 +357,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
     public function set server(value:String):void {
         _server = value;
+//        _bufferTime = 0;
     }
 
     public function get filename():String {

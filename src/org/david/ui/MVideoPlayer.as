@@ -190,7 +190,7 @@ public class MVideoPlayer extends MSprite {
         play();
     }
 
-    public function playFLVs(flvPath:String, seek:int = 0):void {
+    public function playFLVs(flvsIndexUrl:String, seek:int = 0):void {
         if (_player) {
             _player.stop();
             _player = null;
@@ -199,7 +199,7 @@ public class MVideoPlayer extends MSprite {
         var rtmpplayer:MFLVsPlayer = new MFLVsPlayer();
         rtmpplayer.playStatusCallback = playStatusChange;
         rtmpplayer.streamCreateCallback = attachStream;
-        rtmpplayer.flvsIndexUrl = flvPath;
+        rtmpplayer.flvsIndexUrl = flvsIndexUrl;
         if (seek > 0)
             rtmpplayer.seek(seek);
         _player = rtmpplayer;
