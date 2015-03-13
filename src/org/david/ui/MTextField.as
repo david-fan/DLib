@@ -17,9 +17,9 @@ import org.david.ui.core.IText;
 import org.david.util.FilterUtil;
 
 public class MTextField extends TextField implements IText{
-    public function MTextField(size:int, color:uint, wrap:Boolean, fontType:String = null, select:Boolean = true) {
+    public function MTextField(size:int, color:uint, wrap:Boolean, fontType:String = null, select:Boolean = true,autoAlign:String=TextFieldAutoSize.LEFT) {
         super();
-        autoSize = TextFieldAutoSize.LEFT;
+        autoSize = autoAlign;
         background = false;
         border = false;
         wordWrap = wrap;

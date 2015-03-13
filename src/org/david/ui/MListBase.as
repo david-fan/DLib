@@ -97,14 +97,16 @@ import org.david.ui.core.MUIComponent;
 				if (_firstBtn)
 					_firstBtn.enable = false;
 				_preBtn.enable = false;
+                _preBtn.setSkin(1);
 			}
 			if (_currentPage >= _totalPage - 1) {
 				if (_lastBtn)
 					_lastBtn.enable = false;
 				_nextBtn.enable = false;
+                _nextBtn.setSkin(1);
 			}
 			if (_pageInfo)
-				_pageInfo.text = (_currentPage + 1) + " / " + (_totalPage == 0 ? 1 : _totalPage);
+				_pageInfo.text = (_currentPage + 1) + " / " + (_totalPage == 0 ? String(1) : String(_totalPage));
 		}
 
 		/**
