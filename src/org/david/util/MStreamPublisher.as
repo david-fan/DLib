@@ -241,6 +241,7 @@ public class MStreamPublisher extends EventDispatcher {
         publishConnection.addEventListener(NetStatusEvent.NET_STATUS, publishConnectionStatus);
         //var server:String = _rtmpUrl.substr(0, _rtmpUrl.lastIndexOf("\/"));
         publishConnection.connect(_server);
+        LogUtil.debug("connect to", _server);
     }
 
     private function checkMicCam():void {
