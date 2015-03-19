@@ -215,12 +215,16 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     private function onEnterFrame():void {
         if (!_stream)
             return;
-        var ns:NetStream = _stream;
-        if (ns && _metaData) {
-            var info:String = ("缓冲区：" + ns.bufferTime + "s\t\t已缓冲：" + ns.bufferLength + "s\t\t已下载：" + int(ns.bytesLoaded / 1024) + "k\t\t总：" + int(ns.bytesTotal / 1024) + "k\t\t速度:" + int((ns.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" + "\n播放地址：" + _filename + "\n分辨率：" + _metaData.width + "*" + _metaData.height + "\t\tfps：" + _metaData.fps + "\t\tvideo：" + _metaData.videocodecid + " | " + _metaData.videodatarate + "\t\taudio：" + _metaData.audiocodecid + " | " + _metaData.audiodatarate + "\t\tprofile：" + _metaData.profile + "\t\tlevel：" + _metaData.level);
-            var patten:RegExp = /undefined/g;
-            var tempInfo:String = info.replace(patten, "\"\"");
+
+        var info:String;
+        if (_stream) {
+            info = ("缓冲区：" + _stream.bufferTime + "s\t\t已缓冲：" + _stream.bufferLength + "s\t\t已下载：" + int(_stream.bytesLoaded / 1024) + "k\t\t总：" + int(_stream.bytesTotal / 1024) + "k\t\t速度:" + int((_stream.bytesLoaded ) / 1024 / ((getTimer() - _start ) / 1000)) + "k/s" + "\n播放地址：" + _server + "," + _filename);
         }
+        if (_metaData) {
+            info += ("\n分辨率：" + _metaData.width + "*" + _metaData.height + "\t\tfps：" + _metaData.fps + "\t\tvideo：" + _metaData.videocodecid + " | " + _metaData.videodatarate + "\t\taudio：" + _metaData.audiocodecid + " | " + _metaData.audiodatarate + "\t\tprofile：" + _metaData.profile + "\t\tlevel：" + _metaData.level);
+        }
+        var patten:RegExp = /undefined/g;
+        var tempInfo:String = info.replace(patten, "\"\"");
         dispatchEvent(new UIEvent(DebugInfo, tempInfo));
     }
 

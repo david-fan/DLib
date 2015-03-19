@@ -52,7 +52,7 @@ public class MStreamPublisher extends EventDispatcher {
 
     private var _muteMicCam:Boolean;
 
-    private var _setting:Object = {width: 600, height: 480, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 45, profile: "main", level: 3.1};//keyframes: 48
+    private var _setting:Object = {width: 320, height: 240, fps: 15, quality: 0, buffer: 500, rate: 22, keyframes: 45, profile: "main", level: 3.1};//keyframes: 48
 
 
     public function get publishing():Boolean {
