@@ -9,38 +9,90 @@ import org.david.ui.core.MContainer;
 
 public class MRepeater extends MContainer {
     private var _distance:int;
+    private var _direction:String;
     private var _width:Number = 348;
     private var _height:Number = 262;
+    private var _count:int;
 
-    public function MRepeater(distance:int) {
+    public function MRepeater(direction:String, distance:int = 1) {
         super();
-        ;
+        _direction = direction;
         _distance = distance;
     }
+
+    public function get distance():int {
+        return _distance;
+    }
+
+    public function set distance(value:int):void {
+        _distance = value;
+    }
+
+    private function computeCount():void {
+        switch (_direction) {
+            case MDirection.Horizon:
+                _count = Math.max(Math.floor(height / (itemHeight + _distance)), 1);
+                break;
+            case MDirection.Vertical:
+                _count = Math.max(Math.floor(width / (itemWidth + _distance)), 1);
+                break;
+        }
+
+        viewChanged();
+    }
+
+//    private var _source:Array;
+//
+//    public function get source():Array {
+//        return _source;
+//    }
+//
+//    public function set source(value:Array):void {
+//        _source = value || [];
+//    }
 
     override protected function updateDisplayList():void {
         var tx:Number = _distance;
         var ty:Number = _distance;
-        var tw:Number = 0;
-        var th:Number = 0;
-        for (var i:int = 0; i < _childs.length; i++) {
-            var c:DisplayObject = _childs[i];
-            if (_width > tw) {
-                tw = tx + c.width;
-                tx = tw + _distance;
-                if (c.height > th)
-                    th = c.height;
-            } else {
-                tx = 0;
-                ty = th + _distance;
-            }
-            addChildXY(c, tx, ty);
+        var tc:int = 0;
+        var tr:int = 0;
+
+        switch (_direction) {
+            case MDirection.Horizon:
+                for (var i:int = 0; i < _childs.length; i++) {
+                    tx = _distance + (_distance + itemWidth) * tc;
+                    ty = _distance + (_distance + itemHeight) * tr;
+                    var c:DisplayObject = _childs[i];
+                    c.x = tx;
+                    c.y = ty;
+                    tr++;
+                    if (tr > (_count - 1)) {
+                        tr = 0;
+                        tc++;
+                    }
+                }
+                break;
+            case MDirection.Vertical:
+                for (var i:int = 0; i < _childs.length; i++) {
+                    tx = _distance + (_distance + itemWidth) * tc;
+                    ty = _distance + (_distance + itemHeight) * tr;
+                    var c:DisplayObject = _childs[i];
+                    c.x = tx;
+                    c.y = ty;
+                    tc++;
+                    if (tc > (_count - 1)) {
+                        tc = 0;
+                        tr++;
+                    }
+                }
+                break;
         }
         super.updateDisplayList();
     }
 
     override public function set height(value:Number):void {
         _height = value;
+        computeCount();
     }
 
     override public function get height():Number {
@@ -49,10 +101,36 @@ public class MRepeater extends MContainer {
 
     override public function set width(value:Number):void {
         _width = value;
+        computeCount();
     }
 
     override public function get width():Number {
         return _width;
+    }
+
+    private var _itemWidth:Number = 0;
+    private var _itemHeight:Number = 0;
+
+    public function get itemWidth():Number {
+        if (_itemWidth < 1)
+            _itemWidth = getMaxWidth();
+        return _itemWidth;
+    }
+
+    public function set itemWidth(value:Number):void {
+        _itemWidth = value;
+        computeCount();
+    }
+
+    public function get itemHeight():Number {
+        if (_itemHeight < 1)
+            _itemHeight = getMaxHeight();
+        return _itemHeight;
+    }
+
+    public function set itemHeight(value:Number):void {
+        _itemHeight = value;
+        computeCount();
     }
 
     private function getMaxWidth():int {
@@ -71,29 +149,30 @@ public class MRepeater extends MContainer {
         return max;
     }
 
-    protected function get minWidth():Number {
-        var w:Number = 0;
-        for (var i:int = 0; i < _childs.length; i++) {
-            var object:DisplayObject = _childs[i];
-            if (w == 0)
-                w = object.width;
-            if (object.width < w)
-                w = object.width;
-        }
-        return w;
-    }
-
-    protected function get minHeight():Number {
-        var h:Number = 0;
-        for (var i:int = 0; i < _childs.length; i++) {
-            var object:DisplayObject = _childs[i];
-            if (h == 0)
-                h = object.height;
-            if (object.height < h)
-                h = object.height;
-        }
-        return h;
-    }
+//
+//    protected function get minWidth():Number {
+//        var w:Number = 0;
+//        for (var i:int = 0; i < _childs.length; i++) {
+//            var object:DisplayObject = _childs[i];
+//            if (w == 0)
+//                w = object.width;
+//            if (object.width < w)
+//                w = object.width;
+//        }
+//        return w;
+//    }
+//
+//    protected function get minHeight():Number {
+//        var h:Number = 0;
+//        for (var i:int = 0; i < _childs.length; i++) {
+//            var object:DisplayObject = _childs[i];
+//            if (h == 0)
+//                h = object.height;
+//            if (object.height < h)
+//                h = object.height;
+//        }
+//        return h;
+//    }
 
 }
 }
