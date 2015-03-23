@@ -121,6 +121,12 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         }
     }
 
+    public function get duration():Number{
+        if(_metaData)
+            return _metaData.duration;
+        return 0;
+    }
+
     public function get time():Number {
         if (_netStream)
             return _time + _netStream.time;

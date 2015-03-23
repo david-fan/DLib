@@ -275,5 +275,11 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
          */
         _flvsIndex.indexUrl = value;
     }
+
+    public function get duration():Number{
+//        if(_metaData)
+//            return _metaData.duration;
+        return 0;
+    }
 }
 }

@@ -85,6 +85,12 @@ public class MVideoPlayer extends MSprite {
         return _video;
     }
 
+    public function get duration():Number{
+        if(_player)
+            return _player.duration;
+        return 0;
+    }
+
     public function MVideoPlayer(w:Number, h:Number, keepDefaultAspect:Boolean = true) {
         if (w > 0 && h > 0) {
             _videoWidth = w;

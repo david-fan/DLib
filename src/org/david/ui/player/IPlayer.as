@@ -26,5 +26,7 @@ public interface IPlayer {
     function set metaDataGetCallback(value:Function):void;
 
     function set playStatusCallback(value:Function):void;
+
+    function get duration():Number;
 }
 }

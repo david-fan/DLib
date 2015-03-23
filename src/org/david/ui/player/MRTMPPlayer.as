@@ -84,6 +84,12 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         _autoRetry = value;
     }
 
+    public function get duration():Number{
+        if(_metaData)
+            return _metaData.duration;
+        return 0;
+    }
+
     public function get bufferTime():Number {
         return _bufferTime;
     }

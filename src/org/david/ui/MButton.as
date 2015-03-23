@@ -35,15 +35,12 @@ public class MButton extends MUIComponent implements IToolTipUI {
     public function MButton(skin:DisplayObject, mode:int = 4, clickCallback:Function = null, overCallback:Function = null, outCallback:Function = null) {
         super(true);
 //        this.mouseEnabled = true;
-
         this.mouseChildren = false;
         this.buttonMode = true;
         _clickCallback = clickCallback;
         _overCallback = overCallback;
         _outCallback = outCallback;
-        _skin = skin as MovieClip;
         _mode = mode;
-
         if (skin) {
             if (skin.parent) {
                 skin.parent.addChild(this);
@@ -51,7 +48,14 @@ public class MButton extends MUIComponent implements IToolTipUI {
                 this.y = skin.y;
                 skin.x = skin.y = 0;
             }
-            addChild(skin);
+            if (skin is MovieClip)
+                _skin = skin as MovieClip;
+            else {
+                _skin = new MovieClip();
+                _skin.addChild(skin);
+            }
+
+            addChild(_skin);
         }
         addEventListener(MouseEvent.ROLL_OVER, onRollOver);
         addEventListener(MouseEvent.ROLL_OUT, onRollOut);
