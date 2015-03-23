@@ -31,10 +31,10 @@ public class MRepeater extends MContainer {
     private function computeCount():void {
         switch (_direction) {
             case MDirection.Horizon:
-                _count = Math.max(Math.floor(height / (itemHeight + _distance)), 1);
+                _count = Math.max(Math.floor(_height / (itemHeight + _distance)), 1);
                 break;
             case MDirection.Vertical:
-                _count = Math.max(Math.floor(width / (itemWidth + _distance)), 1);
+                _count = Math.max(Math.floor(_width / (itemWidth + _distance)), 1);
                 break;
         }
 
@@ -96,7 +96,7 @@ public class MRepeater extends MContainer {
     }
 
     override public function get height():Number {
-        return _height;
+        return super.height;
     }
 
     override public function set width(value:Number):void {
@@ -105,7 +105,7 @@ public class MRepeater extends MContainer {
     }
 
     override public function get width():Number {
-        return _width;
+        return super.width;
     }
 
     private var _itemWidth:Number = 0;
