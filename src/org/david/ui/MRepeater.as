@@ -13,6 +13,8 @@ public class MRepeater extends MContainer {
     private var _width:Number = 348;
     private var _height:Number = 262;
     private var _count:int;
+    private var _appendh:Number;
+    private var _appendw:Number;
 
     public function MRepeater(direction:String, distance:int = 1) {
         super();
@@ -32,9 +34,17 @@ public class MRepeater extends MContainer {
         switch (_direction) {
             case MDirection.Horizon:
                 _count = Math.max(Math.floor(_height / (itemHeight + _distance)), 1);
+                _appendh = (_height % (itemHeight + _distance)) / (_count + 1);
+                if (_appendh < 0)
+                    _appendh = 0;
+                _appendw = 0;
                 break;
             case MDirection.Vertical:
                 _count = Math.max(Math.floor(_width / (itemWidth + _distance)), 1);
+                _appendh = 0;
+                _appendw = (_width % (itemWidth + _distance)) / (_count + 1);
+                if (_appendw < 0)
+                    _appendw = 0;
                 break;
         }
 
@@ -60,8 +70,8 @@ public class MRepeater extends MContainer {
         switch (_direction) {
             case MDirection.Horizon:
                 for (var i:int = 0; i < _childs.length; i++) {
-                    tx = _distance + (_distance + itemWidth) * tc;
-                    ty = _distance + (_distance + itemHeight) * tr;
+                    tx = _distance + _appendw + (_distance + itemWidth + _appendw) * tc;
+                    ty = _distance + _appendh + (_distance + itemHeight + _appendh) * tr;
                     var c:DisplayObject = _childs[i];
                     c.x = tx;
                     c.y = ty;
@@ -74,8 +84,8 @@ public class MRepeater extends MContainer {
                 break;
             case MDirection.Vertical:
                 for (var i:int = 0; i < _childs.length; i++) {
-                    tx = _distance + (_distance + itemWidth) * tc;
-                    ty = _distance + (_distance + itemHeight) * tr;
+                    tx = _distance + _appendw + (_distance + itemWidth + _appendw) * tc;
+                    ty = _distance + _appendh + (_distance + itemHeight + _appendh) * tr;
                     var c:DisplayObject = _childs[i];
                     c.x = tx;
                     c.y = ty;
