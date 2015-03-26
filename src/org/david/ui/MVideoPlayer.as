@@ -11,6 +11,7 @@ import org.david.ui.core.MSprite;
 import org.david.ui.event.UIEvent;
 import org.david.ui.player.IPlayer;
 import org.david.ui.player.MFLVsPlayer;
+import org.david.ui.player.MLetvPlayer;
 import org.david.ui.player.MRTMPPlayer;
 import org.david.ui.player.MRangePlayer;
 import org.david.ui.player.MHLSPlayer;
@@ -85,8 +86,8 @@ public class MVideoPlayer extends MSprite {
         return _video;
     }
 
-    public function get duration():Number{
-        if(_player)
+    public function get duration():Number {
+        if (_player)
             return _player.duration;
         return 0;
     }
@@ -176,17 +177,25 @@ public class MVideoPlayer extends MSprite {
         play();
     }
 
-    public function playFLV(flvURL:String, range:Boolean = false):void {
+    public function playFLV(flvURL:String, range:Boolean = false, letv:Boolean = false):void {
         if (_player) {
             _player.stop();
             _player = null;
         }
         if (range) {
-            var rangePlayer:MRangePlayer = new MRangePlayer();
-            rangePlayer.streamCreateCallback = attachStream;
-            rangePlayer.playStatusCallback = playStatusChange;
-            rangePlayer.playUrl = flvURL;
-            _player = rangePlayer;
+            if (letv) {
+                var letvPlayer:MLetvPlayer = new MLetvPlayer();
+                letvPlayer.streamCreateCallback = attachStream;
+                letvPlayer.playStatusCallback = playStatusChange;
+                letvPlayer.filename = flvURL;
+                _player = letvPlayer;
+            } else {
+                var rangePlayer:MRangePlayer = new MRangePlayer();
+                rangePlayer.streamCreateCallback = attachStream;
+                rangePlayer.playStatusCallback = playStatusChange;
+                rangePlayer.playUrl = flvURL;
+                _player = rangePlayer;
+            }
         } else {
             var rtmpplayer:MRTMPPlayer = new MRTMPPlayer(true);
             rtmpplayer.streamCreateCallback = attachStream;
