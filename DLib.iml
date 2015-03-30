@@ -17,6 +17,9 @@
             <entry library-id="05d8475e-64d8-41af-aeea-5fcd42d57a82">
               <dependency linkage="Merged" />
             </entry>
+            <entry library-id="f1556750-7e54-4bfc-a5e2-02e03ed9d3b0">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
@@ -72,6 +75,16 @@
         <properties id="05d8475e-64d8-41af-aeea-5fcd42d57a82" />
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/greensock.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="f1556750-7e54-4bfc-a5e2-02e03ed9d3b0" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/corelib-20070830.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

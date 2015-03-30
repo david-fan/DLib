@@ -187,7 +187,7 @@ public class MVideoPlayer extends MSprite {
                 var letvPlayer:MLetvPlayer = new MLetvPlayer();
                 letvPlayer.streamCreateCallback = attachStream;
                 letvPlayer.playStatusCallback = playStatusChange;
-                letvPlayer.filename = flvURL;
+                letvPlayer.playUrl = flvURL;
                 _player = letvPlayer;
             } else {
                 var rangePlayer:MRangePlayer = new MRangePlayer();

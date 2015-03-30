@@ -54,13 +54,13 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
             _httpClient.cancel();
         }
 
-        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":843";
-        trace("policy file: " + policyUrl);
-        Security.loadPolicyFile(policyUrl);
+//        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":843";
+//        LogUtil.log("policy file: " + policyUrl);
+//        Security.loadPolicyFile(policyUrl);
 
         _httpClient = new HttpClient();
 
-        trace("load flv", _playUrl, range);
+        LogUtil.log("load flv", _playUrl, range);
         var uri:URI = new URI(_playUrl);
         var request:HttpRequest = new Get();
         if (range) {
@@ -69,7 +69,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 
         _httpClient.listener.onStatus = onStatus;
         _httpClient.listener.onComplete = function (event:HttpResponseEvent):void {
-            trace(event);
+            LogUtil.log(event);
         };
         _httpClient.listener.onData = onData;
         _httpClient.request(uri, request);
@@ -77,8 +77,8 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 
     private function onStatus(event:HttpStatusEvent):void {
         _lastHttpStatusCode = event.code;
-        trace("*******************http status", _lastHttpStatusCode);
-        trace(event.header.toString());
+        LogUtil.log("*******************http status", _lastHttpStatusCode);
+        LogUtil.log(event.header.toString());
         switch (_lastHttpStatusCode) {
             case "302":
                 _playUrl = event.header.getValue("Location");
@@ -182,10 +182,10 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         LogUtil.log(e.info.code, e.info.message);
         switch (code) {
             case "NetStream.SeekStart.Notify":
-//                trace(e.info);
+//                LogUtil.log(e.info);
                 break;
             case "NetStream.Seek.Notify":
-//                trace(e.info);
+//                LogUtil.log(e.info);
                 break;
             case "NetConnection.Connect.Success":
                 _netStream = new NetStream(_netConnection);
@@ -214,7 +214,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         for (var key:String in info) {
             _metaData[key] = info[key];
         }
-        trace("metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
+        LogUtil.log("metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
         _hasHeader = true;
         if (_metaDataCallback)
             _metaDataCallback(info);
@@ -223,7 +223,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function onCuePoint(info:Object):void {
-        trace("cuepoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
+        LogUtil.log("cuepoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
     }
 
     public static function getServerNameWithPort(url:String):String {
