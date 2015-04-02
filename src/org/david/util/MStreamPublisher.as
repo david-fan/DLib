@@ -37,7 +37,6 @@ public class MStreamPublisher extends EventDispatcher {
 
     public static var PublishStart:String = "MStreamPublisher.PublishStart";
     public static var PublishClose:String = "MStreamPublisher.PublishClose";
-//    public static var PublishError:String = "MStreamPublisher.PublishError";
 
     private var _camera:Camera;
     private var _microphone:Microphone;
@@ -49,8 +48,6 @@ public class MStreamPublisher extends EventDispatcher {
 
     private var _video:Boolean;
     private var _audio:Boolean;
-
-    private var _muteMicCam:Boolean;
 
     private var _setting:Object = {width: 320, height: 240, fps: 15, quality: 0, buffer: 300, rate: 22, keyframes: 45, profile: "main", level: 3.1};//keyframes: 48
 
@@ -173,6 +170,8 @@ public class MStreamPublisher extends EventDispatcher {
                     options.nonLinearProcessing = true;
                     _microphone.enhancedOptions = options;
 
+                    LogUtil.debug("microphone", _microphone.name);
+
                     _publishStream.attachAudio(_microphone);
                 }
                 if (_video) {
@@ -188,6 +187,9 @@ public class MStreamPublisher extends EventDispatcher {
                     h264Settings.setQuality(_setting.buffer * 128, quality);
 //                    h264Settings.setQuality(0, 100);
                     _publishStream.videoStreamSettings = h264Settings;
+
+                    LogUtil.debug("camera", _camera.name);
+
                     _publishStream.attachCamera(_camera);
                 }
                 if (_video || _audio) {
