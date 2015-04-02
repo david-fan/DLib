@@ -287,5 +287,9 @@ public class MVideoPlayer extends MSprite {
 //    override public function get width():Number {
 //        return super.width;
 //    }
+
+    public function get aspect():Number {
+        return _video.width / _video.height;
+    }
 }
 }
