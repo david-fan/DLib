@@ -29,9 +29,10 @@ public class MVideoPlayer extends MSprite {
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;
-    private var _videoWidth:Number = 640;
-    private var _videoHeight:Number = 480;
+//    private var _videoWidth:Number = 640;
+//    private var _videoHeight:Number = 480;
     private var _keepDefaultAspect:Boolean;
+
 
 //    private var _bufferSprite:DisplayObject;
 
@@ -92,13 +93,8 @@ public class MVideoPlayer extends MSprite {
         return 0;
     }
 
-    public function MVideoPlayer(w:Number, h:Number, keepDefaultAspect:Boolean = true) {
-        if (w > 0 && h > 0) {
-            _videoWidth = w;
-            _videoHeight = h;
-            _video = new Video(w, h);
-        } else
-            _video = new Video(_videoWidth, _videoHeight);
+    public function MVideoPlayer(w:Number = 640, h:Number = 480, keepDefaultAspect:Boolean = true) {
+        _video = new Video(w, h);
         _video.smoothing = true;
 
         _keepDefaultAspect = keepDefaultAspect;
@@ -106,39 +102,29 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function resize(w:Number = 0, h:Number = 0):void {
-        if (w > 0 && h > 0) {
-            _videoWidth = w;
-            _videoHeight = h;
-        }
-        if (!_keepDefaultAspect) {
-            _video.width = _videoWidth;
-            _video.height = _videoHeight;
+        _video.width = w || _video.width;
+        _video.height = h || _video.height;
+
+        if (!_keepDefaultAspect || _stream == null) {
             return;
         }
-        if (_stream == null) {
-            _video.width = _videoWidth;
-            _video.height = _videoHeight;
-        } else {
-            if (_video.videoWidth > 0 && _video.videoHeight > 0 && _videoWidth > 0 && _videoHeight > 0) {
-                var sx:Number = _videoWidth / _video.videoWidth;
-                var sy:Number = _videoHeight / _video.videoHeight;
-                if (sx > sy) {
-                    _video.width = _video.videoWidth * sy;
-                    _video.height = _video.videoHeight * sy;
-                } else {
-                    _video.width = _video.videoWidth * sx;
-                    _video.height = _video.videoHeight * sx;
-                }
+        if (_video.videoWidth > 0 && _video.videoHeight > 0) {
+            var sx:Number = _video.width / _video.videoWidth;
+            var sy:Number = _video.height / _video.videoHeight;
+            if (sx > sy) {
+                _video.width = _video.videoWidth * sy;
+                _video.height = _video.videoHeight * sy;
+            } else {
+                _video.width = _video.videoWidth * sx;
+                _video.height = _video.videoHeight * sx;
             }
         }
-        dispatchEvent(new UIEvent(AutoSize, _video));
     }
 
     public function playCam(c:Camera):void {
         _video.attachCamera(c);
-//        bufferVisible = false;
-        _videoWidth = c.width;
-        _videoHeight = c.height;
+        _video.width = c.width;
+        _video.height = c.height;
         dispatchEvent(new UIEvent(AutoSize, _video));
     }
 
@@ -263,9 +249,8 @@ public class MVideoPlayer extends MSprite {
     }
 
     private function metaDataGet(info:Object):void {
-//        _videoWidth = info.width;
-//        _videoHeight = info.height;
         resize();
+        dispatchEvent(new UIEvent(AutoSize, _video));
     }
 
     public function stop():void {
@@ -287,20 +272,20 @@ public class MVideoPlayer extends MSprite {
         }
     }
 
-    override public function set height(value:Number):void {
-        super.height = value;
-    }
-
-    override public function get height():Number {
-        return super.height;
-    }
-
-    override public function set width(value:Number):void {
-        super.width = value;
-    }
-
-    override public function get width():Number {
-        return super.width;
-    }
+//    override public function set height(value:Number):void {
+//        super.height = value;
+//    }
+//
+//    override public function get height():Number {
+//        return super.height;
+//    }
+//
+//    override public function set width(value:Number):void {
+//        super.width = value;
+//    }
+//
+//    override public function get width():Number {
+//        return super.width;
+//    }
 }
 }
