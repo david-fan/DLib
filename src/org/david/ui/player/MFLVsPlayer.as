@@ -5,12 +5,11 @@ import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.NetStreamAppendBytesAction;
 import flash.utils.ByteArray;
+import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import org.david.ui.MVideoPlayer;
 
-import org.david.ui.event.UIEvent;
-import org.david.util.LogUtil;
 import org.david.util.LogUtil;
 
 public class MFLVsPlayer extends EventDispatcher implements IPlayer {
@@ -23,26 +22,27 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     private var _pause:Boolean;
     private var _stop:Boolean;
 
-    private var _seek:int;
+//    private var _seek:int;
 
     private var _flvsIndex:FLVsIndex;
-
+    private var _getZero:Boolean;
+    private var _timeoutId:uint;
 
     public function MFLVsPlayer() {
         _flvsIndex = new FLVsIndex();
 //        _flvsIndex.addEventListener(FLVsIndex.ParseOK, onParseOK);
     }
 
-    private function onParseOK(e:UIEvent):void {
-        play();
-    }
+//    private function onParseOK(e:UIEvent):void {
+//        play();
+//    }
 
     private function loadNext():void {
-        LogUtil.debug(_netStream.bufferLength, _netStream.time);
+        LogUtil.debug("bufferLength", _netStream.bufferLength, "time", _netStream.time);
         if (_stop)
             return;
         if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
-            setTimeout(loadNext, 1000);
+            _timeoutId = setTimeout(loadNext, 1000);
         else
             _loadNext();
     }
@@ -64,10 +64,11 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     public function play():void {
-        _netConnection = new NetConnection();
-        _netConnection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-        _netConnection.connect(null);
-        _pause = false;
+        _index = 1;
+        cleanupStream();
+        stopLoader();
+        createStream();
+//        _pause = false;
     }
 
     public function pause():void {
@@ -86,36 +87,46 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     public function stop():void {
         _stop = true;
-        if (_loader) {
-            try {
-                _loader.close();
-            }
-            catch (e:Error) {
-                LogUtil.error(e.message);
-            }
-        }
-        if (_netConnection)
-            _netConnection.close();
-        if (_netStream)
-            _netStream.close();
+//        if (_loader) {
+//            try {
+//                _loader.close();
+//            }
+//            catch (e:Error) {
+//                LogUtil.error(e.message);
+//            }
+//        }
+//        if (_netConnection)
+//            _netConnection.close();
+//        if (_netStream)
+//            _netStream.close();
+        stopLoader();
+        cleanupStream();
     }
 
     public function seek(time:Number):void {
-        _seek = time;
-        if (_netStream == null)
-            return;
+//        _seek = time;
+//        if (_netStream == null)
+//            return;
         _index = Math.floor(time / 2);
+        _getZero = false;
+        cleanupStream();
+        stopLoader();
+        createStream();
+//        if (_loader) {
+//            try {
+//                _loader.close();
+//            }
+//            catch (e:Error) {
+//                LogUtil.error(e.message);
+//            }
+//        }
+//        resetSeek();
+    }
+
+    private function resetSeek():void {
         _netStream.seek(0);
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
-        if (_loader) {
-            try {
-                _loader.close();
-            }
-            catch (e:Error) {
-                LogUtil.error(e.message);
-            }
-        }
-        loadNext();
+//        loadNext();
     }
 
     private function playBytes(bytes:ByteArray):void {
@@ -130,34 +141,34 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         var code:String = e.info.code;
         switch (code) {
 
-            case "NetConnection.Connect.Success":
-                _netStream = new NetStream(_netConnection);
-//                _netStream.bufferTime = 0;
-                _netStream.play(null);
-                _netStream.client = this;
-                if (_pause)
-                    _netStream.pause();
-                _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                if (_streamCreateCallback)
-                    _streamCreateCallback(_netStream);
-                reset();
+//            case "NetConnection.Connect.Success":
+//                _netStream = new NetStream(_netConnection);
+////                _netStream.bufferTime = 0;
+//                _netStream.play(null);
+//                _netStream.client = this;
+//                if (_pause)
+//                    _netStream.pause();
+//                _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+//                if (_streamCreateCallback)
+//                    _streamCreateCallback(_netStream);
+//                resetBegin();
 //                if (_seek > 0)
 //                    seek(_seek);
 //                else
 //                    loadNext();
-                break;
-            case "NetConnection.Connect.Closed":
-                _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                if (_loader) {
-                    try {
-                        _loader.close();
-                    }
-                    catch (e:Error) {
-                        LogUtil.error(e.message);
-                    }
-                }
-                break;
+//                break;
+//            case "NetConnection.Connect.Closed":
+//                _netConnection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+//                _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+//                if (_loader) {
+//                    try {
+//                        _loader.close();
+//                    }
+//                    catch (e:Error) {
+//                        LogUtil.error(e.message);
+//                    }
+//                }
+//                break;
             default :
                 callPlayStatsCallback(code);
                 break;
@@ -165,36 +176,45 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     }
 
     private function procTimestamp(buf:ByteArray, timestamp:Number):void {
+        var result:ByteArray=new ByteArray();
+        result.readBytes(buf,0,13);
+
         buf[4] = (timestamp >> 16 & 0x000000FF);
         buf[5] = (timestamp >> 8 & 0x000000FF);
         buf[6] = (timestamp & 0x000000FF);
-
     }
 
-    private function reset():void {
+    private function resetBegin():void {
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_BEGIN);
-        _netStream.appendBytes(getHeader());
+//        _netStream.appendBytes(getHeader());
         loadZero();
     }
 
     private function loadZero():void {
-        if (!_flvsIndex.parseOK)
+        if (!_flvsIndex.parseOK) {
             setTimeout(loadZero, 1000);
+            return;
+        }
 
-        var zeroFLV:String = _flvsIndex.getZeroFlvUrl();
-        if (zeroFLV) {
-            _loader = new FLVLoader(zeroFLV, onLoadZero, null);
+        var hasZero:Boolean = _flvsIndex.zero4Thirteenth;
+        if (hasZero && !_getZero) {
+            _getZero = true;
+            var zeroFile:String = _flvsIndex.getFlvUrl(0);
+            _loader = new FLVLoader(zeroFile, onLoadZero, null);
             _loader.start();
+            var nextFile:String = _flvsIndex.getFlvUrl(_index);
+            LogUtil.debug("load zero file,next is", nextFile);
         } else
             loadNext();
     }
 
     private function onLoadZero(bytes:ByteArray):void {
         _netStream.appendBytes(bytes);
-        if (_seek)
-            seek(_seek);
-        else
-            loadNext();
+//        if (_seek)
+//            seek(_seek);
+//        else
+        resetSeek();
+        loadNext();
     }
 
     private function end():void {
@@ -276,10 +296,47 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         _flvsIndex.indexUrl = value;
     }
 
-    public function get duration():Number{
+    public function get duration():Number {
 //        if(_metaData)
 //            return _metaData.duration;
         return 0;
+    }
+
+    protected function createStream():void {
+        _netConnection = new NetConnection();
+        _netConnection.connect(null);
+        _netStream = new NetStream(_netConnection);
+        _netStream.play(null);
+        _netStream.client = this;
+        if (_pause)
+            _netStream.pause();
+        _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+        if (_streamCreateCallback)
+            _streamCreateCallback(_netStream);
+        resetBegin();
+    }
+
+    protected function cleanupStream():void {
+        if (_netStream != null) {
+            _netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+            _netStream.close();
+        }
+        if (_netConnection != null) {
+            _netConnection.close();
+        }
+    }
+
+    protected function stopLoader():void {
+        if (_timeoutId > 0)
+            clearTimeout(_timeoutId);
+        if (_loader) {
+            try {
+                _loader.close();
+            }
+            catch (e:Error) {
+                LogUtil.error(e.message);
+            }
+        }
     }
 }
 }

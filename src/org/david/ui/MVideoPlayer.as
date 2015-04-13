@@ -203,10 +203,15 @@ public class MVideoPlayer extends MSprite {
         rtmpplayer.playStatusCallback = playStatusChange;
         rtmpplayer.streamCreateCallback = attachStream;
         rtmpplayer.flvsIndexUrl = flvsIndexUrl;
+        _player = rtmpplayer;
+        _player.mute = mute;
+        _player.volume = volume;
         if (seek > 0)
             rtmpplayer.seek(seek);
-        _player = rtmpplayer;
-        play();
+        else {
+            rtmpplayer.play();
+        }
+
     }
 
     public function seek(time:Number):void {
