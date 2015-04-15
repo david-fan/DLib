@@ -121,8 +121,7 @@ package org.david.ui {
 					break;
 				}
 				default: {
-					break;
-					break;
+					break;	
 				}
 			}
 			super.updateDisplayList();

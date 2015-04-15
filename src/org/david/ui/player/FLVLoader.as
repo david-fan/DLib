@@ -30,7 +30,7 @@ public class FLVLoader extends URLLoader {
     }
 
     private function onComplete(e:Event):void {
-//        trace("complete", url);
+        trace("complete", url);
         bytes = e.target.data;
         if (complete)
             complete(bytes);
