@@ -19,13 +19,13 @@ import org.david.ui.player.MHLSPlayer;
 public class MVideoPlayer extends MSprite {
     public static const Empty:String = "NetStream.Buffer.Empty";
     public static const Full:String = "NetStream.Buffer.Full";
+    public static const Seek:String = "NetStream.Seek.Notify";
+    public static const SeekStart:String = "NetStream.SeekStart.Notify";
     public static const Start:String = "NetStream.Play.Start";
     public static const Pause:String = "Pause";
     public static const Stop:String = "NetStream.Play.Stop";
     public static const PlayStatus:String = "PlayStatus";
     public static const AutoSize:String = "AutoSize";
-    public static const Seek:String = "NetStream.Seek.Notify";
-    public static const SeekStart:String = "NetStream.SeekStart.Notify";
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;
@@ -87,11 +87,11 @@ public class MVideoPlayer extends MSprite {
         return _video;
     }
 
-    public function get duration():Number {
-        if (_player)
-            return _player.duration;
-        return 0;
-    }
+//    public function get duration():Number {
+//        if (_player)
+//            return _player.duration;
+//        return 0;
+//    }
 
     public function MVideoPlayer(w:Number = 640, h:Number = 480, keepDefaultAspect:Boolean = true) {
         _video = new Video(w, h);
@@ -275,6 +275,18 @@ public class MVideoPlayer extends MSprite {
         if (_player is MRTMPPlayer) {
             (_player as MRTMPPlayer).bufferTime = value;
         }
+    }
+
+    public function get time():Number {
+        if (_player)
+            return _player.time;
+        return -1;
+    }
+
+    public function get duration():Number {
+        if (_player)
+            return _player.duration;
+        return -1;
     }
 
 //    override public function set height(value:Number):void {

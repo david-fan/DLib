@@ -17,10 +17,15 @@ public class MHLSPlayer extends HLS implements IPlayer {
         super();
     }
 
-    public function get duration():Number{
+    public function get duration():Number {
 //        if(_metaData)
 //            return _metaData.duration;
         return _duration;
+    }
+
+    public function get time():Number {
+//        return stream.time;
+        return position;
     }
 
     private var _volume:Number;

@@ -90,6 +90,10 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
         return 0;
     }
 
+    public function get time():Number {
+        return _stream.time;
+    }
+
     public function get bufferTime():Number {
         return _bufferTime;
     }

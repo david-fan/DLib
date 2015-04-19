@@ -267,6 +267,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         return 0;
     }
 
+    public function get time():Number {
+        return _netStream.time;
+    }
+
     protected function createStream():void {
         _netConnection = new NetConnection();
         _netConnection.connect(null);
