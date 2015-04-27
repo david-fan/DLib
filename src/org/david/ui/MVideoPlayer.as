@@ -21,6 +21,7 @@ public class MVideoPlayer extends MSprite {
     public static const Full:String = "NetStream.Buffer.Full";
     public static const Seek:String = "NetStream.Seek.Notify";
     public static const SeekStart:String = "NetStream.SeekStart.Notify";
+    public static const Complete:String = "Complete";
     public static const Start:String = "NetStream.Play.Start";
     public static const Pause:String = "Pause";
     public static const Stop:String = "NetStream.Play.Stop";
@@ -245,6 +246,9 @@ public class MVideoPlayer extends MSprite {
 
     private function playStatusChange(status:String):void {
         dispatchEvent(new UIEvent(PlayStatus, status));
+        if (status == "NetStream.Video.DimensionChange") {
+            resize();
+        }
     }
 
     private function attachStream(stream:NetStream):void {

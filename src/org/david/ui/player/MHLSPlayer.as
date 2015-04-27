@@ -4,14 +4,17 @@
 package org.david.ui.player {
 import flash.media.SoundTransform;
 
+import org.david.ui.MVideoPlayer;
+
 import org.mangui.hls.HLS;
 import org.mangui.hls.event.HLSEvent;
 
 public class MHLSPlayer extends HLS implements IPlayer {
     private var _m3u8Url:String;
-    private var _position:Number = 0;
-    private var _duration:Number = 0;
-    private var _bufferedTime:Number = 0;
+
+
+    protected var _media_position:Number;
+    protected var _duration:Number;
 
     public function MHLSPlayer() {
         super();
@@ -25,7 +28,7 @@ public class MHLSPlayer extends HLS implements IPlayer {
 
     public function get time():Number {
 //        return stream.time;
-        return position;
+        return _media_position;
     }
 
     private var _volume:Number;
@@ -52,10 +55,29 @@ public class MHLSPlayer extends HLS implements IPlayer {
 
     public function play():void {
         load(_m3u8Url);
-        addEventListener(HLSEvent.MANIFEST_LOADED, manifestHandler);
-//        addEventListener(HLSEvent.MANIFEST_LOADED, manifestHandler);
-//        addEventListener(HLSEvent.MEDIA_TIME, manifestHandler);
+        addEventListener(HLSEvent.MANIFEST_LOADED, onManifestLoaded);
+//        addEventListener(HLSEvent.MEDIA_TIME, onManifestLoaded);
+        addEventListener(HLSEvent.PLAYBACK_COMPLETE, onPlayComplete);
+//        _hls.addEventListener(HLSEvent.ERROR, _errorHandler);
+//        _hls.addEventListener(HLSEvent.FRAGMENT_LOADED, _fragmentLoadedHandler);
+//        _hls.addEventListener(HLSEvent.FRAGMENT_PLAYING, _fragmentPlayingHandler);
+//        _hls.addEventListener(HLSEvent.MANIFEST_LOADED, _manifestHandler);
+        addEventListener(HLSEvent.MEDIA_TIME, onMediaTime);
+//        _hls.addEventListener(HLSEvent.PLAYBACK_STATE, _stateHandler);
+//        _hls.addEventListener(HLSEvent.LEVEL_SWITCH, _levelSwitchHandler);
+//        _hls.addEventListener(HLSEvent.AUDIO_TRACKS_LIST_CHANGE, _audioTracksListChange);
+//        _hls.addEventListener(HLSEvent.AUDIO_TRACK_CHANGE, _audioTrackChange);
     }
+
+    protected function onMediaTime(event:HLSEvent):void {
+        _duration = event.mediatime.duration;
+        _media_position = event.mediatime.position;
+    }
+
+    protected function onPlayComplete(event:HLSEvent):void {
+        if (_playStatusCallback)
+            _playStatusCallback(MVideoPlayer.Complete);
+    };
 
     public function resume():void {
         stream.resume();
@@ -108,7 +130,7 @@ public class MHLSPlayer extends HLS implements IPlayer {
     }
 
 
-    private function manifestHandler(event:HLSEvent):void {
+    private function onManifestLoaded(event:HLSEvent):void {
         stream.play();
         _streamCreateCallback(stream);
 //        if (event.mediatime) {
