@@ -248,6 +248,7 @@ public class MVideoPlayer extends MSprite {
         dispatchEvent(new UIEvent(PlayStatus, status));
         if (status == "NetStream.Video.DimensionChange") {
             resize();
+            dispatchEvent(new UIEvent(AutoSize, _video));
         }
     }
 
