@@ -181,8 +181,10 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
                 _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
                 _connection = null;
-                _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-                _stream = null;
+                if (_stream) {
+                    _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+                    _stream = null;
+                }
                 if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
@@ -279,16 +281,16 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     }
 
     protected function cleanupStream():void {
-//        if (_stream != null) {
-//            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-//            _stream.close();
-//            _stream = null;
-//        }
+        if (_stream != null) {
+            _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _stream.close();
+            _stream = null;
+        }
         if (_connection != null) {
-//            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-//            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            _connection.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+            _connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.close();
-//            _connection = null;
+            _connection = null;
         }
     }
 
