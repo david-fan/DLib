@@ -24,7 +24,7 @@ import org.david.util.LogUtil;
 import org.david.util.StrUtil;
 
 public class MRTMPPlayer extends EventDispatcher implements IPlayer {
-    public static var NetStatusUIEvent:String = "NetStatusUIEvent";
+//    public static var NetStatusUIEvent:String = "NetStatusUIEvent";
 //    public static const Buffering:String = "Player.Buffering";
 //    public static const PlayStart:String = "Player.PlayStart";
     public static const DebugInfo:String = "Player.DebugInfo";
@@ -141,7 +141,8 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
     private function netStatusHandler(event:NetStatusEvent):void {
         var code:String = event.info.code;
         LogUtil.log("NetStatusEvent:" + code);
-        dispatchEvent(new UIEvent(NetStatusUIEvent, event));
+//        dispatchEvent(new UIEvent(NetStatusUIEvent, event));
+        callPlayStatsCallback(code);
         switch (code) {
             case "NetConnection.Connect.Success":
                 connectStream();
@@ -190,9 +191,9 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                     setTimeout(_play, 2 * 1000);
                 }
                 break;
-            default :
-                callPlayStatsCallback(code);
-                break;
+//            default :
+//                callPlayStatsCallback(code);
+//                break;
 //            case "NetStream.Play.Complete":
 //                break;
         }
