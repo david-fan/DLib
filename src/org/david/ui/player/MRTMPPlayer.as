@@ -191,11 +191,6 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                     setTimeout(_play, 2 * 1000);
                 }
                 break;
-//            default :
-//                callPlayStatsCallback(code);
-//                break;
-//            case "NetStream.Play.Complete":
-//                break;
         }
     }
 

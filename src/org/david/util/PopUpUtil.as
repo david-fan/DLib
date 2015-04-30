@@ -41,8 +41,8 @@ public class PopUpUtil extends EventDispatcher {
     private function resizeHandler(e:Event):void {
         for each (var wo:WindowObj in this.windowList) {
             if(wo.modal){
-                wo.modal.width=AppLayer.AppWidth;
-                wo.modal.height=AppLayer.AppHeight;
+            wo.modal.width=AppLayer.AppWidth;
+            wo.modal.height=AppLayer.AppHeight;
             }
             if(wo.showModel==WindowObj.TweenPopUp)  {
                 if ( wo.obj===this.windowList[this.windowList.length - 1].obj )  {
