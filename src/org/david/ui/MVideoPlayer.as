@@ -2,7 +2,7 @@ package org.david.ui {
 import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.media.Camera;
-import flash.display.Sprite;
+import flash.display.Sprite
 import flash.media.Video;
 import flash.net.NetStream;
 

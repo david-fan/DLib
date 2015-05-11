@@ -9,6 +9,8 @@ import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
 
+import org.david.util.LogUtil;
+
 public class FLVLoader extends URLLoader {
     public var url:String;
     public var bytes:ByteArray;
@@ -30,7 +32,7 @@ public class FLVLoader extends URLLoader {
     }
 
     private function onComplete(e:Event):void {
-        trace("complete", url);
+        LogUtil.log("complete", url);
         bytes = e.target.data;
         if (complete)
             complete(bytes);
@@ -39,9 +41,15 @@ public class FLVLoader extends URLLoader {
     }
 
     private function onError(e:IOErrorEvent):void {
-        trace("ioerror", url);
+        LogUtil.log("ioerror", url);
         if (next)
             next();
+    }
+
+    override public function close():void {
+        super.close();
+        complete = null;
+        next = null;
     }
 
 }

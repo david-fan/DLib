@@ -36,7 +36,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         LogUtil.debug("bufferLength", _netStream.bufferLength, "time", _netStream.time);
         if (_stop)
             return;
-        if (!_flvsIndex.parseOK || _pause || _netStream.bufferLength > 20)
+        if (!_flvsIndex.parseOK || _netStream.bufferLength > 20)
             _timeoutId = setTimeout(loadNext, 1000);
         else
             _loadNext();
@@ -95,10 +95,10 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
         createStream();
     }
 
-    private function resetSeek():void {
-        _netStream.seek(0);
-        _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
-    }
+//    private function resetSeek():void {
+//        _netStream.seek(0);
+//        _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
+//    }
 
     private function playBytes(bytes:ByteArray):void {
         _netStream.appendBytes(bytes);
@@ -131,7 +131,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
             data[0] = (timestamp >> 16 & 0xff);
             data[1] = (timestamp >> 8 & 0xff);
             data[2] = (timestamp & 0xff);
-            trace("type", type, "timestamp", (data[0] << 16 & 0xff0000) | (data[1] << 8 & 0xff00) | (data[2] & 0xff));
+            LogUtil.debug("type", type, "timestamp", (data[0] << 16 & 0xff0000) | (data[1] << 8 & 0xff00) | (data[2] & 0xff));
             result.writeBytes(data);
         }
         return result;
@@ -154,7 +154,7 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
 
     private function loadZero():void {
         if (!_flvsIndex.parseOK) {
-            setTimeout(loadZero, 1000);
+            _timeoutId = setTimeout(loadZero, 1000);
             return;
         }
 

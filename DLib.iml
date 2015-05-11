@@ -3,7 +3,7 @@
   <component name="FlexBuildConfigurationManager" active="DLib">
     <configurations>
       <configuration name="DLib" pure-as="true" output-type="Library" output-file="DLib.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies target-player="11.1">
+        <dependencies target-player="11.8">
           <entries>
             <entry library-id="eb3561b1-a385-4bbe-855c-3b4f0f15d502">
               <dependency linkage="Merged" />
@@ -24,7 +24,7 @@
           <sdk name="flex_sdk_4.6.0.23201B" />
         </dependencies>
         <compiler-options>
-          <option name="additionalOptions" value="-define+=CONFIG::JSLog,false" />
+          <option name="additionalOptions" value="-define+=CONFIG::JSLog,true" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android />
