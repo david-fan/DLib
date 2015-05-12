@@ -12,9 +12,10 @@ import org.mangui.hls.event.HLSEvent;
 public class MHLSPlayer extends HLS implements IPlayer {
     private var _m3u8Url:String;
 
-
+    private var _hasManifest:Boolean;
     protected var _media_position:Number;
     protected var _duration:Number;
+    private var _seek:Number;
 
     public function MHLSPlayer() {
         super();
@@ -131,8 +132,11 @@ public class MHLSPlayer extends HLS implements IPlayer {
 
 
     private function onManifestLoaded(event:HLSEvent):void {
+        _hasManifest = true;
         stream.play();
         _streamCreateCallback(stream);
+        if (_seek > 0)
+            stream.seek(_seek);
 //        if (event.mediatime) {
 //            _position = Math.max(0, event.mediatime.position);
 //            _duration = event.mediatime.duration;
@@ -141,7 +145,9 @@ public class MHLSPlayer extends HLS implements IPlayer {
     }
 
     public function seek(time:Number):void {
-        stream.seek(time);
+        _seek = time;
+        if (_hasManifest)
+            stream.seek(time);
     }
 }
 }
