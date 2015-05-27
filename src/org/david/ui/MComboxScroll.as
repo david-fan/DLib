@@ -5,7 +5,7 @@
  * Time: 下午2:40
  * To change this template use File | Settings | File Templates.
  */
-package org.david {
+package org.david.ui {
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
