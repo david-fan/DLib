@@ -1,6 +1,7 @@
 package org.david.ui {
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
+import flash.utils.setTimeout;
 
 import org.david.ui.core.IToolTipUI;
 import org.david.ui.core.MUIComponent;
@@ -20,6 +21,8 @@ public class MButton extends MUIComponent implements IToolTipUI {
 
     protected var _skin:MovieClip;
     protected var _mode:int;
+    protected var _clickTimeOut:int;
+    protected var _forbidClick:Boolean;
 
     protected var _currentSkinFrame:int = 1;
 
@@ -32,7 +35,7 @@ public class MButton extends MUIComponent implements IToolTipUI {
      * @param skin 皮肤
      * @param mode 模式
      */
-    public function MButton(skin:DisplayObject, mode:int = 4, clickCallback:Function = null, overCallback:Function = null, outCallback:Function = null) {
+    public function MButton(skin:DisplayObject, mode:int = 4, clickCallback:Function = null, overCallback:Function = null, outCallback:Function = null, clickTimeOut:int = 0) {
         super(true);
 //        this.mouseEnabled = true;
         this.mouseChildren = false;
@@ -41,6 +44,7 @@ public class MButton extends MUIComponent implements IToolTipUI {
         _overCallback = overCallback;
         _outCallback = outCallback;
         _mode = mode;
+        _clickTimeOut = clickTimeOut;
         if (skin) {
             if (skin.parent) {
                 skin.parent.addChild(this);
@@ -90,8 +94,18 @@ public class MButton extends MUIComponent implements IToolTipUI {
     private function onClick(e:MouseEvent):void {
         if (!enable)
             return;
+        if (_forbidClick)
+            return;
         if (_clickCallback)
             _clickCallback(e);
+        if (_clickTimeOut > 0) {
+            _forbidClick = true;
+            setTimeout(clearForbidClick, _clickTimeOut * 1000);
+        }
+    }
+
+    private function clearForbidClick():void {
+        _forbidClick = false;
     }
 
 //    private var _enable:Boolean = true;
