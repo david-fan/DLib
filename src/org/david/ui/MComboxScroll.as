@@ -81,5 +81,18 @@ public class MComboxScroll extends MUIComponent {
     public function get source():Array {
         return _source;
     }
+    override public function get enable():Boolean {
+        return super.enable;
+    }
+
+    override public function set enable(value:Boolean):void {
+        super.enable = value;
+        this.mouseEnabled = value;
+        this.mouseChildren = value;
+        if (value)
+            this.alpha = 1;
+        else
+            this.alpha = 0.3;
+    }
 }
 }
