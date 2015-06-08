@@ -264,9 +264,9 @@ public class MVideoPlayer extends MSprite {
     }
 
     public function stop():void {
+        _video.clear();
         _video.attachCamera(null);
         _video.attachNetStream(null);
-        _video.clear();
         if (_player) {
             _player.stop();
             _player = null;
