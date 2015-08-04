@@ -7,6 +7,7 @@ import flash.media.SoundTransform;
 import org.david.ui.MVideoPlayer;
 
 import org.mangui.hls.HLS;
+import org.mangui.hls.HLSSettings;
 import org.mangui.hls.event.HLSEvent;
 
 public class MHLSPlayer extends HLS implements IPlayer {
@@ -19,6 +20,8 @@ public class MHLSPlayer extends HLS implements IPlayer {
 
     public function MHLSPlayer() {
         super();
+        HLSSettings.maxBufferLength = 120;
+        HLSSettings.lowBufferLength = 60;
     }
 
     public function get duration():Number {

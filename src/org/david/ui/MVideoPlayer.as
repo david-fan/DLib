@@ -282,6 +282,12 @@ public class MVideoPlayer extends MSprite {
         }
     }
 
+    public function get bufferLength():Number{
+        if(_player)
+            return _player.bufferLength;
+        return 0;
+    }
+
     public function get time():Number {
         if (_player)
             return _player.time;

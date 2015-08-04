@@ -42,6 +42,12 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
             _loadNext();
     }
 
+    public function get bufferLength():Number {
+        if (_netStream)
+            return _netStream.bufferLength;
+        return 0;
+    }
+
     private function _loadNext():void {
         _nextUrl = getNextUrl();
         if (_nextUrl == null) {

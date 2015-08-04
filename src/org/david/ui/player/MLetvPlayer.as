@@ -59,7 +59,7 @@ public class MLetvPlayer extends EventDispatcher implements IPlayer {
 
     private var _lastHttpStatusCode:String;
 
-    private function checkSeeklocation():void {
+    private function checkSeekLocation():void {
         var formatUrl:String = _playUrl + "?format=1";
         LogUtil.debug("formatUrl", formatUrl);
         var dl:DataLoad = new DataLoad(formatUrl);
@@ -128,7 +128,7 @@ public class MLetvPlayer extends EventDispatcher implements IPlayer {
         _netConnection = new NetConnection();
         _netConnection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
         _netConnection.connect(null);
-        checkSeeklocation();
+        checkSeekLocation();
     }
 
     public function seek(time:Number):void {
@@ -161,6 +161,12 @@ public class MLetvPlayer extends EventDispatcher implements IPlayer {
             return _time + _netStream.time;
         else
             return 0;
+    }
+
+    public function get bufferLength():Number {
+        if (_netStream)
+            _netStream.bufferLength;
+        return 0;
     }
 
     public function get bufferTime():Number {

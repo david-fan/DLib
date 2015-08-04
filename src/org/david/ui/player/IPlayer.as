@@ -30,5 +30,7 @@ public interface IPlayer {
     function get duration():Number;
 
     function get time():Number;
+
+    function get bufferLength():Number;
 }
 }
