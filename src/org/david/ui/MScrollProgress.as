@@ -43,18 +43,16 @@ public class MScrollProgress extends MUIComponent {
         this._thumb = new MButton(thumb);
         addChild(_thumb);
 
-        init();
-
         slide.x = slide.y = 0;
         this._slide = slide;
-        addChild(_slide);
+
         this._slidemask = new Sprite();
         this._slidemask.graphics.beginFill(0, 0);
         this._slidemask.graphics.drawRect(0, 0, this._slide.width, this._slide.height);
         this._slidemask.graphics.endFill();
         _slide.mask = _slidemask;
-        addChild(_slidemask);
 
+        init();
         addEventListener(MouseEvent.CLICK, onSlideClick);
 
         addChild(_progress);
@@ -66,6 +64,8 @@ public class MScrollProgress extends MUIComponent {
         _progress.mask = _progressMask;
         addChild(_progressMask);
         value = 0;
+        addChild(_slide);
+        addChild(_slidemask);
     }
 
     private function init():void {
