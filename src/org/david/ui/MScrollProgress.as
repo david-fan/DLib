@@ -34,12 +34,14 @@ public class MScrollProgress extends MUIComponent {
         super(true);
         slide.x = slide.y = 0;
         thumb.x = thumb.y = 0;
+        this._slide=slide;
         this.background = background;
         this._direction = direction;
         this._progress = progress;
         this._immediately = immediately;
         this._careThumbSize = careThumbSize;
-
+        this._thumb = new MButton(thumb);
+        addChild(_thumb);
         init();
 
         addChild(_slide);
@@ -60,10 +62,6 @@ public class MScrollProgress extends MUIComponent {
         this._progressMask.graphics.endFill();
         _progress.mask = _progressMask;
         addChild(_progressMask);
-
-        this._thumb = new MButton(thumb);
-        addChild(_thumb);
-
         value = 0;
     }
 

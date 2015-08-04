@@ -303,5 +303,10 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
 
     public function resume():void {
     }
+    public function get bufferLength():Number {
+        if (_netStream)
+            return _netStream.bufferLength;
+        return 0;
+    }
 }
 }

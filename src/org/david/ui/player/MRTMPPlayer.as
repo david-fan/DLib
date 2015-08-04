@@ -389,5 +389,10 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
             _stream.seek(time);
         }
     }
+    public function get bufferLength():Number {
+        if (_stream)
+            return _stream.bufferLength;
+        return 0;
+    }
 }
 }
