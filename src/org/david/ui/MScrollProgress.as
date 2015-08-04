@@ -32,18 +32,21 @@ public class MScrollProgress extends MUIComponent {
 
     public function MScrollProgress(slide:DisplayObject, thumb:DisplayObject, direction:String, progress:DisplayObject, background:DisplayObject, immediately:Boolean = true, careThumbSize:Boolean = true) {
         super(true);
-        slide.x = slide.y = 0;
-        thumb.x = thumb.y = 0;
-        this._slide=slide;
+        background.x = background.y = 0;
         this.background = background;
         this._direction = direction;
         this._progress = progress;
         this._immediately = immediately;
         this._careThumbSize = careThumbSize;
+
+        thumb.x = thumb.y = 0;
         this._thumb = new MButton(thumb);
         addChild(_thumb);
+
         init();
 
+        slide.x = slide.y = 0;
+        this._slide = slide;
         addChild(_slide);
         this._slidemask = new Sprite();
         this._slidemask.graphics.beginFill(0, 0);
@@ -206,9 +209,9 @@ public class MScrollProgress extends MUIComponent {
     }
 
     override public function set width(value:Number):void {
+        background.width = value;
         _slide.width = value;
-        if (_slide)
-            _slide.width = value;
+        _progress.width = value;
         init();
         updateByValue();
     }
@@ -225,9 +228,9 @@ public class MScrollProgress extends MUIComponent {
     }
 
     override public function set height(value:Number):void {
-        _slide.height = value;
-        if (_slide)
-            _slide.height = value;
+        background.width = value;
+        _slide.width = value;
+        _progress.width = value;
         init();
         updateByValue();
     }
