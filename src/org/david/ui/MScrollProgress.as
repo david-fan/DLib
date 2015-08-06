@@ -229,9 +229,9 @@ public class MScrollProgress extends MUIComponent {
     }
 
     override public function set height(value:Number):void {
-        background.width = value;
-        _slide.width = value;
-        _progress.width = value;
+        background.height = value;
+        _slide.height = value;
+        _progress.height = value;
         init();
         updateByValue();
     }
