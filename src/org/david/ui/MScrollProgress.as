@@ -6,6 +6,7 @@ import flash.events.MouseEvent;
 
 import org.david.ui.core.MUIComponent;
 import org.david.ui.event.UIEvent;
+import org.david.util.LogUtil;
 
 /**
  * ...
@@ -120,12 +121,12 @@ public class MScrollProgress extends MUIComponent {
         switch (_direction) {
             case MDirection.Horizon:
                 _thumb.x = _maxX * _value;
-                this._progressMask.width = this._progress.width * _value;
+                //this._progressMask.width = this._progress.width * _value;
                 this._slidemask.width = this._slide.width * _value;
                 break;
             case MDirection.Vertical:
                 _thumb.y = _maxY * _value;
-                this._progressMask.height = this._progress.height * _value;
+//                this._progressMask.height = this._progress.height * _value;
                 this._slidemask.height = this._slide.height * _value;
                 break;
         }
@@ -218,6 +219,7 @@ public class MScrollProgress extends MUIComponent {
     }
 
     public function updateProgress(value:Number):void {
+
         switch (_direction) {
             case MDirection.Horizon:
                 this._progressMask.width = this._progress.width * value;
