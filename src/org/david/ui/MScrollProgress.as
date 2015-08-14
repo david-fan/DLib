@@ -73,21 +73,21 @@ public class MScrollProgress extends MUIComponent {
         switch (_direction) {
             case MDirection.Horizon:
                 if (_careThumbSize)
-                    _maxX = _slide.width - _thumb.width;
+                    _maxX = background.width - _thumb.width;
                 else
-                    _maxX = _slide.width;
+                    _maxX = background.width;
                 _maxY = 0;
                 _thumb.x = 0;
-                var ty:Number = (_slide.height - _thumb.height) / 2;
+                var ty:Number = (background.height - _thumb.height) / 2;
                 _thumb.y = ty;
                 break;
             case MDirection.Vertical:
                 _maxX = 0;
                 if (_careThumbSize)
-                    _maxY = _slide.height - _thumb.height;
+                    _maxY = background.height - _thumb.height;
                 else
-                    _maxY = _slide.height;
-                var tx:Number = ( _slide.width - _thumb.width) / 2;
+                    _maxY = background.height;
+                var tx:Number = ( background.width - _thumb.width) / 2;
                 _thumb.x = tx;
                 _thumb.y = 0;
                 break;
@@ -120,13 +120,13 @@ public class MScrollProgress extends MUIComponent {
         switch (_direction) {
             case MDirection.Horizon:
                 _thumb.x = _maxX * _value;
-//                this._progressMask.width = this._progress.width * _value;
-//                this._slidemask.width = this._slide.width * _value;
+                this._progress.width = this.background.width * _value;
+                this._slide.width = this.background.width * _value;
                 break;
             case MDirection.Vertical:
                 _thumb.y = _maxY * _value;
-//                this._progressMask.height = this._progress.height * _value;
-//                this._slidemask.height = this._slide.height * _value;
+                this._progress.height = this.background.height * _value;
+                this._slide.height = this.background.height * _value;
                 break;
         }
     }
@@ -211,8 +211,8 @@ public class MScrollProgress extends MUIComponent {
 
     override public function set width(value:Number):void {
         background.width = value;
-        _slide.width = value;
-        _progress.width = value;
+//        _slide.width = value;
+//        _progress.width = value;
         init();
         updateByValue();
     }
@@ -230,8 +230,8 @@ public class MScrollProgress extends MUIComponent {
 
     override public function set height(value:Number):void {
         background.height = value;
-        _slide.height = value;
-        _progress.height = value;
+//        _slide.height = value;
+//        _progress.height = value;
         init();
         updateByValue();
     }
