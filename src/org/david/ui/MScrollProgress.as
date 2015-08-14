@@ -6,7 +6,6 @@ import flash.events.MouseEvent;
 
 import org.david.ui.core.MUIComponent;
 import org.david.ui.event.UIEvent;
-import org.david.util.LogUtil;
 
 /**
  * ...
@@ -16,7 +15,7 @@ public class MScrollProgress extends MUIComponent {
     public static const ValueChange:String = "MScrollBar.ValueChange";
     //
     protected var _slide:DisplayObject;
-    protected var _slidemask:Sprite;
+//    protected var _slidemask:Sprite;
     protected var _thumb:MButton;
     private var _value:Number = 0;
     private var _direction:String;
@@ -26,7 +25,7 @@ public class MScrollProgress extends MUIComponent {
     private var _careThumbSize:Boolean;
     //
     protected var _progress:DisplayObject;
-    protected var _progressMask:Sprite;
+//    protected var _progressMask:Sprite;
 
 
     private var _immediately:Boolean;
@@ -47,26 +46,26 @@ public class MScrollProgress extends MUIComponent {
         slide.x = slide.y = 0;
         this._slide = slide;
 
-        this._slidemask = new Sprite();
-        this._slidemask.graphics.beginFill(0, 0);
-        this._slidemask.graphics.drawRect(0, 0, this._slide.width, this._slide.height);
-        this._slidemask.graphics.endFill();
-        _slide.mask = _slidemask;
+//        this._slidemask = new Sprite();
+//        this._slidemask.graphics.beginFill(0, 0);
+//        this._slidemask.graphics.drawRect(0, 0, this._slide.width, this._slide.height);
+//        this._slidemask.graphics.endFill();
+//        _slide.mask = _slidemask;
 
         init();
         addEventListener(MouseEvent.CLICK, onSlideClick);
 
         addChild(_progress);
         _progress.x = _progress.y = 0;
-        this._progressMask = new Sprite();
-        this._progressMask.graphics.beginFill(0, 0);
-        this._progressMask.graphics.drawRect(0, 0, this._progress.width, this._progress.height);
-        this._progressMask.graphics.endFill();
-        _progress.mask = _progressMask;
-        addChild(_progressMask);
+//        this._progressMask = new Sprite();
+//        this._progressMask.graphics.beginFill(0, 0);
+//        this._progressMask.graphics.drawRect(0, 0, this._progress.width, this._progress.height);
+//        this._progressMask.graphics.endFill();
+//        _progress.mask = _progressMask;
+//        addChild(_progressMask);
         value = 0;
         addChild(_slide);
-        addChild(_slidemask);
+//        addChild(_slidemask);
         addChild(_thumb);
     }
 
@@ -121,13 +120,13 @@ public class MScrollProgress extends MUIComponent {
         switch (_direction) {
             case MDirection.Horizon:
                 _thumb.x = _maxX * _value;
-                //this._progressMask.width = this._progress.width * _value;
-                this._slidemask.width = this._slide.width * _value;
+//                this._progressMask.width = this._progress.width * _value;
+//                this._slidemask.width = this._slide.width * _value;
                 break;
             case MDirection.Vertical:
                 _thumb.y = _maxY * _value;
 //                this._progressMask.height = this._progress.height * _value;
-                this._slidemask.height = this._slide.height * _value;
+//                this._slidemask.height = this._slide.height * _value;
                 break;
         }
     }
@@ -158,7 +157,7 @@ public class MScrollProgress extends MUIComponent {
                     if (_thumb.x > _maxX)
                         _thumb.x = _maxX;
                     _value = _thumb.x / _maxX;
-                    this._slidemask.width = this._slide.width * _value;
+                    this._slide.width = this.background.width * _value;
                     break;
                 case MDirection.Vertical:
                     if (_careThumbSize)
@@ -170,7 +169,7 @@ public class MScrollProgress extends MUIComponent {
                     if (_thumb.y > _maxY)
                         _thumb.y = _maxY;
                     _value = _thumb.y / _maxY;
-                    this._slidemask.height = this._slide.height * _value;
+                    this._slide.height = this.background.height * _value;
                     break;
             }
             if (_immediately)
@@ -191,7 +190,7 @@ public class MScrollProgress extends MUIComponent {
                 if (_thumb.x > mx)
                     _thumb.x = mx;
                 _value = _thumb.x / _maxX;
-                this._slidemask.width = this._slide.width * _value;
+                this._slide.width = this.background.width * _value;
                 break;
             case MDirection.Vertical:
                 if (_careThumbSize)
@@ -204,7 +203,7 @@ public class MScrollProgress extends MUIComponent {
                 if (_thumb.y > my)
                     _thumb.y = my;
                 _value = _thumb.y / _maxY;
-                this._slidemask.height = this._slide.height * _value;
+                this._slide.height = this.background.height * _value;
                 break;
         }
         dispatchEvent(new UIEvent(ValueChange, _value));
@@ -219,13 +218,12 @@ public class MScrollProgress extends MUIComponent {
     }
 
     public function updateProgress(value:Number):void {
-
         switch (_direction) {
             case MDirection.Horizon:
-                this._progressMask.width = this._progress.width * value;
+                this._progress.width = this.background.width * value;
                 break;
             case MDirection.Vertical:
-                this._progressMask.height = this._progress.height * value;
+                this._progress.height = this.background.height * value;
                 break;
         }
     }
