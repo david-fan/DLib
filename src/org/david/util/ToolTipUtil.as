@@ -1,8 +1,9 @@
 package org.david.util {
 	import org.david.ui.MToolTip;
-	import org.david.ui.MToolTipBg;
-	import org.david.ui.core.ITollTip;
-	import org.david.ui.core.IToolTipUI;
+import org.david.ui.MToolTipBg;
+import org.david.ui.MToolTipBgBase;
+import org.david.ui.core.ITollTip;
+import org.david.ui.core.IToolTipUI;
 	import org.david.ui.core.MSprite;
 
 	import flash.display.DisplayObject;
@@ -16,13 +17,17 @@ package org.david.util {
 	public class ToolTipUtil {
 		private var _parent : MSprite;
 		private var _tipInstances : Dictionary = new Dictionary();
-		private var _contentBG : MToolTipBg = new MToolTipBg();
+		private var _contentBG : MToolTipBgBase ;
 		private var _hideTimer : Timer = new Timer(3 * 1000, 1);
 
 		public function ToolTipUtil(parent : MSprite) {
 			_parent = parent;
 			_hideTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hide);
+            _contentBG=new MToolTipBg();
 		}
+        public function set tipContentBg(tipBg:MToolTipBgBase):void{
+                _contentBG=tipBg;
+        }
 
 		public function show(target : DisplayObject) : void {
 			var tui : IToolTipUI = target as IToolTipUI;
@@ -47,7 +52,7 @@ package org.david.util {
 			tooltip.data = data;
 			_contentBG.drawBg(tooltip.showbg);
 			_contentBG.target = target;
-			_contentBG.content = tooltip as MSprite;
+			_contentBG.content = tooltip as DisplayObject;
 			// _contentBG.addEventListener(UIEvent.ViewChanged, function(e : UIEvent) : void {
 			// positionBG(direction, target);
 			// checkPosition(direction, tooltip as DisplayObject, target);

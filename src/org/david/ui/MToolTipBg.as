@@ -1,16 +1,16 @@
 package org.david.ui {
 	import org.david.ui.core.AppLayer;
-	import org.david.ui.core.MContainer;
-	import org.david.ui.core.MSprite;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 
-	/**
+import org.david.ui.core.MSprite;
+
+/**
 	 * 标准提示背景
 	 */
-	public class MToolTipBg extends MContainer {
+	public class MToolTipBg extends MToolTipBgBase{
 		private var _triangleSprite : Sprite;
 		private var _bgalpha : Number = 0.5;
 		private var _lineColor : uint = 0x333333;
@@ -22,7 +22,7 @@ package org.david.ui {
 		private var _triangleHeight : int = 10;
 		private var _width : Number = 50;
 		private var _height : Number = 25;
-		private var _content : MSprite = new MSprite();
+		private var _content : Sprite=new Sprite();
 		private var _showbg : Boolean;
 		private var points : Array;
 		private var _obj : Object;
@@ -82,7 +82,7 @@ package org.david.ui {
 		/**
 		 * 获取要显示tips的对象
 		 */
-		public function set target(value : DisplayObject) : void {
+		override public function set target(value : DisplayObject) : void {
 			_curPos = new Point();
 			direct = 0;
 			// 把target的坐标转为全局坐标
@@ -363,19 +363,19 @@ package org.david.ui {
 			return Math.max(this._height, _content.height + _padding * 2);
 		}
 
-		public function get content() : MSprite {
+		public function get content() : DisplayObject {
 			return this._content;
 		}
 
-		public function set content(value : MSprite) : void {
+		override public function set content(value:DisplayObject) : void {
 			if (this.contains(_content))
 				this.removeChild(_content);
-			this._content = value;
+			this._content = value as Sprite;
 			this.addChild(value);
 		}
 
-		public function drawBg(showbg : Boolean) : void {
-			_showbg = showbg;
+        override public function drawBg(draw:Boolean) : void {
+			_showbg = draw;
 		}
 
 		private function clear() : void {
