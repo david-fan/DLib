@@ -29,7 +29,7 @@ public class MScrollProgress extends MUIComponent {
 
 
     private var _immediately:Boolean;
-
+    private var _progressValue:Number=0;
     public function MScrollProgress(slide:DisplayObject, thumb:DisplayObject, direction:String, progress:DisplayObject, background:DisplayObject, immediately:Boolean = true, careThumbSize:Boolean = true) {
         super(true);
         background.x = background.y = 0;
@@ -120,12 +120,12 @@ public class MScrollProgress extends MUIComponent {
         switch (_direction) {
             case MDirection.Horizon:
                 _thumb.x = _maxX * _value;
-                this._progress.width = this.background.width * _value;
+                this._progress.width = this.background.width * _progressValue;
                 this._slide.width = this.background.width * _value;
                 break;
             case MDirection.Vertical:
                 _thumb.y = _maxY * _value;
-                this._progress.height = this.background.height * _value;
+                this._progress.height = this.background.height * _progressValue;
                 this._slide.height = this.background.height * _value;
                 break;
         }
@@ -186,7 +186,7 @@ public class MScrollProgress extends MUIComponent {
                     _thumb.x = this.mouseX;
                 if (_thumb.x < 0)
                     _thumb.x = 0;
-                var mx:Number = _slide.width - _thumb.width;
+                var mx:Number = background.width - _thumb.width;
                 if (_thumb.x > mx)
                     _thumb.x = mx;
                 _value = _thumb.x / _maxX;
@@ -199,7 +199,7 @@ public class MScrollProgress extends MUIComponent {
                     _thumb.y = this.mouseY;
                 if (_thumb.y < 0)
                     _thumb.y = 0;
-                var my:Number = _slide.height - _thumb.height;
+                var my:Number = background.height - _thumb.height;
                 if (_thumb.y > my)
                     _thumb.y = my;
                 _value = _thumb.y / _maxY;
@@ -211,13 +211,14 @@ public class MScrollProgress extends MUIComponent {
 
     override public function set width(value:Number):void {
         background.width = value;
-//        _slide.width = value;
-//        _progress.width = value;
+        _slide.width = value;
+        //_progress.width = value;
         init();
         updateByValue();
     }
 
     public function updateProgress(value:Number):void {
+        _progressValue=value;
         switch (_direction) {
             case MDirection.Horizon:
                 this._progress.width = this.background.width * value;
@@ -230,8 +231,8 @@ public class MScrollProgress extends MUIComponent {
 
     override public function set height(value:Number):void {
         background.height = value;
-//        _slide.height = value;
-//        _progress.height = value;
+        _slide.height = value;
+        _progress.height = value;
         init();
         updateByValue();
     }

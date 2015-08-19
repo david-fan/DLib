@@ -27,6 +27,7 @@ public class MVideoPlayer extends MSprite {
     public static const Stop:String = "NetStream.Play.Stop";
     public static const PlayStatus:String = "PlayStatus";
     public static const AutoSize:String = "AutoSize";
+    public static const PlayError:String="PlayError";
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;

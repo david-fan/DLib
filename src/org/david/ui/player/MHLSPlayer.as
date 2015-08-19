@@ -62,7 +62,8 @@ public class MHLSPlayer extends HLS implements IPlayer {
         addEventListener(HLSEvent.MANIFEST_LOADED, onManifestLoaded);
 //        addEventListener(HLSEvent.MEDIA_TIME, onManifestLoaded);
         addEventListener(HLSEvent.PLAYBACK_COMPLETE, onPlayComplete);
-//        _hls.addEventListener(HLSEvent.ERROR, _errorHandler);
+
+        addEventListener(HLSEvent.ERROR, _errorHandler);
 //        _hls.addEventListener(HLSEvent.FRAGMENT_LOADED, _fragmentLoadedHandler);
 //        _hls.addEventListener(HLSEvent.FRAGMENT_PLAYING, _fragmentPlayingHandler);
 //        _hls.addEventListener(HLSEvent.MANIFEST_LOADED, _manifestHandler);
@@ -72,7 +73,10 @@ public class MHLSPlayer extends HLS implements IPlayer {
 //        _hls.addEventListener(HLSEvent.AUDIO_TRACKS_LIST_CHANGE, _audioTracksListChange);
 //        _hls.addEventListener(HLSEvent.AUDIO_TRACK_CHANGE, _audioTrackChange);
     }
-
+    private function _errorHandler(event:HLSEvent):void{
+        if (_playStatusCallback)
+            _playStatusCallback(MVideoPlayer.PlayError);
+    }
     protected function onMediaTime(event:HLSEvent):void {
         _duration = event.mediatime.duration;
         _media_position = event.mediatime.position;
