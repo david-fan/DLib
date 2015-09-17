@@ -25,7 +25,8 @@ public class FLVsIndex extends EventDispatcher {
 
     public var duration:Number;
     public var timestamp:Number;
-    public var timeIndexItems:Array;
+//    public var timeIndexItems:Array;
+    public var itemLengths:int;
     public var parseOK:Boolean;
 
 
@@ -37,14 +38,15 @@ public class FLVsIndex extends EventDispatcher {
         var index:Object = JSONExt.decode(txts);
         duration = index.duration;
         timestamp = index.timestamp;
-        timeIndexItems = index.timeIndexItems;
+        itemLengths = Math.ceil(index.length / 2);
+//        timeIndexItems = index.timeIndexItems;
         _zero4Thirteenth = index.zero4Thirteenth;
         parseOK = true;
 //        dispatchEvent(new UIEvent(FLVsIndex.ParseOK));
     }
 
     public function getFlvUrl(index:int):String {
-        if (index > timeIndexItems.length)
+        if (index > itemLengths)
             return null;
 
         return flvsPath + "/" + StrUtil.replace(flvsName, index, timestamp);
