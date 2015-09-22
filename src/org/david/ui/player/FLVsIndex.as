@@ -38,7 +38,7 @@ public class FLVsIndex extends EventDispatcher {
         var index:Object = JSONExt.decode(txts);
         duration = index.duration;
         timestamp = index.timestamp;
-        itemLengths = Math.ceil(index.length / 2);
+        itemLengths = Math.ceil(index.length / 1000 / 2);
 //        timeIndexItems = index.timeIndexItems;
         _zero4Thirteenth = index.zero4Thirteenth;
         parseOK = true;
