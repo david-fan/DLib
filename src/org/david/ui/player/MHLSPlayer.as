@@ -142,6 +142,7 @@ public class MHLSPlayer extends HLS implements IPlayer {
         _hasManifest = true;
         stream.play();
         _streamCreateCallback(stream);
+        _playStatusCallback(MVideoPlayer.Full);
         if (_seek > 0)
             stream.seek(_seek);
 //        if (event.mediatime) {
