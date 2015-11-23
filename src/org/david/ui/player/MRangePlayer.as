@@ -180,6 +180,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     private function onNetStatus(e:NetStatusEvent):void {
         var code:String = e.info.code;
         LogUtil.log(e.info.code, e.info.message);
+        _playStatusCallback(code);
         switch (code) {
             case "NetStream.SeekStart.Notify":
 //                LogUtil.log(e.info);
@@ -302,6 +303,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     }
 
     public function resume():void {
+        _netStream.resume();
     }
     public function get bufferLength():Number {
         if (_netStream)

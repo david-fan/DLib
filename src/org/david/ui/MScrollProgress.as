@@ -53,7 +53,9 @@ public class MScrollProgress extends MUIComponent {
 //        _slide.mask = _slidemask;
 
         init();
-        addEventListener(MouseEvent.CLICK, onSlideClick);
+        _slide.addEventListener(MouseEvent.CLICK, onSlideClick);
+        _progress.addEventListener(MouseEvent.CLICK, onSlideClick);
+        background.addEventListener(MouseEvent.CLICK, onSlideClick);
 
         addChild(_progress);
         _progress.x = _progress.y = 0;
