@@ -64,7 +64,12 @@ public class LogUtil {
         else {
             if (CONFIG::JSLog) {
                 if (ExternalInterface.available)
-                    ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
+                    try{
+                        ExternalInterface.call("console.log", "[" + type + "]" + msg + "\n");
+                    }catch( error:Error){
+
+                    }
+
             } else {
                 trace("[" + type + "]" + msg);
             }

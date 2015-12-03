@@ -6,16 +6,22 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.david.ui.player {
+
 import flash.events.EventDispatcher;
 
 import com.adobe.net.URI;
 
 import flash.events.NetStatusEvent;
+import flash.events.SecurityErrorEvent;
+import flash.events.TimerEvent;
+import flash.events.TimerEvent;
 import flash.media.SoundTransform;
 import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.net.NetStreamAppendBytesAction;
 import flash.system.Security;
+import flash.utils.Timer;
+import flash.utils.setTimeout;
 
 import org.casalib.util.StringUtil;
 
@@ -27,6 +33,7 @@ import org.httpclient.events.HttpDataEvent;
 import org.httpclient.events.HttpResponseEvent;
 import org.httpclient.events.HttpStatusEvent;
 import org.httpclient.http.Get;
+import org.osmf.events.TimeEvent;
 
 public class MRangePlayer extends EventDispatcher implements IPlayer {
     public static var StreamOK:String = "PlayStream.StreamOK";
@@ -41,49 +48,62 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     private var _httpClient:HttpClient;
     private var _time:Number = 0;
     private var _metaData:Object = {};
+    private var _tagSize:Number = 1024 * 1024;
+    private var _endPosition:int = 0;
+    private var _benginPosition:int = 0;
+    private var _lastPosition:int = 0;
+    private var _bufferTimer:Timer;
+    private var _contentLength:Number = 0;
+    private var _lastIsComplete:Boolean = false;
 
     public function MRangePlayer() {
         super();
-
+        _bufferTimer = new Timer(1000);
+        _bufferTimer.addEventListener(TimerEvent.TIMER, onBufferTimer);
     }
 
     private var _lastHttpStatusCode:String;
 
-    private function loadFLV(range:String = null):void {
+    private function loadFLV(range_start:int = -1, range_end = 0):void {
+        if (range_end < range_start)
+            throw Error("range_start must less than range_end")
         if (_httpClient) {
             _httpClient.cancel();
         }
 
-//        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":843";
-//        LogUtil.log("policy file: " + policyUrl);
-//        Security.loadPolicyFile(policyUrl);
+        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":10843";
+        LogUtil.log("policy file: " + policyUrl);
+        Security.loadPolicyFile(policyUrl);
 
         _httpClient = new HttpClient();
 
-        LogUtil.log("load flv", _playUrl, range);
+        _lastIsComplete = false;
+        LogUtil.log("load flv", _playUrl);
         var uri:URI = new URI(_playUrl);
         var request:HttpRequest = new Get();
-        if (range) {
-            request.addHeader("Range", "bytes=" + range);//0-2000
+        if (range_start > -1) {
+            LogUtil.log("Range", range_start + "-" + range_end);
+            request.addHeader("Range", "bytes=" + range_start + "-" + (range_end > 0 ? range_end : ""));//0-2000
+            _lastPosition = range_end;
         }
-
-        _httpClient.listener.onStatus = onStatus;
-        _httpClient.listener.onComplete = function (event:HttpResponseEvent):void {
-            LogUtil.log(event);
+        _httpClient.listener.onError = function (event:SecurityErrorEvent):void {
+            LogUtil.error(event);
         };
+        _httpClient.listener.onStatus = onStatus;
+        _httpClient.listener.onComplete = onComplete;
         _httpClient.listener.onData = onData;
         _httpClient.request(uri, request);
     }
 
     private function onStatus(event:HttpStatusEvent):void {
         _lastHttpStatusCode = event.code;
-        LogUtil.log("*******************http status", _lastHttpStatusCode);
+//        LogUtil.log("*******************http status", _lastHttpStatusCode);
         LogUtil.log(event.header.toString());
         switch (_lastHttpStatusCode) {
             case "302":
                 _playUrl = event.header.getValue("Location");
                 _playUrl = StringUtil.trimLeft(_playUrl);
-                loadFLV();
+                loadFLV(_benginPosition, _endPosition);
                 break;
             case "200":
                 break;
@@ -92,10 +112,53 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         }
     }
 
+    private function onComplete(event:HttpResponseEvent):void {
+        LogUtil.log("Data load complete：" + event + "---------------");
+        _lastIsComplete = true;
+    }
+
     private function onData(event:HttpDataEvent):void {
         if (["200", "206"].indexOf(_lastHttpStatusCode) == -1)
             return;
         _netStream.appendBytes(event.bytes);
+    }
+
+    private function getHeader():void {
+        var policyUrl:String = "xmlsocket://" + getServerName(_playUrl) + ":10843";
+        Security.loadPolicyFile(policyUrl);
+        var _http:HttpClient = new HttpClient();
+        var uri:URI = new URI(_playUrl);
+        _http.listener.onError = function (event:SecurityErrorEvent):void {
+            LogUtil.error("getHead:" + event);
+        };
+        _http.listener.onComplete = onGethead;
+        _http.head(uri);
+    }
+
+    private function onGethead(event:HttpResponseEvent):void {
+        _contentLength = event.response.contentLength;
+        _endPosition = _tagSize;
+        if (_contentLength < _endPosition) {
+            _endPosition = _contentLength;
+        }
+        loadFLV(_benginPosition, _endPosition);
+    }
+
+    private function onBufferTimer(e:TimerEvent):void {
+        if (_lastPosition >= _contentLength) {
+            _bufferTimer.stop();
+            return;
+        }
+        LogUtil.log("bufferLength:" + bufferLength);
+        if (bufferLength < 10 && _lastIsComplete) {
+            _benginPosition = _lastPosition + 1;
+            if (_benginPosition + _tagSize > _contentLength) {
+                _endPosition = _contentLength;
+            } else {
+                _endPosition = _benginPosition + _tagSize;
+            }
+            loadFLV(_benginPosition, _endPosition);
+        }
     }
 
     public function play():void {
@@ -107,6 +170,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     public function seek(time:Number):void {
         if (!_hasHeader)
             return;
+        _bufferTimer.stop();
         _netStream.seek(0);
         _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_SEEK);
         var keyframes:Object = _metaData.keyframes;
@@ -115,14 +179,21 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
                 if (i == 0)
                     i = 1;
                 _time = keyframes.times[i - 1];
-                loadFLV(keyframes.filepositions[i - 1] + "-");
+                _benginPosition = keyframes.filepositions[i - 1];
+                if (_benginPosition + _tagSize > _contentLength) {
+                    _endPosition = _contentLength;
+                } else {
+                    _endPosition = _benginPosition + _tagSize;
+                }
+                loadFLV(_benginPosition, _endPosition);
+                _bufferTimer.start();
                 break;
             }
         }
     }
 
-    public function get duration():Number{
-        if(_metaData)
+    public function get duration():Number {
+        if (_metaData)
             return _metaData.duration;
         return 0;
     }
@@ -194,9 +265,10 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
                 if (_streamCreateCallback)
                     _streamCreateCallback(_netStream);
                 _netStream.play(null);
+                _netStream.appendBytesAction(NetStreamAppendBytesAction.RESET_BEGIN);
                 _netStream.client = this;
                 _netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-                loadFLV();
+                getHeader();
                 dispatchEvent(new UIEvent(StreamOK, _netStream));
                 break;
             case "NetConnection.Connect.Closed":
@@ -219,8 +291,8 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
         _hasHeader = true;
         if (_metaDataCallback)
             _metaDataCallback(info);
-
 //        _metaDataGetCallback(info.width, info.height);
+        _bufferTimer.start();
     }
 
     public function onCuePoint(info:Object):void {
@@ -305,6 +377,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
     public function resume():void {
         _netStream.resume();
     }
+
     public function get bufferLength():Number {
         if (_netStream)
             return _netStream.bufferLength;
