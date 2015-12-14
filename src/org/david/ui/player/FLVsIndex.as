@@ -34,9 +34,9 @@ public class FLVsIndex extends EventDispatcher {
     }
 
     private function parse(txts:String):void {
-        //{"duration":2,"timestamp":1420622214,"length":2040903,"timeIndexItems":[{"start":0,"end":2011},{"start":2011,"end":4011}]}
+        //{"interval":2,"timestamp":1420622214,"length":2040903,"timeIndexItems":[{"start":0,"end":2011},{"start":2011,"end":4011}]}
         var index:Object = JSONExt.decode(txts);
-        duration = index.duration;
+        duration = index.interval;
         timestamp = index.timestamp;
         itemLengths = Math.ceil(index.length / 1000 / 2);
 //        timeIndexItems = index.timeIndexItems;

@@ -95,6 +95,9 @@ public class MFLVsPlayer extends EventDispatcher implements IPlayer {
     public function seek(time:Number):void {
         _seek = time;
         _index = Math.floor(time / 2);
+        if(_index==0){
+            _index=1;
+        }
         _getZero = false;
         cleanupStream();
         stopLoader();
