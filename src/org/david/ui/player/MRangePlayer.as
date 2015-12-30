@@ -149,7 +149,7 @@ public class MRangePlayer extends EventDispatcher implements IPlayer {
             _bufferTimer.stop();
             return;
         }
-        LogUtil.log("bufferLength:" + bufferLength);
+        //LogUtil.log("bufferLength:" + bufferLength);
         if (bufferLength < 10 && _lastIsComplete) {
             _benginPosition = _lastPosition + 1;
             if (_benginPosition + _tagSize > _contentLength) {

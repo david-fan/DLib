@@ -147,6 +147,8 @@ public class MScrollProgress extends MUIComponent {
     }
 
     private function onMouseMove(e:MouseEvent):void {
+        if(!enable)
+            return;
         if (_move) {
             switch (_direction) {
                 case MDirection.Horizon:
@@ -180,6 +182,8 @@ public class MScrollProgress extends MUIComponent {
     }
 
     private function onSlideClick(e:MouseEvent):void {
+        if(!enable)
+            return;
         switch (_direction) {
             case MDirection.Horizon:
                 if (_careThumbSize)
@@ -237,6 +241,14 @@ public class MScrollProgress extends MUIComponent {
         _progress.height = value;
         init();
         updateByValue();
+    }
+    override public function set enable(value:Boolean):void {
+        super.enable = value;
+        if (value) {
+            this.alpha = 1;
+        } else {
+            this.alpha = 0.3;
+        }
     }
 }
 }
