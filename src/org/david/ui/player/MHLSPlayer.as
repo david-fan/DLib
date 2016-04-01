@@ -157,5 +157,10 @@ public class MHLSPlayer extends HLS implements IPlayer {
         if (_hasManifest)
             stream.seek(time);
     }
+    public function get bufferLength():Number {
+        if (stream)
+            return stream.bufferLength;
+        return 0;
+    }
 }
 }
