@@ -155,8 +155,10 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                 }
                 break;
             case "NetStream.Play.Stop":
-                if (_replay)
+                if (_replay){
                     _stream.seek(1);
+//                    _play();
+                }
                 callPlayStatsCallback(MVideoPlayer.Stop);
                 break;
             case "NetConnection.Connect.Failed":
@@ -168,8 +170,12 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 
 //            case "NetStream.Play.Start":
 //                break;
-//            case "NetStream.Buffer.Flush":
-//                break;
+            case "NetStream.Buffer.Flush":
+                if (_autoRetry) {
+                    LogUtil.log("AutoRetry :" + _filename + " in 2 second");
+                    setTimeout(_play, 2 * 1000);
+                }
+                break;
 //            case "NetStream.Buffer.Empty":
 //                break;
 //            case "NetStream.Buffer.Full":
