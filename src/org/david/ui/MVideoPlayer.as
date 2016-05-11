@@ -27,7 +27,7 @@ public class MVideoPlayer extends MSprite {
     public static const Stop:String = "NetStream.Play.Stop";
     public static const PlayStatus:String = "PlayStatus";
     public static const AutoSize:String = "AutoSize";
-    public static const PlayError:String="PlayError";
+    public static const PlayError:String = "PlayError";
     private var _player:IPlayer;
     protected var _video:Video;
     private var _stream:NetStream;
@@ -148,12 +148,13 @@ public class MVideoPlayer extends MSprite {
             _player.resume();
     }
 
-    public function playRTMP(server:String, streamId:String):void {
+    public function playRTMP(server:String, streamId:String, autoRetry:Boolean = true, debug:Boolean = false, log:Boolean = true, replay:Boolean = true, bufferTime:Number = 0.5):void {
         if (_player) {
             _player.stop();
             _player = null;
         }
-        var player:MRTMPPlayer = new MRTMPPlayer(true);
+        var player:MRTMPPlayer = new MRTMPPlayer(autoRetry, debug, log, replay);
+        player.bufferTime = bufferTime;
         player.playStatusCallback = playStatusChange;
         player.streamCreateCallback = attachStream;
         player.server = server;
@@ -283,8 +284,8 @@ public class MVideoPlayer extends MSprite {
         }
     }
 
-    public function get bufferLength():Number{
-        if(_player)
+    public function get bufferLength():Number {
+        if (_player)
             return _player.bufferLength;
         return 0;
     }

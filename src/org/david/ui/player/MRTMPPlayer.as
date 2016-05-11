@@ -171,6 +171,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
 //            case "NetStream.Play.Start":
 //                break;
             case "NetStream.Buffer.Flush":
+                    LogUtil.log("AutoRetry",_autoRetry);
                 if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
@@ -192,6 +193,7 @@ public class MRTMPPlayer extends EventDispatcher implements IPlayer {
                     _stream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
                     _stream = null;
                 }
+                LogUtil.log("AutoRetry",_autoRetry);
                 if (_autoRetry) {
                     LogUtil.log("AutoRetry :" + _filename + " in 2 second");
                     setTimeout(_play, 2 * 1000);
